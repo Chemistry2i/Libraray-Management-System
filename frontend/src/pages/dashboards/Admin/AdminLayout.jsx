@@ -1,4 +1,5 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, Navigate } from 'react-router-dom'
+import { useAuth } from '../../../context/AuthContext'
 import AdminSidebar from './components/AdminSidebar'
 import AdminHeader from './components/AdminHeader'
 import AdminFooter from './components/AdminFooter'
@@ -6,6 +7,21 @@ import CommandPalette from '../../../components/CommandPalette'
 import { PageTransition } from '../../../components/PageTransition'
 
 export default function AdminLayout() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  // Protect route
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50 font-outfit">
       {/* Fixed Sidebar */}

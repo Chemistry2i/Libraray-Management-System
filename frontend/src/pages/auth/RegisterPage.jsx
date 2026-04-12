@@ -39,15 +39,16 @@ export default function RegisterPage() {
     setLoading(true)
 
     try {
-      await register({
-        firstName: formData.firstName,
-        lastName: formData.lastName,
+      const user = await register({
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        username: formData.email.split('@')[0], // Generate username from email
         email: formData.email,
         phone: formData.phone,
         password: formData.password,
       })
       toast.success('Registration successful!')
-      navigate('/')
+      navigate('/user/dashboard')
     } catch (error) {
       toast.error(error.response?.data?.message || 'Registration failed')
     } finally {

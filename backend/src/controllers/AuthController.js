@@ -1,5 +1,6 @@
 const AuthService = require('../services/AuthService');
 const PasswordService = require('../services/PasswordService');
+const UserModel = require('../models/UserModel');
 const { sendSuccess, sendError } = require('../utils/response');
 const { ERROR_MESSAGES, SUCCESS_MESSAGES } = require('../constants/messages');
 
@@ -25,7 +26,11 @@ class AuthController {
 
   static async getProfile(req, res, next) {
     try {
-      sendSuccess(res, 'Profile retrieved', { user: req.user });
+      const user = await UserModel.findById(req.user.user_id);
+      if (!user) {
+        return sendError(res, 'User not found', 404);
+      }
+      sendSuccess(res, 'Profile retrieved', { user });
     } catch (error) {
       next(error);
     }

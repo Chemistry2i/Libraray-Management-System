@@ -29,12 +29,27 @@ export function AuthProvider({ children }) {
   const checkAuth = async () => {
     try {
       const response = await authAPI.getCurrentUser()
-      setUser(response.data.data)
+      let userData = response.data.data?.user || response.data.data;
+      
+      // Map backend snake_case to camelCase
+      if (userData) {
+        userData = {
+          ...userData,
+          firstName: userData.first_name,
+          lastName: userData.last_name,
+          userId: userData.user_id,
+          profileImage: userData.profile_image_url
+        }
+      }
+
+      setUser(userData)
       setIsAuthenticated(true)
+      return userData;
     } catch (error) {
       localStorage.removeItem('token')
       setUser(null)
       setIsAuthenticated(false)
+      throw error;
     } finally {
       setLoading(false)
     }
@@ -44,21 +59,19 @@ export function AuthProvider({ children }) {
     try {
       const response = await authAPI.login({ email, password })
       localStorage.setItem('token', response.data.data.token)
-      setUser(response.data.data.user)
-      setIsAuthenticated(true)
-      return response.data
+      const userData = await checkAuth()
+      return userData
     } catch (error) {
       throw error
     }
   }
 
-  const register = async (userData) => {
+  const register = async (userDataInput) => {
     try {
-      const response = await authAPI.register(userData)
+      const response = await authAPI.register(userDataInput)
       localStorage.setItem('token', response.data.data.token)
-      setUser(response.data.data.user)
-      setIsAuthenticated(true)
-      return response.data
+      const userData = await checkAuth()
+      return userData
     } catch (error) {
       throw error
     }

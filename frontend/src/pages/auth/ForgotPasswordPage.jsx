@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { toast } from 'react-toastify'
+import { authAPI } from '../../api/endpoints'
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('')
@@ -15,11 +16,11 @@ export default function ForgotPasswordPage() {
 
     try {
       // Call forgot password API
-      // await authAPI.forgotPassword({ email })
+      await authAPI.forgotPassword({ email })
       toast.success('Password reset link sent to your email')
       setSent(true)
     } catch (error) {
-      toast.error('Failed to send reset link')
+      toast.error(error.response?.data?.message || 'Failed to send reset link')
     } finally {
       setLoading(false)
     }

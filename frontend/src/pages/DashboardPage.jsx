@@ -3,11 +3,15 @@ import { useAuth } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 
 export default function DashboardPage() {
-  const { user } = useAuth()
+  const { user, loading } = useAuth()
   const navigate = useNavigate()
   
   useEffect(() => {
-    if (!user) return
+    if (loading) return
+    if (!user) {
+      navigate('/login', { replace: true })
+      return
+    }
 
     const isAdmin = user.role === 'admin' || user.role === 'librarian'
     if (isAdmin) {
@@ -15,7 +19,7 @@ export default function DashboardPage() {
     } else {
       navigate('/user', { replace: true })
     }
-  }, [user, navigate])
+  }, [user, loading, navigate])
 
   return (
     <div className="min-h-screen bg-light py-12 flex items-center justify-center">
