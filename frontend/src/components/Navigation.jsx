@@ -32,8 +32,8 @@ export default function Navigation() {
             <Link to="/books" className="text-gray-700 hover:text-primary transition">Books</Link>
             {isAuthenticated && (
               <>
-                <Link to="/my-books" className="text-gray-700 hover:text-primary transition">My Books</Link>
-                <Link to="/reservations" className="text-gray-700 hover:text-primary transition">Reservations</Link>
+                <Link to="/user/my-books" className="text-gray-700 hover:text-primary transition">My Books</Link>
+                <Link to="/user/reservations" className="text-gray-700 hover:text-primary transition">Reservations</Link>
               </>
             )}
           </div>
@@ -46,25 +46,27 @@ export default function Navigation() {
                   <FontAwesomeIcon icon={faBell} className="text-primary text-lg" />
                   <span className="absolute -top-1 -right-1 w-4 h-4 bg-danger text-white text-xs rounded-full flex items-center justify-center">3</span>
                 </button>
-                <div className="relative group">
+                <div className="relative group flex items-center h-full">
                   <button className="flex items-center space-x-2 p-2 bg-light rounded-lg">
                     <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-semibold text-sm">
                       {user?.firstName?.charAt(0)}
                     </div>
                   </button>
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-airbnb-lg hidden group-hover:block">
-                    <Link to="/profile" className="block px-4 py-2 hover:bg-light text-sm">
-                      <FontAwesomeIcon icon={faUser} className="mr-2 text-primary" />
-                      Profile
-                    </Link>
-                    <Link to="/dashboard" className="block px-4 py-2 hover:bg-light text-sm">
-                      <FontAwesomeIcon icon={faCog} className="mr-2 text-primary" />
-                      Dashboard
-                    </Link>
-                    <button onClick={handleLogout} className="w-full text-left px-4 py-2 hover:bg-light text-sm border-t">
-                      <FontAwesomeIcon icon={faSignOutAlt} className="mr-2 text-danger" />
-                      Logout
-                    </button>
+                  <div className="absolute right-0 top-full pt-2 w-48 hidden group-hover:block">
+                    <div className="bg-white rounded-lg shadow-airbnb-lg overflow-hidden pb-1">
+                      <Link to="/user/profile" className="block px-4 py-2 hover:bg-light text-sm">
+                        <FontAwesomeIcon icon={faUser} className="mr-2 text-primary" />
+                        Profile
+                      </Link>
+                      <Link to="/user/dashboard" className="block px-4 py-2 hover:bg-light text-sm">
+                        <FontAwesomeIcon icon={faCog} className="mr-2 text-primary" />
+                        Dashboard
+                      </Link>
+                      <button onClick={handleLogout} className="w-full text-left px-4 py-2 hover:bg-light text-sm border-t">
+                        <FontAwesomeIcon icon={faSignOutAlt} className="mr-2 text-danger" />
+                        Logout
+                      </button>
+                    </div>
                   </div>
                 </div>
               </>
@@ -92,9 +94,9 @@ export default function Navigation() {
             <Link to="/books" className="block px-4 py-2 text-gray-700 hover:bg-light rounded">Books</Link>
             {isAuthenticated ? (
               <>
-                <Link to="/my-books" className="block px-4 py-2 text-gray-700 hover:bg-light rounded">My Books</Link>
-                <Link to="/reservations" className="block px-4 py-2 text-gray-700 hover:bg-light rounded">Reservations</Link>
-                <Link to="/profile" className="block px-4 py-2 text-gray-700 hover:bg-light rounded">Profile</Link>
+                <Link to="/user/my-books" className="block px-4 py-2 text-gray-700 hover:bg-light rounded">My Books</Link>
+                <Link to="/user/reservations" className="block px-4 py-2 text-gray-700 hover:bg-light rounded">Reservations</Link>
+                <Link to="/user/profile" className="block px-4 py-2 text-gray-700 hover:bg-light rounded">Profile</Link>
                 <button onClick={handleLogout} className="w-full text-left px-4 py-2 text-danger hover:bg-light rounded">Logout</button>
               </>
             ) : (

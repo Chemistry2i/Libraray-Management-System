@@ -18,14 +18,14 @@ export default function LoginPage() {
     setLoading(true)
 
     try {
-      const user = await login(email, password)
-      toast.success('Login successful!')
+      const response = await login(email, password)
+      toast.success(response.message || 'Login successful!')
       
       // Redirect based on role
-      if (user?.role === 'admin' || user?.role === 'librarian') {
-        navigate('/admin/dashboard')
+      if (response.user?.role === 'admin' || response.user?.role === 'librarian') {
+        navigate('/admin')
       } else {
-        navigate('/user/dashboard')
+        navigate('/user')
       }
     } catch (error) {
       toast.error(error.response?.data?.message || 'Login failed')

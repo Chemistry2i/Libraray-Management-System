@@ -35,8 +35,8 @@ router.get('/admin/active', authenticate, authorize('librarian', 'admin'), Borro
 router.get('/admin/overdue', authenticate, authorize('librarian', 'admin'), BorrowingController.getOverdueBooks);
 router.get('/admin/statistics', authenticate, authorize('librarian', 'admin'), BorrowingController.getBorrowingStats);
 
-module.exports = router;
-
 // Fines management
-router.get('/admin/fines', authenticate, authorize(ROLES.ADMIN, ROLES.LIBRARIAN), BorrowingController.getAllFines);
-router.patch('/admin/fines/:borrowId/waive', authenticate, authorize(ROLES.ADMIN, ROLES.LIBRARIAN), BorrowingController.waiveFine);
+router.get('/admin/fines', authenticate, authorize('librarian', 'admin'), BorrowingController.getAllFines);
+router.patch('/admin/fines/:borrowId/waive', authenticate, authorize('librarian', 'admin'), BorrowingController.waiveFine);
+
+module.exports = router;

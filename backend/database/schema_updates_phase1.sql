@@ -6,14 +6,17 @@
 -- Token Blacklist Table (for logout functionality)
 CREATE TABLE IF NOT EXISTS token_blacklist (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  token VARCHAR(500) NOT NULL,
+  token VARCHAR(512) NOT NULL,
   user_id INT NOT NULL,
   blacklisted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  expires_at TIMESTAMP NOT NULL,
+  expires_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
   INDEX idx_user_id (user_id),
   INDEX idx_expires_at (expires_at)
 );
+
+-- (Fallback for existing tables without the column)
+-- ALTER TABLE token_blacklist ADD COLUMN expires_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER blacklisted_at;
 
 -- Password Resets Table (for forgot password flow)
 CREATE TABLE IF NOT EXISTS password_resets (
@@ -34,11 +37,11 @@ CREATE TABLE IF NOT EXISTS notifications (
   type VARCHAR(50),
   title VARCHAR(255),
   message TEXT,
-  read BOOLEAN DEFAULT false,
+  `read` BOOLEAN DEFAULT false,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
   INDEX idx_user_id (user_id),
-  INDEX idx_read (read),
+  INDEX idx_read (`read`),
   INDEX idx_created_at (created_at)
 );
 

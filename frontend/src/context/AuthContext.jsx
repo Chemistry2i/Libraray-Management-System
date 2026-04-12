@@ -60,7 +60,7 @@ export function AuthProvider({ children }) {
       const response = await authAPI.login({ email, password })
       localStorage.setItem('token', response.data.data.token)
       const userData = await checkAuth()
-      return userData
+      return { user: userData, message: response.data.message }
     } catch (error) {
       throw error
     }
@@ -71,7 +71,7 @@ export function AuthProvider({ children }) {
       const response = await authAPI.register(userDataInput)
       localStorage.setItem('token', response.data.data.token)
       const userData = await checkAuth()
-      return userData
+      return { user: userData, message: response.data.message }
     } catch (error) {
       throw error
     }
