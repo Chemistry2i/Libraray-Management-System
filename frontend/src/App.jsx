@@ -21,6 +21,10 @@ import ProfilePage from './pages/ProfilePage'
 import DashboardPage from './pages/DashboardPage'
 import NotFoundPage from './pages/NotFoundPage'
 
+// Admin Pages Layout
+import AdminLayout from './pages/dashboards/Admin/AdminLayout'
+import AdminDashboard from './pages/dashboards/Admin/AdminDashboard'
+
 // Context
 import { AuthProvider } from './context/AuthContext'
 
@@ -45,6 +49,12 @@ export default function App() {
             <Route path="/reservations" element={<ReservationsPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/profile" element={<ProfilePage />} />
+          </Route>
+
+          {/* Admin Routes */}
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
+            {/* We will add more admin paths here later, like users, books, settings */}
           </Route>
 
           {/* 404 */}
