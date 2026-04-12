@@ -5,6 +5,8 @@ import api from '../../../api/axios';
 
 const AdminCategories = () => {
   const [categories, setCategories] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [viewItem, setViewItem] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // Modal & Form State
@@ -101,6 +103,12 @@ const AdminCategories = () => {
     }
   };
 
+  
+  const filteredCategories = categories.filter(c => 
+    (c.name && c.name.toLowerCase().includes(searchTerm.toLowerCase())) || 
+    (c.description && c.description.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
+
   return (
     <div className="py-2">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
@@ -125,6 +133,8 @@ const AdminCategories = () => {
             <input 
               type="text" 
               placeholder="Search categories..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all bg-white"
             />
           </div>
@@ -147,7 +157,7 @@ const AdminCategories = () => {
               ) : categories.length === 0 ? (
                 <tr><td colSpan="4" className="p-4 text-center text-gray-500">No categories found.</td></tr>
               ) : (
-                categories.map((category) => (
+                filteredCategories.map((category) => (
                   <tr key={category.category_id} className="hover:bg-gray-50 transition-colors">
                     <td className="p-4">
                       <p className="font-bold text-gray-900">{category.category_name}</p>
@@ -162,7 +172,7 @@ const AdminCategories = () => {
                     </td>
                     <td className="p-4 text-right align-middle">
                       <div className="flex items-center justify-end gap-2 text-gray-400">
-                        <button className="p-1.5 hover:text-blue-500 hover:bg-blue-50 rounded transition-colors" title="View details">
+                        <button onClick={() => setViewItem(category)} className="p-1.5 hover:text-blue-500 hover:bg-blue-50 rounded transition-colors" title="View details">
                           <Eye size={18} />
                         </button>
                         <button onClick={() => handleEditClick(category)} className="p-1.5 hover:text-primary hover:bg-primary/10 rounded transition-colors" title="Edit">
@@ -251,8 +261,67 @@ const AdminCategories = () => {
           </div>
         </div>
       )}
+    
+      {/* View Category Modal */}
+      {viewItem && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl w-full max-w-md shadow-airbnb-xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+              <h2 className="text-xl font-bold text-gray-900">Category Details</h2>
+              <button onClick={() => setViewItem(null)} className="text-gray-400 hover:text-gray-600 transition-colors p-2 hover:bg-gray-100 rounded-full">
+                <X size={20} />
+              </button>
+            </div>
+            <div className="p-6 space-y-4">
+              <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                 <p className="text-sm text-gray-500 font-bold mb-1">Category Name</p>
+                 <p className="text-gray-900 text-lg font-semibold">{viewItem.name}</p>
+              </div>
+              <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                 <p className="text-sm text-gray-500 font-bold mb-1">Description</p>
+                 <p className="text-gray-700">{viewItem.description || 'No description provided'}</p>
+              </div>
+            </div>
+            <div className="p-6 border-t border-gray-100 bg-gray-50/50 flex justify-end">
+              <button type="button" onClick={() => setViewItem(null)} className="px-6 py-2.5 text-sm font-bold text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors shadow-sm">
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    
+      {/* View Category Modal */}
+      {viewItem && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl w-full max-w-md shadow-airbnb-xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+              <h2 className="text-xl font-bold text-gray-900">Category Details</h2>
+              <button onClick={() => setViewItem(null)} className="text-gray-400 hover:text-gray-600 transition-colors p-2 hover:bg-gray-100 rounded-full">
+                <X size={20} />
+              </button>
+            </div>
+            <div className="p-6 space-y-4">
+              <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                 <p className="text-sm text-gray-500 font-bold mb-1">Category Name</p>
+                 <p className="text-gray-900 text-lg font-semibold">{viewItem.name}</p>
+              </div>
+              <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                 <p className="text-sm text-gray-500 font-bold mb-1">Description</p>
+                 <p className="text-gray-700">{viewItem.description || 'No description provided'}</p>
+              </div>
+            </div>
+            <div className="p-6 border-t border-gray-100 bg-gray-50/50 flex justify-end">
+              <button type="button" onClick={() => setViewItem(null)} className="px-6 py-2.5 text-sm font-bold text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors shadow-sm">
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
-
 export default AdminCategories;
+
+

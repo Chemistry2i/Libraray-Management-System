@@ -5,6 +5,8 @@ import api from '../../../api/axios';
 
 const AdminBooks = () => {
   const [books, setBooks] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [viewBook, setViewBook] = useState(null);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 

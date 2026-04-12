@@ -5,6 +5,8 @@ import api from '../../../api/axios';
 
 const AdminBorrowing = () => {
   const [borrowings, setBorrowings] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [viewItem, setViewItem] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

@@ -5,6 +5,8 @@ import api from '../../../api/axios';
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [viewUser, setViewUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
