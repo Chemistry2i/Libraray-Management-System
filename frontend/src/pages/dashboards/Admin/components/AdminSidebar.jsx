@@ -11,7 +11,7 @@ const navItems = [
   { name: 'Overview', path: '/admin', icon: faChartPie },
   { name: 'Books & Inventory', path: '/admin/books', icon: faBook },
   { name: 'Categories & Genres', path: '/admin/categories', icon: faTags },
-  { name: 'Circulation', path: '/admin/circulation', icon: faExchangeAlt },
+  { name: 'Borrowing Management', path: '/admin/borrowing', icon: faExchangeAlt },
   { name: 'Holds & Reservations', path: '/admin/reservations', icon: faClock },
   { name: 'Patrons & Users', path: '/admin/users', icon: faUsers },
   { name: 'Reviews & Moderation', path: '/admin/reviews', icon: faStar },

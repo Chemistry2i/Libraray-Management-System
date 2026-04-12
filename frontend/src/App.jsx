@@ -24,6 +24,15 @@ import NotFoundPage from './pages/NotFoundPage'
 // Admin Pages Layout
 import AdminLayout from './pages/dashboards/Admin/AdminLayout'
 import AdminDashboard from './pages/dashboards/Admin/AdminDashboard'
+import AdminBooks from './pages/dashboards/Admin/AdminBooks'
+import AdminCategories from './pages/dashboards/Admin/AdminCategories'
+import AdminUsers from './pages/dashboards/Admin/AdminUsers'
+import AdminBorrowing from './pages/dashboards/Admin/AdminBorrowing'
+import AdminReservations from './pages/dashboards/Admin/AdminReservations'
+import AdminReviews from './pages/dashboards/Admin/AdminReviews'
+import AdminSettings from './pages/dashboards/Admin/AdminSettings'
+import AdminFines from './pages/dashboards/Admin/AdminFines'
+import AdminReports from './pages/dashboards/Admin/AdminReports'
 
 // Context
 import { AuthProvider } from './context/AuthContext'
@@ -54,7 +63,15 @@ export default function App() {
           {/* Admin Routes */}
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
-            {/* We will add more admin paths here later, like users, books, settings */}
+            <Route path="books" element={<AdminBooks />} />
+            <Route path="categories" element={<AdminCategories />} />
+            <Route path="borrowing" element={<AdminBorrowing />} />
+            <Route path="reservations" element={<AdminReservations />} />
+            <Route path="users" element={<AdminUsers />} />
+            <Route path="reviews" element={<AdminReviews />} />
+            <Route path="settings" element={<AdminSettings />} />
+            <Route path="fines" element={<AdminFines />} />
+            <Route path="reports" element={<AdminReports />} />
           </Route>
 
           {/* 404 */}
