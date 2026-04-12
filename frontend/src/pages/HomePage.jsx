@@ -101,7 +101,7 @@ export default function HomePage() {
   const [showDemo, setShowDemo] = useState(false)
 
   return (
-    <div className="w-full bg-white flex flex-col font-inter">
+    <div className="w-full bg-white flex flex-col font-outfit">
       {/* Video Modal */}
       <AnimatePresence>
         {showDemo && (

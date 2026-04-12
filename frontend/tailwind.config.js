@@ -7,8 +7,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        inter: ['Inter', 'sans-serif'],
-        sans: ['Inter', 'sans-serif'],
+        outfit: ['Outfit', 'sans-serif'],
+        sans: ['Outfit', 'sans-serif'],
       },
       colors: {
         primary: '#FF6B6B',
