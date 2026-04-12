@@ -1,24 +1,25 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
-import AdminDashboard from '../components/dashboard/AdminDashboard'
-import UserDashboard from '../components/dashboard/UserDashboard'
+import { useNavigate } from 'react-router-dom'
 
 export default function DashboardPage() {
   const { user } = useAuth()
+  const navigate = useNavigate()
   
-  if (!user) return null
+  useEffect(() => {
+    if (!user) return
 
-  const isAdmin = user.role === 'admin' || user.role === 'librarian'
+    const isAdmin = user.role === 'admin' || user.role === 'librarian'
+    if (isAdmin) {
+      navigate('/admin', { replace: true })
+    } else {
+      navigate('/user', { replace: true })
+    }
+  }, [user, navigate])
 
   return (
-    <div className="min-h-screen bg-light py-12">
-      <div className="max-w-7xl mx-auto px-4">
-        {isAdmin ? (
-          <AdminDashboard user={user} />
-        ) : (
-          <UserDashboard user={user} />
-        )}
-      </div>
+    <div className="min-h-screen bg-light py-12 flex items-center justify-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
     </div>
   )
 }

@@ -34,6 +34,15 @@ import AdminSettings from './pages/dashboards/Admin/AdminSettings'
 import AdminFines from './pages/dashboards/Admin/AdminFines'
 import AdminReports from './pages/dashboards/Admin/AdminReports'
 
+// User Pages Layout
+import UserLayout from './pages/dashboards/User/UserLayout'
+import UserDashboard from './pages/dashboards/User/UserDashboard'
+import UserBorrowings from './pages/dashboards/User/UserBorrowings'
+import UserReservations from './pages/dashboards/User/UserReservations'
+import UserFines from './pages/dashboards/User/UserFines'
+import UserReviews from './pages/dashboards/User/UserReviews'
+import UserProfile from './pages/dashboards/User/UserProfile'
+
 // Context
 import { AuthProvider } from './context/AuthContext'
 
@@ -72,6 +81,16 @@ export default function App() {
             <Route path="settings" element={<AdminSettings />} />
             <Route path="fines" element={<AdminFines />} />
             <Route path="reports" element={<AdminReports />} />
+          </Route>
+
+          {/* User Routes */}
+          <Route path="/user" element={<UserLayout />}>
+            <Route index element={<UserDashboard />} />
+            <Route path="my-books" element={<UserBorrowings />} />
+            <Route path="reservations" element={<UserReservations />} />
+            <Route path="fines" element={<UserFines />} />
+            <Route path="reviews" element={<UserReviews />} />
+            <Route path="profile" element={<UserProfile />} />
           </Route>
 
           {/* 404 */}
