@@ -15,5 +15,6 @@ router.get('/:id/queue-position', authenticate, ReservationController.getQueuePo
 router.get('/', authenticate, authorize(ROLES.ADMIN, ROLES.LIBRARIAN), ReservationController.getAllReservations);
 router.post('/queue/:bookId', authenticate, authorize(ROLES.ADMIN, ROLES.LIBRARIAN), ReservationController.getPendingQueue);
 router.patch('/ready', authenticate, authorize(ROLES.ADMIN, ROLES.LIBRARIAN), ReservationController.markReady);
+router.delete('/admin/:id', authenticate, authorize(ROLES.ADMIN, ROLES.LIBRARIAN), ReservationController.adminCancelReservation);
 
 module.exports = router;

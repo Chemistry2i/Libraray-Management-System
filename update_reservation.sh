@@ -1,0 +1,6 @@
+sed -i '/static async cancelReservation/i \  // Cancel reservation (admin/librarian)\n  static async adminCancelReservation(req, res, next) {\n    try {\n      const reservationId = req.params.id;\n      await ReservationService.adminCancelReservation(reservationId);\n      sendSuccess(res, "Reservation cancelled");\n    } catch (error) {\n      next(error);\n    }\n  }\n' backend/src/controllers/ReservationController.js
+
+sed -i '/static async cancelReservation/i \  // Cancel reservation (admin only)\n  static async adminCancelReservation(reservationId) {\n    const reservation = await ReservationModel.findById(reservationId);\n    if (!reservation) {\n      throw new NotFoundError("Reservation not found");\n    }\n    if (reservation.status === "cancelled") {\n      throw new ValidationError("Reservation already cancelled");\n    }\n    await ReservationModel.cancel(reservationId);\n    return true;\n  }\n' backend/src/services/ReservationService.js
+
+sed -i "/router.delete('\/:id', authenticate, ReservationController.cancelReservation);/a router.delete('/admin/:id', authenticate, authorize(ROLES.ADMIN, ROLES.LIBRARIAN), ReservationController.adminCancelReservation);" backend/src/routes/reservationRoutes.js
+bash update_reservation.sh

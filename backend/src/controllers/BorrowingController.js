@@ -1,4 +1,5 @@
 const BorrowingService = require('../services/BorrowingService');
+const BorrowingModel = require('../models/BorrowingModel');
 const { sendSuccess, sendPaginated } = require('../utils/response');
 const { DEFAULT_PAGE, DEFAULT_LIMIT } = require('../constants/appConstants');
 
@@ -144,20 +145,73 @@ class BorrowingController {
       const userId = req.query.userId ? parseInt(req.query.userId) : null;
       const bookId = req.query.bookId ? parseInt(req.query.bookId) : null;
 
-      const { records, total } = await BorrowingService.getAllActiveBorrowings(
-        page,
-        limit,
-        { userId, bookId }
+      const { records, total } = await BorrowingService.getAllActiveBorrowings(page, limit, { userId, bookId });
+      sendPaginated(res, 'All active borrowings', records, page, limit, total);
+    } catch (error) {
+      next(error);
+    }
+  }
+  
+  // Get all borrowings including returned (admin overview view)
+  static async getAllBorrowings(req, res, next) {
+    try {
+      const page = parseInt(req.query.page) || DEFAULT_PAGE;
+      const limit = parseInt(req.query.limit) || DEFAULT_LIMIT;
+      const offset = (page - 1) * limit;
+      
+      const pool = require('../config/database');
+      const [records] = await pool.query(
+        `SELECT br.*, b.title, b.author, u.username, u.email, u.first_name, u.last_name
+         FROM borrowing_records br
+         JOIN books b ON br.book_id = b.book_id
+         JOIN users u ON br.user_id = u.user_id
+         ORDER BY br.borrow_id DESC
+         LIMIT ? OFFSET ?`,
+        [limit, offset]
       );
+      
+      const [countResult] = await pool.query('SELECT COUNT(*) as total FROM borrowing_records');
+      
+      sendPaginated(res, 'All borrowings retrieved', records, page, limit, countResult[0].total);
+    } catch (error) {
+      next(error);
+    }
+  }
+  
+  // Admin forced book return
+  static async adminReturnBook(req, res, next) {
+    try {
+      const { borrowId } = req.params;
+      const pool = require('../config/database');
+      
+      // Get borrowing record
+      const [records] = await pool.query('SELECT * FROM borrowing_records WHERE borrow_id = ?', [borrowId]);
+      if (records.length === 0) throw new Error('Borrowing record not found');
+      
+      const record = records[0];
+      if (record.status === 'returned') throw new Error('Book is already returned.');
 
-      sendPaginated(
-        res,
-        'All active borrowings',
-        records,
-        page,
-        limit,
-        total
+      let fine = 0;
+      const today = new Date();
+      const dueDate = new Date(record.due_date);
+      if (today > dueDate) {
+        const daysOverdue = Math.ceil((today - dueDate) / (1000 * 60 * 60 * 24));
+        fine = daysOverdue * 10; // $10 per day? That's what returnBook calculates
+      }
+
+      await pool.query(
+        'UPDATE borrowing_records SET return_date = ?, status = ?, fine_amount = ? WHERE borrow_id = ?',
+        [today.toISOString().split('T')[0], 'returned', fine, borrowId]
       );
+      
+      // Update book copies
+      if (record.copy_id) {
+        await pool.query('UPDATE book_copies SET status = "available" WHERE copy_id = ?', [record.copy_id]);
+      } else {
+        await pool.query('UPDATE books SET available_copies = available_copies + 1 WHERE book_id = ?', [record.book_id]);
+      }
+      
+      sendSuccess(res, 'Book returned successfully by admin', { fine });
     } catch (error) {
       next(error);
     }

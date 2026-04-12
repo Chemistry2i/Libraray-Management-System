@@ -40,32 +40,14 @@ const uploadProfileImage = multer({
 
 // Middleware to handle multer errors
 const handleMulterError = (err, req, res, next) => {
-  console.log('🚨 handleMulterError called');
-  console.log('Multer error handler called:', err?.code || err?.message);
-  
   if (err instanceof multer.MulterError) {
-    console.warn('Multer error detected:', err.code, err.message);
     if (err.code === 'FILE_TOO_LARGE' || err.code === 'LIMIT_FILE_SIZE') {
-      console.warn('File too large:', err.message);
-      return res.status(400).json({
-        success: false,
-        message: 'File size must be less than 5MB',
-        code: 'FILE_TOO_LARGE'
-      });
+      return res.status(400).json({ success: false, message: 'File size must be less than 5MB', code: 'FILE_TOO_LARGE' });
     }
-    return res.status(400).json({
-      success: false,
-      message: err.message || 'File upload error',
-      code: err.code
-    });
+    return res.status(400).json({ success: false, message: err.message || 'File upload error', code: err.code });
   } else if (err) {
-    console.error('Upload error:', err.message);
-    return res.status(400).json({
-      success: false,
-      message: err.message || 'File upload error'
-    });
+    return res.status(400).json({ success: false, message: err.message || 'File upload error' });
   }
-  console.log('✅ No multer errors, continuing to next');
   next();
 };
 
@@ -74,13 +56,7 @@ router.get('/profile', authenticate, UserController.getProfile);
 router.put('/profile', authenticate, UserController.updateProfile);
 
 // Log upload route hits BEFORE authentication
-router.post('/profile/image', (req, res, next) => {
-  console.log('🚀 UPLOAD ROUTE HIT! POST /profile/image');
-  console.log('Headers:', req.headers);
-  console.log('Method:', req.method);
-  console.log('URL:', req.url);
-  next();
-}, authenticate, 
+router.post('/profile/image', authenticate, 
   uploadProfileImage.single('profileImage'), 
   handleMulterError, 
   UserController.uploadProfileImage
@@ -88,7 +64,9 @@ router.post('/profile/image', (req, res, next) => {
 
 // Admin & Librarian Routes
 router.get('/', authenticate, authorize(ROLES.ADMIN, ROLES.LIBRARIAN), UserController.getAllUsers);
-router.get('/:id', authenticate, UserController.getUser);
+router.post('/', authenticate, authorize(ROLES.ADMIN, ROLES.LIBRARIAN), UserController.createUser);
+router.get('/:id', authenticate, authorize(ROLES.ADMIN, ROLES.LIBRARIAN), UserController.getUser);
+router.put('/:id', authenticate, authorize(ROLES.ADMIN, ROLES.LIBRARIAN), UserController.updateUser);
 router.delete('/:id', authenticate, authorize(ROLES.ADMIN, ROLES.LIBRARIAN), UserController.deleteUser);
 
 module.exports = router;

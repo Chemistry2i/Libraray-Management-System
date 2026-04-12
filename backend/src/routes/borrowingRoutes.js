@@ -27,6 +27,9 @@ router.post('/:borrowId/approve', authenticate, authorize('librarian', 'admin'),
 router.post('/:borrowId/reject', authenticate, authorize('librarian', 'admin'), BorrowingController.rejectBorrow);
 
 // Admin management view (librarian only)
+router.get('/admin/all', authenticate, authorize('librarian', 'admin'), BorrowingController.getAllBorrowings);
+router.post('/admin/return/:borrowId', authenticate, authorize('librarian', 'admin'), BorrowingController.adminReturnBook);
+
 router.get('/admin/pending-requests', authenticate, authorize('librarian', 'admin'), BorrowingController.getPendingRequests);
 router.get('/admin/active', authenticate, authorize('librarian', 'admin'), BorrowingController.getAllActiveBorrowings);
 router.get('/admin/overdue', authenticate, authorize('librarian', 'admin'), BorrowingController.getOverdueBooks);

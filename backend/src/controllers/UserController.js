@@ -1,7 +1,10 @@
 const UserService = require('../services/UserService');
+const UserModel = require('../models/UserModel');
 const { sendSuccess, sendPaginated } = require('../utils/response');
 const { DEFAULT_PAGE, DEFAULT_LIMIT } = require('../constants/appConstants');
 const config = require('../config/config');
+const { hashPassword } = require('../services/PasswordService');
+const { NotFoundError, ConflictError } = require('../exceptions/AppError');
 
 class UserController {
   static async deleteUser(req, res, next) {
@@ -51,72 +54,64 @@ class UserController {
     }
   }
 
-  static async uploadProfileImage(req, res, next) {
+  // Admin: Update User
+  static async updateUser(req, res, next) {
     try {
-      console.log('uploadProfileImage called');
-      console.log('req.file:', req.file);
-      console.log('req.user:', req.user);
+      const db = require('../config/database');
+      const { first_name, last_name, email, role, phone_number, username, status } = req.body;
+      
+      // Update logic
+      const [result] = await db.query(
+        'UPDATE users SET first_name = ?, last_name = ?, email = ?, role = COALESCE(?, role), phone = COALESCE(?, phone), username = COALESCE(?, username), status = COALESCE(?, status) WHERE user_id = ?',
+        [first_name, last_name, email, role, phone_number, username, status, req.params.id]
+      );
+      if (result.affectedRows === 0) throw new NotFoundError('User not found');
+      sendSuccess(res, 'User updated successfully');
+    } catch (error) {
+      next(error);
+    }
+  }
 
-      if (!req.file) {
-        console.warn('No file in upload request');
-        return sendSuccess(res, 'No file uploaded', null, 400);
-      }
+  // Admin: Create User
+  static async createUser(req, res, next) {
+    try {
+      const db = require('../config/database');
+      const { first_name, last_name, email, role, password, username, phone_number, status } = req.body;
+      
+      const [existing] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+      if (existing.length > 0) throw new ConflictError('User with this email already exists');
+      
+      const pass = password || 'Library123!';
+      const password_hash = await hashPassword(pass);
+      const userStatus = status || 'active';
+      const uname = username || email.split('@')[0];
+      
+      const [result] = await db.query(
+        'INSERT INTO users (first_name, last_name, email, role, password_hash, username, phone, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        [first_name, last_name, email, role || 'member', password_hash, uname, phone_number, userStatus]
+      );
+      sendSuccess(res, 'User created successfully', { user_id: result.insertId }, 201);
+    } catch (error) {
+      next(error);
+    }
+  }
 
-      if (!req.user || !req.user.user_id) {
-        console.warn('No user in request or user_id missing');
-        return sendSuccess(res, 'User not authenticated', null, 401);
-      }
+  static async uploadProfileImage(req, res, next) {
+    // existing upload code
+    try {
+      if (!req.file) return sendSuccess(res, 'No file uploaded', null, 400);
+      if (!req.user || !req.user.user_id) return sendSuccess(res, 'User not authenticated', null, 401);
 
       const userId = req.user.user_id;
       const imageUrl = `${config.API_URL}/uploads/profile-images/${req.file.filename}`;
-
-      console.log('Uploading image for userId:', userId);
-      console.log('Image filename:', req.file.filename);
-      console.log('Image URL:', imageUrl);
-
-      // Update user profile with image URL
       const updatedUser = await UserService.uploadProfileImage(userId, imageUrl);
       
-      if (!updatedUser) {
-        console.warn('User not found during image upload:', userId);
-        return sendSuccess(res, 'User not found', null, 404);
-      }
-
-      console.log('Profile image uploaded successfully for userId:', userId);
-      console.log('Sending response with user:', updatedUser);
-      console.log('Sending imageUrl:', imageUrl);
+      if (!updatedUser) return sendSuccess(res, 'User not found', null, 404);
       
-      const responseData = {
-        success: true,
-        message: 'Profile image uploaded successfully',
-        data: { 
-          user: updatedUser,
-          imageUrl 
-        },
-        timestamp: new Date().toISOString()
-      };
-      
-      console.log('Before sending success response');
-      console.log('Response object:', JSON.stringify(responseData, null, 2));
-      res.status(200).json(responseData);
-      console.log('After sending success response - response sent');
+      res.status(200).json({ success: true, message: 'Profile image uploaded successfully', data: { user: updatedUser, imageUrl }, timestamp: new Date().toISOString() });
     } catch (error) {
-      console.error('Upload profile image error:', {
-        message: error.message,
-        code: error.code,
-        stack: error.stack,
-        type: error.constructor.name
-      });
-      
-      // Only send error response if headers not already sent
       if (!res.headersSent) {
-        res.status(500).json({
-          success: false,
-          message: error.message || 'Image upload failed',
-          timestamp: new Date().toISOString()
-        });
-      } else {
-        console.error('Headers already sent, cannot send error response');
+        res.status(500).json({ success: false, message: error.message || 'Image upload failed', timestamp: new Date().toISOString() });
       }
     }
   }

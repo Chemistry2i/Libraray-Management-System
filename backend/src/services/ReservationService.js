@@ -42,6 +42,21 @@ class ReservationService {
     return result;
   }
 
+  // Cancel reservation (Admin)
+  static async adminCancelReservation(reservationId) {
+    const reservation = await ReservationModel.findById(reservationId);
+    if (!reservation) {
+      throw new NotFoundError('Reservation not found');
+    }
+
+    if (reservation.status === 'cancelled') {
+      throw new ValidationError('Reservation already cancelled');
+    }
+
+    await ReservationModel.cancel(reservationId);
+    return true;
+  }
+
   // Cancel reservation
   static async cancelReservation(reservationId, userId) {
     const reservation = await ReservationModel.findById(reservationId);

@@ -6,7 +6,7 @@ export default function AdminHeader() {
   const { user } = useAuth();
 
   return (
-    <header className="h-20 bg-white border-b border-gray-200 px-8 flex items-center justify-between z-20 sticky top-0">
+    <header className="h-20 bg-white border-b border-gray-200 px-8 flex items-center justify-between z-10 relative">
       {/* Left side: Mobile menu toggle & Search */}
       <div className="flex items-center gap-6">
         <button className="text-gray-500 hover:text-primary transition-colors lg:hidden">

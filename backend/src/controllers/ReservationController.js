@@ -43,6 +43,17 @@ class ReservationController {
     }
   }
 
+  // Cancel reservation (admin)
+  static async adminCancelReservation(req, res, next) {
+    try {
+      const reservationId = req.params.id;
+      await ReservationService.adminCancelReservation(reservationId);
+      sendSuccess(res, 'Reservation cancelled');
+    } catch (error) {
+      next(error);
+    }
+  }
+
   // Cancel reservation
   static async cancelReservation(req, res, next) {
     try {
