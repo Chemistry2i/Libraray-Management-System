@@ -1,0 +1,68 @@
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
+// Layouts
+import MainLayout from './components/layouts/MainLayout'
+import AuthLayout from './components/layouts/AuthLayout'
+
+// Pages - Auth
+import LoginPage from './pages/auth/LoginPage'
+import RegisterPage from './pages/auth/RegisterPage'
+import ForgotPasswordPage from './pages/auth/ForgotPasswordPage'
+
+// Pages - Main
+import HomePage from './pages/HomePage'
+import BooksPage from './pages/BooksPage'
+import BookDetailsPage from './pages/BookDetailsPage'
+import MyBooksPage from './pages/MyBooksPage'
+import ReservationsPage from './pages/ReservationsPage'
+import ProfilePage from './pages/ProfilePage'
+import DashboardPage from './pages/DashboardPage'
+import NotFoundPage from './pages/NotFoundPage'
+
+// Context
+import { AuthProvider } from './context/AuthContext'
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <Routes>
+          {/* Auth Routes */}
+          <Route element={<AuthLayout />}>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          </Route>
+
+          {/* Main Routes */}
+          <Route element={<MainLayout />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/books" element={<BooksPage />} />
+            <Route path="/books/:id" element={<BookDetailsPage />} />
+            <Route path="/my-books" element={<MyBooksPage />} />
+            <Route path="/reservations" element={<ReservationsPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+          </Route>
+
+          {/* 404 */}
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+
+        <ToastContainer
+          position="bottom-right"
+          autoClose={4000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+      </Router>
+    </AuthProvider>
+  )
+}

@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: 'Inter', sans-serif !important;
+}
+
+body {
+  @apply bg-light text-dark;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-light;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-secondary rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary;
+}
+
+/* Airbnb-inspired button style */
+.btn-primary {
+  @apply px-6 py-3 bg-primary text-white rounded-lg font-semibold transition-all duration-300 hover:bg-red-700 hover:shadow-airbnb;
+}
+
+.btn-secondary {
+  @apply px-6 py-3 bg-secondary text-white rounded-lg font-semibold transition-all duration-300 hover:bg-teal-600 hover:shadow-airbnb;
+}
+
+.btn-outline {
+  @apply px-6 py-3 border-2 border-primary text-primary rounded-lg font-semibold transition-all duration-300 hover:bg-primary hover:text-white;
+}
+
+/* Card styling */
+.card {
+  @apply bg-white rounded-lg shadow-airbnb p-6 transition-all duration-300 hover:shadow-airbnb-lg;
+}
+
+.card-hover {
+  @apply cursor-pointer hover:-translate-y-2;
+}
+
+/* Input styling */
+input, textarea, select {
+  @apply px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition-all;
+}
+
+input:focus, textarea:focus, select:focus {
+  @apply border-primary;
+}
+
+/* Loading spinner */
+.spinner {
+  @apply border-4 border-gray-200 border-t-primary rounded-full animate-spin;
+}
