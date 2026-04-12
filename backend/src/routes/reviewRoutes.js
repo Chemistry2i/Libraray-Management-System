@@ -13,3 +13,10 @@ router.put('/:reviewId', authenticate, reviewValidator, ReviewController.updateR
 router.delete('/:reviewId', authenticate, ReviewController.deleteReview);
 
 module.exports = router;
+
+const { ROLES } = require('../constants/appConstants');
+const { authorize } = require('../middleware/auth');
+
+// Admin routes
+router.get('/admin/all', authenticate, authorize(ROLES.ADMIN, ROLES.LIBRARIAN), ReviewController.getAllReviews);
+router.delete('/admin/:reviewId', authenticate, authorize(ROLES.ADMIN, ROLES.LIBRARIAN), ReviewController.adminDeleteReview);

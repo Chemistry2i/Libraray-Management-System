@@ -8,6 +8,29 @@ const { MAX_BORROW_DAYS, MAX_RENEWALS } = require('../constants/appConstants');
 const pool = require('../config/database');
 
 class BorrowingService {
+  static async getAllFines(page, limit) {
+    const offset = (page - 1) * limit;
+    const [rows] = await pool.query(
+      `SELECT br.borrow_id, br.user_id, br.book_id, br.fine_amount, br.status, br.due_date, br.return_date, 
+              u.username, u.email, b.title 
+       FROM borrowing_records br
+       JOIN users u ON br.user_id = u.user_id
+       JOIN books b ON br.book_id = b.book_id
+       WHERE br.fine_amount > 0
+       ORDER BY br.borrow_id DESC
+       LIMIT ? OFFSET ?`, [limit, offset]
+    );
+    const [count] = await pool.query('SELECT COUNT(*) as total FROM borrowing_records WHERE fine_amount > 0');
+    return { fines: rows, total: count[0].total };
+  }
+
+  static async waiveFine(borrowId) {
+    const [borrowing] = await pool.query('SELECT fine_amount FROM borrowing_records WHERE borrow_id = ?', [borrowId]);
+    if (borrowing.length === 0) throw new Error('Record not found');
+    await pool.query('UPDATE borrowing_records SET fine_amount = 0 WHERE borrow_id = ?', [borrowId]);
+    return true;
+  }
+
   static async checkoutBook(userId, bookId) {
     // Verify book exists
     const book = await BookModel.findById(bookId);

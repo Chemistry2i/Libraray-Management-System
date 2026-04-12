@@ -4,6 +4,29 @@ const { sendSuccess, sendPaginated } = require('../utils/response');
 const { DEFAULT_PAGE, DEFAULT_LIMIT } = require('../constants/appConstants');
 
 class BorrowingController {
+  // Admin: Get all outstanding fines
+  static async getAllFines(req, res, next) {
+    try {
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 100;
+      const { fines, total } = await BorrowingService.getAllFines(page, limit);
+      res.status(200).json({ status: 'success', data: { fines, total } });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // Admin: Waive fine
+  static async waiveFine(req, res, next) {
+    try {
+      const borrowId = req.params.borrowId;
+      await BorrowingService.waiveFine(borrowId);
+      res.status(200).json({ status: 'success', message: 'Fine waived successfully' });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   // ===== USER ENDPOINTS =====
 
   // Request to borrow a book

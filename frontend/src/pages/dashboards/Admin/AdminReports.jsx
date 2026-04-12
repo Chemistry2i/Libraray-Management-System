@@ -62,17 +62,6 @@ const AdminReports = () => {
     { title: 'Top Reservable Inventory', icon: <TrendingUp />, format: 'JSON', desc: 'Most hold-requested books to indicate future purchasing needs.', targetData: reportData?.mostBorrowed }
   ];
 
-  if (loading) {
-    return (
-      <div className="flex h-[400px] items-center justify-center">
-        <div className="flex flex-col items-center text-gray-500">
-          <Loader2 className="animate-spin mb-2" size={32} />
-          <p>Compiling Reports...</p>
-        </div>
-      </div>
-    );
-  }
-
   const { overview } = reportData || {};
 
   return (

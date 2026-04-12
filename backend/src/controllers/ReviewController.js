@@ -4,6 +4,43 @@ const { sendSuccess } = require('../utils/response');
 const { NotFoundError, ValidationError } = require('../exceptions/AppError');
 
 class ReviewController {
+  // Admin: Get all reviews
+  static async getAllReviews(req, res, next) {
+    try {
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 100;
+      const offset = (page - 1) * limit;
+      
+      const pool = require('../config/database');
+      const [rows] = await pool.query(
+        `SELECT r.*, u.username, u.email, b.title 
+         FROM reviews r
+         JOIN users u ON r.user_id = u.user_id
+         JOIN books b ON r.book_id = b.book_id
+         ORDER BY r.created_at DESC
+         LIMIT ? OFFSET ?`, [limit, offset]
+      );
+      const [count] = await pool.query('SELECT COUNT(*) as total FROM reviews');
+      
+      // Let's manually return the response like the sendSuccess utility
+      res.status(200).json({ status: 'success', message: 'Reviews retrieved', data: { reviews: rows, total: count[0].total } });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // Admin: Delete review
+  static async adminDeleteReview(req, res, next) {
+    try {
+      const { reviewId } = req.params;
+      const pool = require('../config/database');
+      await pool.query('DELETE FROM reviews WHERE review_id = ?', [reviewId]);
+      res.status(200).json({ status: 'success', message: 'Review deleted successfully' });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   // Get all reviews for a book
   static async getBookReviews(req, res, next) {
     try {
