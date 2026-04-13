@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Bell, Search, Menu, LogOut, ChevronDown, User } from 'lucide-react';
+import { Bell, Search, Menu, LogOut, ChevronDown, User, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '../../../../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
@@ -90,6 +90,15 @@ export default function UserHeader() {
 
           {isDropdownOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+              <button 
+                onClick={() => { setIsDropdownOpen(false); navigate('/user'); }}
+                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors flex items-center gap-2"
+              >
+                <LayoutDashboard size={16} /> Dashboard
+              </button>
+
+              <div className="h-px bg-gray-100 my-1"></div>
+
               <button 
                 onClick={() => { setIsDropdownOpen(false); navigate('/user/profile'); }}
                 className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors flex items-center gap-2"

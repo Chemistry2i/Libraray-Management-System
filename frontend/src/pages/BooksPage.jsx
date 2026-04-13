@@ -119,8 +119,16 @@ export default function BooksPage() {
                 to={`/books/${book.book_id}`}
                 className="bg-white rounded-lg overflow-hidden shadow-airbnb card-hover transition-all"
               >
-                <div className="w-full h-64 bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-                  <FontAwesomeIcon icon={faBook} className="text-white text-5xl" />
+                <div className="w-full h-64 bg-gradient-to-br from-primary to-secondary flex items-center justify-center overflow-hidden">
+                  {book.cover_url ? (
+                    <img 
+                      src={book.cover_url} 
+                      alt={book.title}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <FontAwesomeIcon icon={faBook} className="text-white text-5xl" />
+                  )}
                 </div>
                 <div className="p-4">
                   <h3 className="font-semibold text-dark mb-1 line-clamp-2">
