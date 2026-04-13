@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { BookOpen, Bookmark, Wallet, TrendingUp, AlertCircle, Library } from 'lucide-react';
+import { BookOpen, Bookmark, Wallet, TrendingUp, AlertCircle, Library, Calendar, User as UserIcon } from 'lucide-react';
+import { borrowingAPI, reservationAPI } from '../../../api/endpoints';
 import UserWelcomeBanner from './components/UserWelcomeBanner';
+import Swal from 'sweetalert2';
 
 export default function UserDashboard() {
   const { user } = useAuth();
@@ -16,21 +18,67 @@ export default function UserDashboard() {
 
   const fetchDashboardData = async () => {
     try {
-      // TODO: Connect this to actual backend endpoints later
-      // For now, populate empty state so UI looks complete
-      setTimeout(() => {
-        setStats({
-          booksBorrowed: 0,
-          reservations: 0,
-          totalFines: 0,
-          booksRead: 0,
-          currentlyReading: [],
-          recentReservations: []
-        });
-        setLoading(false);
-      }, 500);
+      setLoading(true);
+      
+      // Fetch user stats
+      console.log('Fetching user stats for user_id:', user.user_id);
+      const statsResponse = await borrowingAPI.getUserStats(user.user_id);
+      console.log('Full stats response:', statsResponse);
+      const statsData = statsResponse.data?.data?.stats || statsResponse.data?.data || statsResponse.data;
+      console.log('Extracted stats data:', statsData);
+      
+      // Fetch active books
+      console.log('Fetching active books');
+      const booksResponse = await borrowingAPI.getMyBooks();
+      console.log('Full books response:', booksResponse);
+      let activeBooks = [];
+      if (booksResponse.data?.data?.books) {
+        activeBooks = booksResponse.data.data.books;
+      } else if (booksResponse.data?.data?.items) {
+        activeBooks = booksResponse.data.data.items;
+      } else if (Array.isArray(booksResponse.data?.data)) {
+        activeBooks = booksResponse.data.data;
+      } else if (Array.isArray(booksResponse.data?.books)) {
+        activeBooks = booksResponse.data.books;
+      } else if (Array.isArray(booksResponse.data?.items)) {
+        activeBooks = booksResponse.data.items;
+      }
+      console.log('Extracted active books:', activeBooks);
+      
+      // Fetch reservations
+      console.log('Fetching reservations');
+      const reservationsResponse = await reservationAPI.getMyReservations();
+      console.log('Full reservations response:', reservationsResponse);
+      let reservations = [];
+      if (reservationsResponse.data?.data?.items) {
+        reservations = reservationsResponse.data.data.items;
+      } else if (reservationsResponse.data?.data?.reservations) {
+        reservations = reservationsResponse.data.data.reservations;
+      } else if (Array.isArray(reservationsResponse.data?.data)) {
+        reservations = reservationsResponse.data.data;
+      }
+      console.log('Extracted reservations:', reservations);
+      
+      setStats({
+        booksBorrowed: statsData?.active_count || 0,
+        reservations: reservations?.length || 0,
+        totalFines: statsData?.total_fines || 0,
+        booksRead: statsData?.returned_count || 0,
+        currentlyReading: Array.isArray(activeBooks) ? activeBooks : [],
+        recentReservations: Array.isArray(reservations) ? reservations.slice(0, 5) : [],
+        overdueCount: statsData?.overdue_count || 0,
+        pendingRequests: statsData?.pending_count || 0,
+      });
+      setLoading(false);
     } catch (error) {
       console.error('Error fetching user dashboard:', error);
+      console.error('Error details:', error.response?.data || error.message);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Failed to load dashboard data',
+        timer: 3000,
+      });
       setLoading(false);
     }
   };
@@ -39,7 +87,7 @@ export default function UserDashboard() {
     { title: 'Books Borrowed', value: stats?.booksBorrowed || 0, icon: BookOpen, color: 'text-indigo-500', bg: 'bg-indigo-50' },
     { title: 'Reservations', value: stats?.reservations || 0, icon: Bookmark, color: 'text-pink-500', bg: 'bg-pink-50' },
     { title: 'Books Read', value: stats?.booksRead || 0, icon: TrendingUp, color: 'text-teal-500', bg: 'bg-teal-50' },
-    { title: 'Pending Fines', value: `$${(stats?.totalFines || 0).toFixed(2)}`, icon: Wallet, color: 'text-red-500', bg: 'bg-red-50' }
+    { title: 'Pending Fines', value: `$${(parseFloat(stats?.totalFines) || 0).toFixed(2)}`, icon: Wallet, color: 'text-red-500', bg: 'bg-red-50' }
   ];
 
   return (
@@ -60,6 +108,24 @@ export default function UserDashboard() {
           Browse Catalog
         </button>
       </div>
+
+      {stats?.overdueCount > 0 && (
+        <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-xl flex items-start gap-4">
+          <div className="bg-yellow-100 p-2 rounded-full text-yellow-600 shrink-0">
+            <AlertCircle size={20} />
+          </div>
+          <div>
+            <h4 className="font-bold text-yellow-900">Overdue Books Warning</h4>
+            <p className="text-yellow-700 text-sm mt-1">You have {stats.overdueCount} overdue book{stats.overdueCount !== 1 ? 's' : ''}. Please return them as soon as possible.</p>
+            <button 
+              onClick={() => navigate('/user/my-books')}
+              className="mt-3 text-sm font-bold text-yellow-600 hover:text-yellow-800 transition-colors"
+            >
+              View My Books &rarr;
+            </button>
+          </div>
+        </div>
+      )}
 
       {stats?.totalFines > 0 && (
         <div className="bg-red-50 border border-red-200 p-4 rounded-xl flex items-start gap-4">
@@ -130,8 +196,26 @@ export default function UserDashboard() {
                 </button>
               </div>
             ) : (
-              <div className="space-y-4">
-                {/* We will map over actual borrowing data here later */}
+              <div className="space-y-4 max-h-96 overflow-y-auto">
+                {stats?.currentlyReading?.map((book) => (
+                  <div key={book.borrow_id} className="flex items-start gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors border border-gray-200">
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-semibold text-gray-900 truncate">{book.title}</h4>
+                      <p className="text-sm text-gray-600 truncate">{book.author}</p>
+                      <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
+                        <span className="flex items-center gap-1">
+                          <Calendar size={14} />
+                          Due: {new Date(book.due_date).toLocaleDateString()}
+                        </span>
+                        {book.status === 'overdue' && (
+                          <span className="px-2 py-1 bg-red-100 text-red-800 rounded font-medium">
+                            Overdue
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
           </div>
@@ -159,8 +243,25 @@ export default function UserDashboard() {
                 <p className="text-gray-500 text-sm">No books on hold.</p>
               </div>
             ) : (
-              <div className="space-y-4">
-                {/* We will map over actual reservation data here later */}
+              <div className="space-y-3 max-h-96 overflow-y-auto">
+                {stats?.recentReservations?.map((reservation) => (
+                  <div key={reservation.reservation_id} className="flex items-start gap-3 p-3 bg-purple-50 rounded-lg border border-purple-200 hover:shadow-sm transition-shadow">
+                    <Bookmark size={16} className="text-purple-600 mt-1 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-semibold text-purple-900 text-sm truncate">{reservation.book_title || 'Book'}</h4>
+                      <p className="text-xs text-purple-700 mt-1">
+                        Reserved on {new Date(reservation.reservation_date).toLocaleDateString()}
+                      </p>
+                      {reservation.status && (
+                        <p className={`text-xs font-medium mt-1 ${
+                          reservation.status === 'available' ? 'text-green-700' : 'text-amber-700'
+                        }`}>
+                          Status: {reservation.status}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
           </div>

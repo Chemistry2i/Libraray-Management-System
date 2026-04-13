@@ -7,7 +7,8 @@ import {
   CreditCard,
   MessageSquare,
   User,
-  Library
+  Library,
+  Bell
 } from 'lucide-react';
 
 export default function UserSidebar() {
@@ -15,6 +16,7 @@ export default function UserSidebar() {
     { path: '/user', icon: LayoutDashboard, label: 'Dashboard', end: true },
     { path: '/user/my-books', icon: BookOpen, label: 'My Borrowings' },
     { path: '/user/reservations', icon: Bookmark, label: 'Reservations' },
+    { path: '/user/notifications', icon: Bell, label: 'Notifications' },
     { path: '/user/fines', icon: CreditCard, label: 'My Fines' },
     { path: '/user/reviews', icon: MessageSquare, label: 'My Reviews' },
     { path: '/user/profile', icon: User, label: 'Profile Settings' },

@@ -42,6 +42,7 @@ import UserReservations from './pages/dashboards/User/UserReservations'
 import UserFines from './pages/dashboards/User/UserFines'
 import UserReviews from './pages/dashboards/User/UserReviews'
 import UserProfile from './pages/dashboards/User/UserProfile'
+import UserNotifications from './pages/dashboards/User/UserNotifications'
 
 // Context
 import { AuthProvider } from './context/AuthContext'
@@ -88,6 +89,7 @@ export default function App() {
             <Route index element={<UserDashboard />} />
             <Route path="my-books" element={<UserBorrowings />} />
             <Route path="reservations" element={<UserReservations />} />
+            <Route path="notifications" element={<UserNotifications />} />
             <Route path="fines" element={<UserFines />} />
             <Route path="reviews" element={<UserReviews />} />
             <Route path="profile" element={<UserProfile />} />

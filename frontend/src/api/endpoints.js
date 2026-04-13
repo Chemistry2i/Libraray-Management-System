@@ -24,12 +24,13 @@ export const borrowingAPI = {
   returnBook: (borrowingId) => api.post(`/borrowing/${borrowingId}/return`),
   getMyBooks: () => api.get('/borrowing/my-books'),
   getBorrowingHistory: () => api.get('/borrowing/history'),
+  getUserStats: (userId) => api.get(`/borrowing/stats/user/${userId}`),
 }
 
 // Reservation endpoints
 export const reservationAPI = {
   reserveBook: (bookId) => api.post('/reservations', { bookId }),
-  getMyReservations: () => api.get('/reservations/my-reservations'),
+  getMyReservations: () => api.get('/reservations/my'),
   cancelReservation: (reservationId) => api.delete(`/reservations/${reservationId}`),
 }
 
@@ -61,6 +62,7 @@ export const dashboardAPI = {
 // Notification endpoints
 export const notificationAPI = {
   getNotifications: () => api.get('/notifications'),
-  markAsRead: (notificationId) => api.put(`/notifications/${notificationId}/read`),
+  getUserNotifications: () => api.get('/notifications'),
+  markAsRead: (notificationId) => api.patch(`/notifications/${notificationId}/read`),
   deleteNotification: (notificationId) => api.delete(`/notifications/${notificationId}`),
 }
