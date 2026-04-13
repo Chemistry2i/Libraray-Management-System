@@ -24,8 +24,11 @@ export default function BooksPage() {
         search,
         category: selectedCategory
       })
-      setBooks(response.data.data || [])
+      // Response structure: { data: { items: [...], pagination: {...} } }
+      const books = response.data?.data?.items || []
+      setBooks(Array.isArray(books) ? books : [])
     } catch (error) {
+      console.error('Failed to load books:', error)
       toast.error('Failed to load books')
       setBooks([])
     } finally {
@@ -36,9 +39,12 @@ export default function BooksPage() {
   const fetchCategories = async () => {
     try {
       const response = await bookAPI.getCategories()
-      setCategories(response.data.data || [])
+      // Response structure: { data: { items: [...], pagination: {...} } }
+      const categories = response.data?.data?.items || []
+      setCategories(Array.isArray(categories) ? categories : [])
     } catch (error) {
-      console.error('Failed to load categories')
+      console.error('Failed to load categories:', error)
+      setCategories([])
     }
   }
 
@@ -78,9 +84,9 @@ export default function BooksPage() {
               className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             >
               <option value="">All Categories</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
+              {Array.isArray(categories) && categories.map((cat) => (
+                <option key={cat.category_id} value={cat.category_id}>
+                  {cat.category_name}
                 </option>
               ))}
             </select>
@@ -109,8 +115,8 @@ export default function BooksPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {books.map((book) => (
               <Link
-                key={book.id}
-                to={`/books/${book.id}`}
+                key={book.book_id}
+                to={`/books/${book.book_id}`}
                 className="bg-white rounded-lg overflow-hidden shadow-airbnb card-hover transition-all"
               >
                 <div className="w-full h-64 bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
@@ -123,12 +129,9 @@ export default function BooksPage() {
                   <p className="text-sm text-gray-600 mb-3 line-clamp-1">
                     {book.author}
                   </p>
-                  <div className="flex justify-between items-center mb-4">
+                  <div className="flex items-center mb-4">
                     <span className="text-sm font-medium text-gray-600">
-                      {book.copies > 0 ? `${book.copies} available` : 'Out of stock'}
-                    </span>
-                    <span className="text-yellow-400 text-sm">
-                      {book.rating ? `⭐ ${book.rating}` : 'No rating'}
+                      {book.available_copies > 0 ? `${book.available_copies} available` : 'Out of stock'}
                     </span>
                   </div>
                   <button className="w-full btn-primary text-sm py-2">

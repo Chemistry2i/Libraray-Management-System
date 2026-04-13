@@ -25,7 +25,7 @@ export default function UserLayout() {
       <UserSidebar />
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
         <UserHeader />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50/50 p-8">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50/50 px-6 py-4">
           <Outlet />
         </main>
       </div>

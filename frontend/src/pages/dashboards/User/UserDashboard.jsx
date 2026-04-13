@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { BookOpen, Bookmark, Wallet, TrendingUp, AlertCircle, Library } from 'lucide-react';
+import UserWelcomeBanner from './components/UserWelcomeBanner';
 
 export default function UserDashboard() {
   const { user } = useAuth();
@@ -42,7 +43,9 @@ export default function UserDashboard() {
   ];
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
+    <div className="space-y-6">
+      <UserWelcomeBanner user={user || { firstName: 'Guest' }} />
+
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
