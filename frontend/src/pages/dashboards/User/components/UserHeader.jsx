@@ -6,7 +6,7 @@ import { notificationAPI } from '../../../../api/endpoints';
 import Swal from 'sweetalert2';
 import NotificationCenter from './NotificationCenter';
 
-export default function UserHeader() {
+export default function UserHeader({ onMenuToggle }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -66,35 +66,35 @@ export default function UserHeader() {
   };
 
   return (
-    <header className="h-20 bg-white border-b border-gray-200 px-8 flex items-center justify-between z-50 relative">
-      <div className="flex items-center gap-6 w-full max-w-xl">
-        <button className="text-gray-500 hover:text-primary transition-colors lg:hidden">
+    <header className="h-16 md:h-20 bg-white border-b border-gray-200 px-4 md:px-8 flex items-center justify-between z-50 relative gap-4">
+      <div className="flex items-center gap-3 md:gap-6 flex-1 min-w-0">
+        <button onClick={onMenuToggle} className="text-gray-500 hover:text-primary transition-colors md:hidden shrink-0">
           <Menu size={24} />
         </button>
         
-        <div className="relative hidden md:block w-full">
+        <div className="relative hidden sm:block w-full max-w-xs">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
           <input 
             type="text" 
-            placeholder="Search books, authors, or genres..." 
+            placeholder="Search books..." 
             className="pl-10 pr-4 py-2 w-full bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
           />
         </div>
       </div>
 
-      <div className="flex items-center gap-5 ml-auto pl-4">
-        <Link to="/books" className="hidden sm:block text-sm font-semibold text-primary hover:text-primary/80 transition-colors">
+      <div className="flex items-center gap-2 md:gap-5 ml-auto pl-2 md:pl-4">
+        <Link to="/books" className="hidden md:block text-sm font-semibold text-primary hover:text-primary/80 transition-colors">
           Browse Catalog &rarr;
         </Link>
 
-        <div className="h-8 w-px bg-gray-200 hidden sm:block"></div>
+        <div className="h-8 w-px bg-gray-200 hidden md:block"></div>
 
         <button 
           onClick={() => setIsNotificationOpen(true)}
-          className="relative w-10 h-10 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 transition-colors"
+          className="relative w-10 h-10 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 transition-colors shrink-0"
           title="Notifications"
         >
-          <Bell size={20} />
+          <Bell size={18} />
           {unreadCount > 0 && (
             <span className="absolute top-1 right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
               {unreadCount > 9 ? '9+' : unreadCount}
@@ -104,50 +104,55 @@ export default function UserHeader() {
 
         <div className="h-8 w-px bg-gray-200 hidden sm:block"></div>
 
-        <div className="relative" ref={dropdownRef}>
-          <button 
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg transition-colors cursor-pointer"
-          >
-            <div className="text-right hidden sm:block">
-              <p className="text-sm font-bold text-gray-900">{user?.firstName} {user?.lastName}</p>
-              <p className="text-xs text-gray-500 capitalize">{user?.role || 'User'}</p>
-            </div>
-            <div className="w-10 h-10 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center border border-primary/20 shrink-0">
-              {user?.firstName?.charAt(0) || 'U'}
-            </div>
-            <ChevronDown size={16} className={`text-gray-400 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
-          </button>
-
-          {isDropdownOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-              <button 
-                onClick={() => { setIsDropdownOpen(false); navigate('/user'); }}
-                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors flex items-center gap-2"
-              >
-                <LayoutDashboard size={16} /> Dashboard
-              </button>
-
-              <div className="h-px bg-gray-100 my-1"></div>
-
-              <button 
-                onClick={() => { setIsDropdownOpen(false); navigate('/user/profile'); }}
-                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors flex items-center gap-2"
-              >
-                <User size={16} /> My Profile
-              </button>
-              
-              <div className="h-px bg-gray-100 my-1"></div>
-              
-              <button 
-                onClick={handleLogout}
-                className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors flex items-center gap-2"
-              >
-                <LogOut size={16} /> Sign out
-              </button>
-            </div>
-          )}
+        <div className="flex items-center gap-2 md:gap-3 relative shrink-0" ref={dropdownRef}>
+        <div className="hidden sm:flex items-center gap-2 md:gap-3">
+          <div className="text-right hidden md:block">
+            <p className="text-sm font-semibold text-gray-900">{user?.firstName}</p>
+            <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
+          </div>
+          <img 
+            src={user?.profile_image_url || `https://ui-avatars.com/api/?name=${user?.firstName} ${user?.lastName}&background=4f46e5&color=fff`} 
+            alt="Profile" 
+            className="w-8 h-8 md:w-9 md:h-9 rounded-full object-cover shrink-0"
+          />
         </div>
+        <button
+          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          className="flex items-center gap-1 py-2 px-2 rounded-lg hover:bg-gray-100 transition-colors shrink-0"
+        >
+          <ChevronDown size={16} className={`text-gray-500 transform transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+        </button>
+
+        {isDropdownOpen && (
+          <div 
+            ref={dropdownRef}
+            className="absolute top-full right-0 mt-2 w-40 md:w-48 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden z-50"
+          >
+            <Link 
+              to="/user/profile"
+              onClick={() => setIsDropdownOpen(false)}
+              className="flex items-center gap-3 px-3 md:px-4 py-3 hover:bg-gray-50 text-gray-700 border-b border-gray-100 text-sm md:text-base"
+            >
+              <User size={16} />
+              My Profile
+            </Link>
+            <Link 
+              to="/user"
+              onClick={() => setIsDropdownOpen(false)}
+              className="flex items-center gap-3 px-3 md:px-4 py-3 hover:bg-gray-50 text-gray-700 border-b border-gray-100 text-sm md:text-base"
+            >
+              <LayoutDashboard size={16} />
+              Dashboard
+            </Link>
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center gap-3 px-3 md:px-4 py-3 hover:bg-red-50 text-red-600 text-left text-sm md:text-base"
+            >
+              <LogOut size={16} />
+              Sign Out
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Notification Center */}

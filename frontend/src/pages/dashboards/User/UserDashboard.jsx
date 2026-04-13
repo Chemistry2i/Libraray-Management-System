@@ -95,14 +95,14 @@ export default function UserDashboard() {
       <UserWelcomeBanner user={user || { firstName: 'Guest' }} />
 
       {/* Header Section */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="flex flex-col gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Welcome Back, {user?.firstName}!</h1>
-          <p className="text-sm text-gray-500 mt-1">Here is what is happening with your library account today.</p>
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900">Welcome Back, {user?.firstName}!</h1>
+          <p className="text-xs md:text-sm text-gray-500 mt-1">Here is what is happening with your library account today.</p>
         </div>
         <button 
           onClick={() => navigate('/books')}
-          className="bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all flex items-center gap-2"
+          className="w-full sm:w-auto bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all flex items-center justify-center md:justify-start gap-2"
         >
           <Library size={18} />
           Browse Catalog
@@ -110,16 +110,16 @@ export default function UserDashboard() {
       </div>
 
       {stats?.overdueCount > 0 && (
-        <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-xl flex items-start gap-4">
+        <div className="bg-yellow-50 border border-yellow-200 p-3 md:p-4 rounded-xl flex items-start gap-3 md:gap-4">
           <div className="bg-yellow-100 p-2 rounded-full text-yellow-600 shrink-0">
-            <AlertCircle size={20} />
+            <AlertCircle size={18} />
           </div>
-          <div>
-            <h4 className="font-bold text-yellow-900">Overdue Books Warning</h4>
-            <p className="text-yellow-700 text-sm mt-1">You have {stats.overdueCount} overdue book{stats.overdueCount !== 1 ? 's' : ''}. Please return them as soon as possible.</p>
+          <div className="min-w-0">
+            <h4 className="font-bold text-yellow-900 text-sm md:text-base">Overdue Books Warning</h4>
+            <p className="text-yellow-700 text-xs md:text-sm mt-1">You have {stats.overdueCount} overdue book{stats.overdueCount !== 1 ? 's' : ''}. Please return them as soon as possible.</p>
             <button 
               onClick={() => navigate('/user/my-books')}
-              className="mt-3 text-sm font-bold text-yellow-600 hover:text-yellow-800 transition-colors"
+              className="mt-2 md:mt-3 text-xs md:text-sm font-bold text-yellow-600 hover:text-yellow-800 transition-colors"
             >
               View My Books &rarr;
             </button>
@@ -128,16 +128,16 @@ export default function UserDashboard() {
       )}
 
       {stats?.totalFines > 0 && (
-        <div className="bg-red-50 border border-red-200 p-4 rounded-xl flex items-start gap-4">
+        <div className="bg-red-50 border border-red-200 p-3 md:p-4 rounded-xl flex items-start gap-3 md:gap-4">
           <div className="bg-red-100 p-2 rounded-full text-red-600 shrink-0">
-            <AlertCircle size={20} />
+            <AlertCircle size={18} />
           </div>
-          <div>
-            <h4 className="font-bold text-red-900">Outstanding Fines Warning</h4>
-            <p className="text-red-700 text-sm mt-1">You have ${stats.totalFines.toFixed(2)} in pending fines. Please clear them to restore full borrowing privileges.</p>
+          <div className="min-w-0">
+            <h4 className="font-bold text-red-900 text-sm md:text-base">Outstanding Fines Warning</h4>
+            <p className="text-red-700 text-xs md:text-sm mt-1">You have ${stats.totalFines.toFixed(2)} in pending fines. Please clear them to restore full borrowing privileges.</p>
             <button 
               onClick={() => navigate('/user/fines')}
-              className="mt-3 text-sm font-bold text-red-600 hover:text-red-800 transition-colors"
+              className="mt-2 md:mt-3 text-xs md:text-sm font-bold text-red-600 hover:text-red-800 transition-colors"
             >
               View Fines &rarr;
             </button>
@@ -146,17 +146,17 @@ export default function UserDashboard() {
       )}
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
         {statCards.map((stat, index) => (
-          <div key={index} className="bg-white p-6 rounded-2xl border border-gray-200 hover:shadow-md transition-shadow">
-            <div className="flex items-center gap-4">
-              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${stat.bg} ${stat.color}`}>
-                <stat.icon size={24} />
+          <div key={index} className="bg-white p-4 md:p-6 rounded-2xl border border-gray-200 hover:shadow-md transition-shadow">
+            <div className="flex items-center gap-3 md:gap-4">
+              <div className={`w-10 md:w-12 h-10 md:h-12 rounded-xl flex items-center justify-center ${stat.bg} ${stat.color}`}>
+                <stat.icon size={20} />
               </div>
-              <div>
+              <div className="min-w-0">
                 <p className="text-xs font-bold text-gray-500 uppercase tracking-wide">{stat.title}</p>
                 <div className="flex items-baseline gap-2 mt-1">
-                  <h3 className="text-2xl font-black text-gray-900">{loading ? '-' : stat.value}</h3>
+                  <h3 className="text-lg md:text-2xl font-black text-gray-900 truncate">{loading ? '-' : stat.value}</h3>
                 </div>
               </div>
             </div>
@@ -164,51 +164,51 @@ export default function UserDashboard() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-6">
         {/* Currently Reading */}
         <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-200 overflow-hidden flex flex-col">
-          <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+          <div className="p-4 md:p-6 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div>
-              <h2 className="text-lg font-bold text-gray-900">Currently Reading</h2>
-              <p className="text-sm text-gray-500 mt-1">Books you hold right now</p>
+              <h2 className="text-base md:text-lg font-bold text-gray-900">Currently Reading</h2>
+              <p className="text-xs md:text-sm text-gray-500 mt-1">Books you hold right now</p>
             </div>
             <button 
               onClick={() => navigate('/user/my-books')}
-              className="text-sm font-bold text-primary hover:text-primary/80 transition-colors"
+              className="text-xs md:text-sm font-bold text-primary hover:text-primary/80 transition-colors text-left sm:text-right"
             >
               View All
             </button>
           </div>
           
-          <div className="p-6 flex-1 flex flex-col">
+          <div className="p-4 md:p-6 flex-1 flex flex-col">
             {!loading && (!stats?.currentlyReading || stats.currentlyReading.length === 0) ? (
-              <div className="flex flex-col items-center justify-center text-center py-12 flex-1 border-2 border-dashed border-gray-100 rounded-xl">
-                <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
-                  <BookOpen size={28} className="text-gray-400" />
+              <div className="flex flex-col items-center justify-center text-center py-8 md:py-12 flex-1 border-2 border-dashed border-gray-100 rounded-xl">
+                <div className="w-12 md:w-16 h-12 md:h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
+                  <BookOpen size={24} className="text-gray-400" />
                 </div>
-                <h3 className="text-gray-900 font-bold mb-1">No Active Borrows</h3>
-                <p className="text-gray-500 text-sm max-w-[250px]">You haven't borrowed any books at the moment.</p>
+                <h3 className="text-gray-900 font-bold mb-1 text-sm md:text-base">No Active Borrows</h3>
+                <p className="text-gray-500 text-xs md:text-sm max-w-[250px]">You haven't borrowed any books at the moment.</p>
                 <button 
                   onClick={() => navigate('/books')}
-                  className="mt-6 px-4 py-2 bg-gray-900 text-white text-sm font-bold rounded-lg hover:bg-gray-800 transition-colors"
+                  className="mt-4 md:mt-6 px-4 py-2 bg-gray-900 text-white text-xs md:text-sm font-bold rounded-lg hover:bg-gray-800 transition-colors"
                 >
                   Find a book
                 </button>
               </div>
             ) : (
-              <div className="space-y-4 max-h-96 overflow-y-auto">
+              <div className="space-y-2 md:space-y-4 max-h-96 overflow-y-auto">
                 {stats?.currentlyReading?.map((book) => (
-                  <div key={book.borrow_id} className="flex items-start gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors border border-gray-200">
+                  <div key={book.borrow_id} className="flex items-start gap-3 md:gap-4 p-3 md:p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors border border-gray-200">
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-semibold text-gray-900 truncate">{book.title}</h4>
-                      <p className="text-sm text-gray-600 truncate">{book.author}</p>
-                      <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
+                      <h4 className="font-semibold text-gray-900 truncate text-sm md:text-base">{book.title}</h4>
+                      <p className="text-xs md:text-sm text-gray-600 truncate">{book.author}</p>
+                      <div className="flex items-center gap-2 md:gap-4 mt-2 text-xs text-gray-500">
                         <span className="flex items-center gap-1">
-                          <Calendar size={14} />
+                          <Calendar size={12} />
                           Due: {new Date(book.due_date).toLocaleDateString()}
                         </span>
                         {book.status === 'overdue' && (
-                          <span className="px-2 py-1 bg-red-100 text-red-800 rounded font-medium">
+                          <span className="px-2 py-1 bg-red-100 text-red-800 rounded font-medium text-xs">
                             Overdue
                           </span>
                         )}
@@ -221,36 +221,39 @@ export default function UserDashboard() {
           </div>
         </div>
 
-        {/* My Reservations */}
+        {/* Recent Reservations */}
         <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden flex flex-col">
-          <div className="p-6 border-b border-gray-100 flex items-center justify-between">
-            <h2 className="text-lg font-bold text-gray-900">Reservations</h2>
+          <div className="p-4 md:p-6 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <div>
+              <h2 className="text-base md:text-lg font-bold text-gray-900">Recent Reservations</h2>
+              <p className="text-xs md:text-sm text-gray-500 mt-1">Books on hold</p>
+            </div>
             <button 
               onClick={() => navigate('/user/reservations')}
-              className="text-sm font-bold text-primary hover:text-primary/80 transition-colors"
+              className="text-xs md:text-sm font-bold text-primary hover:text-primary/80 transition-colors text-left sm:text-right"
             >
               View All
             </button>
           </div>
           
-          <div className="p-6 flex-1 flex flex-col">
+          <div className="p-4 md:p-6 flex-1 flex flex-col">
             {!loading && (!stats?.recentReservations || stats.recentReservations.length === 0) ? (
-              <div className="flex flex-col items-center justify-center text-center py-12 flex-1 border-2 border-dashed border-gray-100 rounded-xl">
-                <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center mb-3">
-                  <Bookmark size={20} className="text-gray-400" />
+              <div className="flex flex-col items-center justify-center text-center py-8 md:py-12 flex-1">
+                <div className="w-12 md:w-16 h-12 md:h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
+                  <Bookmark size={24} className="text-gray-400" />
                 </div>
-                <h3 className="text-gray-900 font-bold mb-1">No Reservations</h3>
-                <p className="text-gray-500 text-sm">No books on hold.</p>
+                <h3 className="text-gray-900 font-bold mb-1 text-sm md:text-base">No Reservations</h3>
+                <p className="text-gray-500 text-xs md:text-sm max-w-[250px]">You haven't reserved any books yet.</p>
               </div>
             ) : (
-              <div className="space-y-3 max-h-96 overflow-y-auto">
+              <div className="space-y-2 md:space-y-3 max-h-96 overflow-y-auto">
                 {stats?.recentReservations?.map((reservation) => (
-                  <div key={reservation.reservation_id} className="flex items-start gap-3 p-3 bg-purple-50 rounded-lg border border-purple-200 hover:shadow-sm transition-shadow">
-                    <Bookmark size={16} className="text-purple-600 mt-1 flex-shrink-0" />
+                  <div key={reservation.reservation_id} className="flex items-start gap-2 md:gap-3 p-2 md:p-3 bg-purple-50 rounded-lg border border-purple-200 hover:shadow-sm transition-shadow">
+                    <Bookmark size={14} className="text-purple-600 mt-1 flex-shrink-0 md:size-16" />
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-semibold text-purple-900 text-sm truncate">{reservation.title || 'Book'}</h4>
+                      <h4 className="font-semibold text-purple-900 text-xs md:text-sm truncate">{reservation.title || 'Book'}</h4>
                       <p className="text-xs text-purple-700 mt-1">
-                        {reservation.author && `by ${reservation.author} • `}Reserved on {new Date(reservation.reservation_date).toLocaleDateString()}
+                        {reservation.author && `by ${reservation.author} • `}{new Date(reservation.reservation_date).toLocaleDateString()}
                       </p>
                       {reservation.status && (
                         <p className={`text-xs font-medium mt-1 ${

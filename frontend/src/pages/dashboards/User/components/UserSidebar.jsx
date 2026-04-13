@@ -11,7 +11,7 @@ import {
   Bell
 } from 'lucide-react';
 
-export default function UserSidebar() {
+export default function UserSidebar({ onClose }) {
   const navItems = [
     { path: '/user', icon: LayoutDashboard, label: 'Dashboard', end: true },
     { path: '/user/my-books', icon: BookOpen, label: 'My Borrowings' },
@@ -42,6 +42,7 @@ export default function UserSidebar() {
             key={item.path}
             to={item.path}
             end={item.end}
+            onClick={onClose}
             className={({ isActive }) =>
               `flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${
                 isActive
@@ -51,7 +52,7 @@ export default function UserSidebar() {
             }
           >
             <item.icon size={20} className="shrink-0" />
-            {item.label}
+            <span className="truncate">{item.label}</span>
           </NavLink>
         ))}
       </nav>
