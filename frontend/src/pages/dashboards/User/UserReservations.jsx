@@ -1,32 +1,68 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Bookmark, Clock, XCircle, Bell } from 'lucide-react';
 import Swal from 'sweetalert2';
+import { reservationAPI } from '../../../api/endpoints';
 
 export default function UserReservations() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [reservations, setReservations] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  // Dummy Data
-  const reservations = [
-    { id: 1, title: 'Clean Architecture', author: 'Robert C. Martin', queuePosition: 2, estimatedDate: '2026-04-20', status: 'waiting' },
-    { id: 2, title: 'The Pragmatic Programmer', author: 'Robert C. Martin', queuePosition: 1, estimatedDate: '2026-04-14', status: 'available' },
-  ];
+  useEffect(() => {
+    fetchReservations();
+  }, []);
+
+  const fetchReservations = async () => {
+    try {
+      setLoading(true);
+      const response = await reservationAPI.getMyReservations();
+      console.log('Reservations response:', response.data);
+      
+      const data = response.data?.data?.items || response.data?.data?.reservations || response.data?.data || [];
+      const formatted = Array.isArray(data) ? data.map(r => ({
+        id: r.reservation_id,
+        title: r.title,
+        author: r.author || 'Unknown',
+        queuePosition: r.queue_position || 0,
+        estimatedDate: r.estimated_available_date || '',
+        status: r.status || 'waiting',
+        reservationId: r.reservation_id
+      })) : [];
+      
+      setReservations(formatted);
+    } catch (error) {
+      console.error('Error fetching reservations:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Failed to load reservations',
+        timer: 3000,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filtered = reservations.filter(r => 
     r.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleCancel = (book) => {
-    Swal.fire({
+  const handleCancel = async (reservation) => {
+    const result = await Swal.fire({
       title: 'Cancel Reservation?',
-      text: `Are you sure you want to cancel your spot for "${book.title}"?`,
+      text: `Are you sure you want to cancel your spot for "${reservation.title}"?`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#ef4444',
       cancelButtonColor: '#d1d5db',
       confirmButtonText: 'Yes, cancel it',
       customClass: { popup: 'rounded-[4px] z-[9999]' }
-    }).then((result) => {
-      if (result.isConfirmed) {
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await reservationAPI.cancelReservation(reservation.reservationId);
+        
         Swal.fire({
           title: 'Cancelled',
           text: 'Your reservation has been removed.',
@@ -35,8 +71,18 @@ export default function UserReservations() {
           timer: 1500,
           customClass: { popup: 'rounded-[4px] z-[9999]' }
         });
+        
+        fetchReservations();
+      } catch (error) {
+        console.error('Cancel error:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.response?.data?.message || 'Failed to cancel reservation',
+          timer: 3000,
+        });
       }
-    });
+    }
   };
 
   return (
@@ -63,7 +109,11 @@ export default function UserReservations() {
         </div>
 
         <div className="p-0">
-          {filtered.length === 0 ? (
+          {loading ? (
+            <div className="py-16 flex items-center justify-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            </div>
+          ) : filtered.length === 0 ? (
             <div className="py-16 flex flex-col items-center justify-center text-gray-500">
               <Bookmark size={48} className="text-gray-300 mb-4" />
               <p className="text-lg font-medium text-gray-900">No reservations found</p>

@@ -17,12 +17,23 @@ class BookService {
     return books;
   }
 
-  static async getBookById(bookId) {
+  static async getBookById(bookId, userId = null) {
     const book = await BookModel.findById(bookId);
     if (!book) {
       throw new NotFoundError('Book not found');
     }
-    return book;
+    
+    // Track view asynchronously (don't wait for it)
+    BookModel.recordView(bookId, userId).catch(err => console.error('Failed to record view:', err));
+    
+    // Get stats for the book
+    const stats = await BookModel.getBookStats(bookId);
+    
+    return {
+      ...book,
+      total_views: stats.total_views,
+      times_borrowed: stats.times_borrowed
+    };
   }
 
   static async createBook(bookData) {

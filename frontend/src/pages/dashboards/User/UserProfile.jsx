@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import { User, Mail, Shield, Camera } from 'lucide-react';
 import Swal from 'sweetalert2';
+import { userAPI } from '../../../api/endpoints';
 
 export default function UserProfile() {
   const { user } = useAuth();
@@ -13,25 +14,56 @@ export default function UserProfile() {
     newPassword: '',
     confirmPassword: ''
   });
+  const [loadingProfile, setLoadingProfile] = useState(false);
+  const [loadingPassword, setLoadingPassword] = useState(false);
+
+  useEffect(() => {
+    setFormData(prev => ({
+      ...prev,
+      firstName: user?.firstName || '',
+      lastName: user?.lastName || '',
+      email: user?.email || ''
+    }));
+  }, [user]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleUpdateProfile = (e) => {
+  const handleUpdateProfile = async (e) => {
     e.preventDefault();
-    Swal.fire({
-      title: 'Profile Updated',
-      text: 'Your personal information has been saved successfully.',
-      icon: 'success',
-      timer: 1500,
-      showConfirmButton: false,
-      customClass: { popup: 'rounded-[4px] z-[9999]' }
-    });
+    setLoadingProfile(true);
+    try {
+      await userAPI.updateProfile({
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email
+      });
+      
+      Swal.fire({
+        title: 'Profile Updated',
+        text: 'Your personal information has been saved successfully.',
+        icon: 'success',
+        timer: 1500,
+        showConfirmButton: false,
+        customClass: { popup: 'rounded-[4px] z-[9999]' }
+      });
+    } catch (error) {
+      console.error('Profile update error:', error);
+      Swal.fire({
+        title: 'Error',
+        text: error.response?.data?.message || 'Failed to update profile',
+        icon: 'error',
+        customClass: { popup: 'rounded-[4px] z-[9999]' }
+      });
+    } finally {
+      setLoadingProfile(false);
+    }
   };
 
-  const handleUpdatePassword = (e) => {
+  const handleUpdatePassword = async (e) => {
     e.preventDefault();
+    
     if(formData.newPassword !== formData.confirmPassword) {
       Swal.fire({
         title: 'Error',
@@ -42,15 +74,43 @@ export default function UserProfile() {
       return;
     }
     
-    Swal.fire({
-      title: 'Password Updated',
-      text: 'Your password has been changed successfully.',
-      icon: 'success',
-      timer: 1500,
-      showConfirmButton: false,
-      customClass: { popup: 'rounded-[4px] z-[9999]' }
-    });
-    setFormData({ ...formData, currentPassword: '', newPassword: '', confirmPassword: '' });
+    if(formData.newPassword.length < 6) {
+      Swal.fire({
+        title: 'Error',
+        text: 'New password must be at least 6 characters long.',
+        icon: 'error',
+        customClass: { popup: 'rounded-[4px] z-[9999]' }
+      });
+      return;
+    }
+    
+    setLoadingPassword(true);
+    try {
+      await userAPI.changePassword({
+        currentPassword: formData.currentPassword,
+        newPassword: formData.newPassword
+      });
+      
+      Swal.fire({
+        title: 'Password Updated',
+        text: 'Your password has been changed successfully.',
+        icon: 'success',
+        timer: 1500,
+        showConfirmButton: false,
+        customClass: { popup: 'rounded-[4px] z-[9999]' }
+      });
+      setFormData({ ...formData, currentPassword: '', newPassword: '', confirmPassword: '' });
+    } catch (error) {
+      console.error('Password change error:', error);
+      Swal.fire({
+        title: 'Error',
+        text: error.response?.data?.message || 'Failed to change password',
+        icon: 'error',
+        customClass: { popup: 'rounded-[4px] z-[9999]' }
+      });
+    } finally {
+      setLoadingPassword(false);
+    }
   };
 
   return (
@@ -128,8 +188,8 @@ export default function UserProfile() {
               </div>
 
               <div className="pt-2">
-                <button type="submit" className="bg-primary text-white px-5 py-2 rounded-lg text-sm font-bold shadow-sm hover:shadow hover:opacity-90 transition-all">
-                  Save Changes
+                <button type="submit" disabled={loadingProfile} className="bg-primary text-white px-5 py-2 rounded-lg text-sm font-bold shadow-sm hover:shadow hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                  {loadingProfile ? 'Saving...' : 'Save Changes'}
                 </button>
               </div>
             </form>
@@ -183,8 +243,8 @@ export default function UserProfile() {
               </div>
 
               <div className="pt-2 flex items-center justify-between">
-                <button type="submit" className="bg-gray-900 text-white px-5 py-2 rounded-lg text-sm font-bold shadow-sm hover:shadow hover:bg-gray-800 transition-all">
-                  Update Password
+                <button type="submit" disabled={loadingPassword} className="bg-gray-900 text-white px-5 py-2 rounded-lg text-sm font-bold shadow-sm hover:shadow hover:bg-gray-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                  {loadingPassword ? 'Updating...' : 'Update Password'}
                 </button>
                 <button type="button" className="text-sm font-bold text-primary hover:underline">
                   Forgot Password?

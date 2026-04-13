@@ -68,7 +68,12 @@ export default function BookDetailsPage() {
       }
     } catch (error) {
       console.error('Error fetching book details:', error)
-      toast.error('Failed to load book details: ' + (error.message || 'Unknown error'))
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Failed to load book details: ' + (error.message || 'Unknown error'),
+        timer: 3000,
+      })
     } finally {
       setLoading(false)
     }
@@ -81,24 +86,41 @@ export default function BookDetailsPage() {
     }
 
     if (book.available_copies <= 0) {
-      toast.error('This book is currently out of stock')
+      Swal.fire({
+        icon: 'info',
+        title: 'Out of Stock',
+        text: 'This book is currently not available. Try reserving it instead!',
+        timer: 3000,
+      })
       return
     }
 
     setActionLoading(true)
     try {
-      console.log('Borrowing book:', id)
+      console.log('Borrowing book:', id, 'User ID:', user.user_id)
       const response = await borrowingAPI.borrowBook(id)
-      console.log('Borrow response:', response.data)
+      console.log('Full borrow response:', response)
+      console.log('Borrow response data:', response.data)
       
-      toast.success('Book borrowed successfully! Pending approval from librarian.')
+      Swal.fire({
+        icon: 'success',
+        title: 'Request Submitted!',
+        text: 'Your borrow request has been submitted and is pending approval from the librarian.',
+        timer: 3000,
+      })
       
       // Refresh book details
       setTimeout(() => fetchBookDetails(), 500)
     } catch (error) {
-      console.error('Borrow error:', error)
+      console.error('Full borrow error:', error)
+      console.error('Error response:', error.response)
       const errorMsg = error.response?.data?.message || error.message || 'Failed to borrow book'
-      toast.error(errorMsg)
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: errorMsg,
+        timer: 3000,
+      })
     } finally {
       setActionLoading(false)
     }
@@ -112,18 +134,30 @@ export default function BookDetailsPage() {
 
     setActionLoading(true)
     try {
-      console.log('Reserving book:', id)
+      console.log('Reserving book:', id, 'User ID:', user.user_id)
       const response = await reservationAPI.reserveBook(id)
-      console.log('Reserve response:', response.data)
+      console.log('Full reserve response:', response)
+      console.log('Reserve response data:', response.data)
       
-      toast.success('Book reserved successfully!')
+      Swal.fire({
+        icon: 'success',
+        title: 'Reserved!',
+        text: 'Book reserved successfully! Check your reservations page.',
+        timer: 3000,
+      })
       
       // Refresh book details
       setTimeout(() => fetchBookDetails(), 500)
     } catch (error) {
-      console.error('Reserve error:', error)
+      console.error('Full reserve error:', error)
+      console.error('Error response:', error.response)
       const errorMsg = error.response?.data?.message || error.message || 'Failed to reserve book'
-      toast.error(errorMsg)
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: errorMsg,
+        timer: 3000,
+      })
     } finally {
       setActionLoading(false)
     }
@@ -131,30 +165,31 @@ export default function BookDetailsPage() {
 
   const handleDownload = async () => {
     if (!book?.book_file_url) {
-      toast.error('This book is not available for download')
+      Swal.fire({
+        icon: 'info',
+        title: 'Not Available',
+        text: 'This book is not available for digital download',
+        timer: 2000,
+      })
       return
     }
 
     try {
-      console.log('Downloading from:', book.book_file_url)
+      setActionLoading(true)
+      console.log('Downloading book ID:', id)
       
-      // Construct full URL if relative path
-      let fileUrl = book.book_file_url
-      if (!fileUrl.startsWith('http')) {
-        // Get the API base URL from window or default
-        const baseUrl = window.location.origin
-        fileUrl = `${baseUrl}${fileUrl.startsWith('/') ? '' : '/'}${fileUrl}`
+      // Use the API download endpoint with blob response type
+      const response = await bookAPI.downloadBook(id)
+      console.log('Download response:', response)
+      
+      // Create blob and download
+      const blob = response.data
+      console.log('Blob size:', blob.size, 'bytes')
+      
+      if (blob.size === 0) {
+        throw new Error('Downloaded file is empty')
       }
       
-      console.log('Full download URL:', fileUrl)
-      
-      // Try to fetch and download
-      const response = await fetch(fileUrl)
-      if (!response.ok) {
-        throw new Error(`Failed to download: ${response.statusText}`)
-      }
-      
-      const blob = await response.blob()
       const link = document.createElement('a')
       link.href = URL.createObjectURL(blob)
       link.download = `${book.title || 'book'}.pdf`
@@ -163,10 +198,22 @@ export default function BookDetailsPage() {
       document.body.removeChild(link)
       URL.revokeObjectURL(link.href)
       
-      toast.success('Download started!')
+      Swal.fire({
+        icon: 'success',
+        title: 'Downloaded!',
+        text: 'Your book has started downloading.',
+        timer: 2000,
+      })
     } catch (error) {
       console.error('Download error:', error)
-      toast.error('Failed to download book: ' + error.message)
+      Swal.fire({
+        icon: 'error',
+        title: 'Download Failed',
+        text: 'Failed to download book: ' + error.message,
+        timer: 3000,
+      })
+    } finally {
+      setActionLoading(false)
     }
   }
 
@@ -177,12 +224,22 @@ export default function BookDetailsPage() {
     }
 
     if (!reviewForm.comment.trim()) {
-      toast.error('Please write a review')
+      Swal.fire({
+        icon: 'warning',
+        title: 'Please Write a Review',
+        text: 'Your review comment cannot be empty',
+        timer: 2000,
+      })
       return
     }
 
     if (reviewForm.rating < 1 || reviewForm.rating > 5) {
-      toast.error('Please select a valid rating (1-5)')
+      Swal.fire({
+        icon: 'warning',
+        title: 'Invalid Rating',
+        text: 'Please select a valid rating (1-5)',
+        timer: 2000,
+      })
       return
     }
 
@@ -198,7 +255,12 @@ export default function BookDetailsPage() {
       const response = await reviewAPI.createReview(id, payload)
       console.log('Review created:', response.data)
       
-      toast.success('Review added successfully!')
+      Swal.fire({
+        icon: 'success',
+        title: 'Review Added!',
+        text: 'Your review has been published successfully.',
+        timer: 2000,
+      })
       setReviewForm({ rating: 5, comment: '' })
       setShowReviewForm(false)
       
@@ -207,7 +269,12 @@ export default function BookDetailsPage() {
     } catch (error) {
       console.error('Review creation error:', error)
       const errorMsg = error.response?.data?.message || error.message || 'Failed to add review'
-      toast.error(errorMsg)
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: errorMsg,
+        timer: 3000,
+      })
     } finally {
       setIsAddingReview(false)
     }
@@ -226,16 +293,31 @@ export default function BookDetailsPage() {
           text: text,
           url: url
         })
-        toast.success('Book shared successfully!')
+        Swal.fire({
+          icon: 'success',
+          title: 'Shared!',
+          text: 'Book shared successfully!',
+          timer: 2000,
+        })
       } else {
         // Fallback to clipboard
         await navigator.clipboard.writeText(url)
-        toast.success('Link copied to clipboard!')
+        Swal.fire({
+          icon: 'success',
+          title: 'Copied!',
+          text: 'Link copied to clipboard!',
+          timer: 2000,
+        })
       }
     } catch (error) {
       if (error.name !== 'AbortError') {
         console.error('Share error:', error)
-        toast.error('Failed to share: ' + error.message)
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to share: ' + error.message,
+          timer: 3000,
+        })
       }
     }
   }
@@ -479,15 +561,15 @@ export default function BookDetailsPage() {
                     <div className="grid grid-cols-3 gap-4 mt-6">
                       <div className="bg-gray-50 p-4 rounded-lg text-center">
                         <p className="text-sm text-gray-600 mb-1">Times Borrowed</p>
-                        <p className="text-2xl font-bold text-gray-900">{Math.floor(Math.random() * 100)}</p>
+                        <p className="text-2xl font-bold text-gray-900">{book?.times_borrowed || 0}</p>
                       </div>
                       <div className="bg-gray-50 p-4 rounded-lg text-center">
                         <p className="text-sm text-gray-600 mb-1">Total Reviews</p>
                         <p className="text-2xl font-bold text-gray-900">{reviews.length}</p>
                       </div>
                       <div className="bg-gray-50 p-4 rounded-lg text-center">
-                        <p className="text-sm text-gray-600 mb-1">Rating</p>
-                        <p className="text-2xl font-bold text-yellow-500">{averageRating}★</p>
+                        <p className="text-sm text-gray-600 mb-1">Views</p>
+                        <p className="text-2xl font-bold text-gray-900">{book?.total_views || 0}</p>
                       </div>
                     </div>
                   </div>
@@ -496,6 +578,18 @@ export default function BookDetailsPage() {
                 {/* Reviews Tab */}
                 {activeTab === 'reviews' && (
                   <div className="space-y-6">
+                    {!user && (
+                      <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg text-center">
+                        <p className="text-blue-900 font-semibold mb-3">Sign in to write a review</p>
+                        <button
+                          onClick={() => navigate('/login')}
+                          className="px-6 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-primary/90 transition-all"
+                        >
+                          Login
+                        </button>
+                      </div>
+                    )}
+
                     {!showReviewForm && user && (
                       <button
                         onClick={() => setShowReviewForm(true)}
@@ -620,6 +714,18 @@ export default function BookDetailsPage() {
                         <p className="text-gray-900">{book.category_name}</p>
                       </div>
                     )}
+                    <div>
+                      <p className="text-sm text-gray-600 font-semibold mb-1">Times Borrowed</p>
+                      <p className="text-gray-900">{book?.times_borrowed || 0}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600 font-semibold mb-1">Total Views</p>
+                      <p className="text-gray-900">{book?.total_views || 0}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600 font-semibold mb-1">Total Reviews</p>
+                      <p className="text-gray-900">{reviews.length}</p>
+                    </div>
                   </div>
                 )}
               </div>

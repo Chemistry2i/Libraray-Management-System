@@ -102,6 +102,41 @@ class BookModel {
     }
   }
 
+  // Record a book view
+  static async recordView(bookId, userId = null) {
+    try {
+      await pool.query(
+        'INSERT INTO book_views (book_id, user_id) VALUES (?, ?)',
+        [bookId, userId]
+      );
+      return true;
+    } catch (error) {
+      console.error('Error recording view:', error);
+      // Don't throw - just log. View tracking shouldn't break the app
+      return false;
+    }
+  }
+
+  // Get book statistics (views count and times borrowed)
+  static async getBookStats(bookId) {
+    try {
+      const [stats] = await pool.query(`
+        SELECT 
+          COALESCE(COUNT(DISTINCT v.view_id), 0) as total_views,
+          COALESCE(COUNT(DISTINCT b.borrow_id), 0) as times_borrowed
+        FROM books
+        LEFT JOIN book_views v ON books.book_id = v.book_id
+        LEFT JOIN borrowing_records b ON books.book_id = b.book_id AND b.status IN ('returned', 'active', 'overdue')
+        WHERE books.book_id = ?
+      `, [bookId]);
+      
+      return stats.length > 0 ? stats[0] : { total_views: 0, times_borrowed: 0 };
+    } catch (error) {
+      console.error('Error getting book stats:', error);
+      throw new DatabaseError(error.message);
+    }
+  }
+
   // Populate book_copies for existing books that don't have individual copies
   static async populateMissingCopies() {
     try {

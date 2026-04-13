@@ -1,22 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Star, Edit, Trash2, MessageSquare } from 'lucide-react';
 import Swal from 'sweetalert2';
+import { reviewAPI } from '../../../api/endpoints';
 
 export default function UserReviews() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  // Dummy Data
-  const reviews = [
-    { id: 1, bookTitle: 'Clean Architecture', rating: 5, comment: 'Incredible book on software design. Highly recommended!', date: '2026-04-10' },
-    { id: 2, title: 'The Pragmatic Programmer', rating: 4, comment: 'Great tips, though some are getting a bit dated.', date: '2026-03-15' },
-  ];
+  useEffect(() => {
+    fetchReviews();
+  }, []);
+
+  const fetchReviews = async () => {
+    try {
+      setLoading(true);
+      const response = await reviewAPI.getUserReviews();
+      console.log('User reviews response:', response.data);
+      
+      const data = response.data?.data?.items || response.data?.data?.reviews || response.data?.data || [];
+      const formatted = Array.isArray(data) ? data.map(r => ({
+        id: r.review_id,
+        bookTitle: r.title || r.bookTitle,
+        rating: r.rating,
+        comment: r.comment,
+        date: r.created_at,
+        bookId: r.book_id,
+        reviewId: r.review_id
+      })) : [];
+      
+      setReviews(formatted);
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Failed to load reviews',
+        timer: 3000,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filtered = reviews.filter(r => 
-    (r.bookTitle || r.title).toLowerCase().includes(searchTerm.toLowerCase())
+    (r.bookTitle || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleDelete = (review) => {
-    Swal.fire({
+  const handleDelete = async (review) => {
+    const result = await Swal.fire({
       title: 'Delete Review?',
       text: "This action cannot be undone.",
       icon: 'warning',
@@ -25,8 +57,12 @@ export default function UserReviews() {
       cancelButtonColor: '#d1d5db',
       confirmButtonText: 'Yes, delete it',
       customClass: { popup: 'rounded-[4px] z-[9999]' }
-    }).then((result) => {
-      if (result.isConfirmed) {
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await reviewAPI.deleteReview(review.bookId, review.reviewId);
+        
         Swal.fire({
           title: 'Deleted!',
           text: 'Your review has been removed.',
@@ -35,22 +71,39 @@ export default function UserReviews() {
           timer: 1500,
           customClass: { popup: 'rounded-[4px] z-[9999]' }
         });
+        
+        fetchReviews();
+      } catch (error) {
+        console.error('Delete error:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.response?.data?.message || 'Failed to delete review',
+          timer: 3000,
+        });
       }
-    });
+    }
   };
 
-  const handleEdit = (review) => {
-    Swal.fire({
+  const handleEdit = async (review) => {
+    const { value: newComment } = await Swal.fire({
       title: 'Edit Review',
       input: 'textarea',
       inputValue: review.comment,
       showCancelButton: true,
-      confirmButtonColor: '#4f46e5', // primary color
+      confirmButtonColor: '#4f46e5',
       cancelButtonColor: '#d1d5db',
       confirmButtonText: 'Save Changes',
       customClass: { popup: 'rounded-[4px] z-[9999]' }
-    }).then((result) => {
-      if (result.isConfirmed) {
+    });
+
+    if (newComment !== undefined) {
+      try {
+        await reviewAPI.updateReview(review.bookId, review.reviewId, {
+          rating: review.rating,
+          comment: newComment
+        });
+        
         Swal.fire({
           title: 'Updated!',
           text: 'Your review has been updated.',
@@ -59,8 +112,18 @@ export default function UserReviews() {
           timer: 1500,
           customClass: { popup: 'rounded-[4px] z-[9999]' }
         });
+        
+        fetchReviews();
+      } catch (error) {
+        console.error('Update error:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.response?.data?.message || 'Failed to update review',
+          timer: 3000,
+        });
       }
-    });
+    }
   };
 
   return (
@@ -87,7 +150,11 @@ export default function UserReviews() {
         </div>
 
         <div className="p-0">
-          {filtered.length === 0 ? (
+          {loading ? (
+            <div className="py-16 flex items-center justify-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            </div>
+          ) : filtered.length === 0 ? (
             <div className="py-16 flex flex-col items-center justify-center text-gray-500">
               <MessageSquare size={48} className="text-gray-300 mb-4" />
               <p className="text-lg font-medium text-gray-900">No reviews found</p>

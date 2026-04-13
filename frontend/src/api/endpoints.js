@@ -16,6 +16,7 @@ export const bookAPI = {
   getById: (id) => api.get(`/books/${id}`),
   search: (query) => api.get('/books/search', { params: { q: query } }),
   getCategories: () => api.get('/categories'),
+  downloadBook: (id) => api.get(`/books/${id}/download`, { responseType: 'blob' }),
 }
 
 // Borrowing endpoints
@@ -25,6 +26,7 @@ export const borrowingAPI = {
   getMyBooks: () => api.get('/borrowing/my-books'),
   getBorrowingHistory: () => api.get('/borrowing/history'),
   getUserStats: (userId) => api.get(`/borrowing/stats/user/${userId}`),
+  payFine: (borrowId, amount) => api.post(`/borrowing/${borrowId}/pay-fine`, { amount }),
 }
 
 // Reservation endpoints
@@ -40,6 +42,7 @@ export const reviewAPI = {
   createReview: (bookId, reviewData) => api.post(`/books/${bookId}/reviews`, reviewData),
   updateReview: (bookId, reviewId, reviewData) => api.put(`/books/${bookId}/reviews/${reviewId}`, reviewData),
   deleteReview: (bookId, reviewId) => api.delete(`/books/${bookId}/reviews/${reviewId}`),
+  getUserReviews: () => api.get('/reviews/my-reviews'),
 }
 
 // User endpoints
@@ -49,6 +52,7 @@ export const userAPI = {
   uploadProfileImage: (formData) => api.post('/users/profile-image', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   }),
+  changePassword: (passwordData) => api.post('/users/change-password', passwordData),
 }
 
 // Dashboard endpoints

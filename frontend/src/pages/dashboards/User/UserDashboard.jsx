@@ -248,15 +248,15 @@ export default function UserDashboard() {
                   <div key={reservation.reservation_id} className="flex items-start gap-3 p-3 bg-purple-50 rounded-lg border border-purple-200 hover:shadow-sm transition-shadow">
                     <Bookmark size={16} className="text-purple-600 mt-1 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-semibold text-purple-900 text-sm truncate">{reservation.book_title || 'Book'}</h4>
+                      <h4 className="font-semibold text-purple-900 text-sm truncate">{reservation.title || 'Book'}</h4>
                       <p className="text-xs text-purple-700 mt-1">
-                        Reserved on {new Date(reservation.reservation_date).toLocaleDateString()}
+                        {reservation.author && `by ${reservation.author} • `}Reserved on {new Date(reservation.reservation_date).toLocaleDateString()}
                       </p>
                       {reservation.status && (
                         <p className={`text-xs font-medium mt-1 ${
-                          reservation.status === 'available' ? 'text-green-700' : 'text-amber-700'
+                          reservation.status === 'available' ? 'text-green-700' : reservation.status === 'pending' ? 'text-blue-700' : 'text-amber-700'
                         }`}>
-                          Status: {reservation.status}
+                          {reservation.status === 'available' ? '✓ Ready to Pickup' : reservation.status === 'pending' ? '⏳ Pending' : `Position: #${reservation.queue_position || 'N/A'}`}
                         </p>
                       )}
                     </div>

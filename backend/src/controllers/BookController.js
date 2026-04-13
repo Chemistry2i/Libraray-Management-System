@@ -27,7 +27,9 @@ class BookController {
 
   static async getBook(req, res, next) {
     try {
-      const book = await BookService.getBookById(req.params.id);
+      // Get user ID from JWT if authenticated, otherwise null
+      const userId = req.user?.user_id || null;
+      const book = await BookService.getBookById(req.params.id, userId);
       sendSuccess(res, 'Book retrieved', { book });
     } catch (error) {
       next(error);
@@ -73,6 +75,52 @@ class BookController {
       await BookService.deleteBook(req.params.id);
       sendSuccess(res, 'Book deleted');
     } catch (error) {
+      next(error);
+    }
+  }
+
+  static async downloadBook(req, res, next) {
+    try {
+      const book = await BookService.getBookById(req.params.id);
+      
+      if (!book?.book_file_url) {
+        return sendError(res, 'Book file not available', 404);
+      }
+
+      const path = require('path');
+      const fs = require('fs');
+      
+      // Extract filename from URL path
+      const filename = book.book_file_url.split('/').pop();
+      const filepath = path.join(__dirname, '../../uploads/books', filename);
+      
+      // Check if file exists
+      if (!fs.existsSync(filepath)) {
+        console.error('File not found at:', filepath);
+        return sendError(res, 'Book file not found on server', 404);
+      }
+
+      // Get file stats
+      const stats = fs.statSync(filepath);
+      
+      // Set response headers
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename="${book.title || 'book'}.pdf"`);
+      res.setHeader('Content-Length', stats.size);
+      res.setHeader('Cache-Control', 'public, max-age=86400');
+      
+      // Stream the file
+      const stream = fs.createReadStream(filepath);
+      stream.pipe(res);
+      
+      stream.on('error', (error) => {
+        console.error('Stream error:', error);
+        if (!res.headersSent) {
+          res.status(500).json({ success: false, message: 'Error downloading file' });
+        }
+      });
+    } catch (error) {
+      console.error('Download error:', error);
       next(error);
     }
   }

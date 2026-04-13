@@ -1,16 +1,53 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Wallet, AlertCircle, CheckCircle, CreditCard } from 'lucide-react';
 import Swal from 'sweetalert2';
+import { borrowingAPI } from '../../../api/endpoints';
 
 export default function UserFines() {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('unpaid');
+  const [fines, setFines] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  // Dummy Data
-  const fines = [
-    { id: 1, reason: 'Overdue: The Great Gatsby', amount: 5.50, issueDate: '2026-04-10', status: 'unpaid' },
-    { id: 2, reason: 'Overdue: 1984', amount: 2.00, issueDate: '2026-03-20', paidDate: '2026-03-25', status: 'paid' },
-  ];
+  useEffect(() => {
+    fetchFines();
+  }, []);
+
+  const fetchFines = async () => {
+    try {
+      setLoading(true);
+      const response = await borrowingAPI.getBorrowingHistory();
+      console.log('Fines response:', response.data);
+      
+      // Extract records and filter for fines
+      const records = response.data?.data?.items || response.data?.data?.records || response.data?.data || [];
+      const finesData = Array.isArray(records) ? records
+        .filter(r => parseFloat(r.fine_amount) > 0)
+        .map(r => ({
+          id: r.borrow_id,
+          reason: `Overdue: ${r.title}`,
+          amount: parseFloat(r.fine_amount),
+          issueDate: r.due_date,
+          paidDate: r.return_date,
+          status: parseFloat(r.fine_amount) > 0 && !r.return_date ? 'unpaid' : 'paid',
+          borrowId: r.borrow_id
+        }))
+        .sort((a, b) => new Date(b.issueDate) - new Date(a.issueDate))
+      : [];
+      
+      setFines(finesData);
+    } catch (error) {
+      console.error('Error fetching fines:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Failed to load fines',
+        timer: 3000,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filtered = fines.filter(f => 
     f.reason.toLowerCase().includes(searchTerm.toLowerCase()) && f.status === activeTab
@@ -18,8 +55,8 @@ export default function UserFines() {
 
   const totalUnpaid = fines.filter(f => f.status === 'unpaid').reduce((sum, f) => sum + f.amount, 0);
 
-  const handlePay = (fine) => {
-    Swal.fire({
+  const handlePay = async (fine) => {
+    const result = await Swal.fire({
       title: 'Pay Fine?',
       text: `You will be redirected to the secure payment portal for $${fine.amount.toFixed(2)}.`,
       icon: 'info',
@@ -28,18 +65,34 @@ export default function UserFines() {
       cancelButtonColor: '#d1d5db',
       confirmButtonText: 'Proceed to Payment',
       customClass: { popup: 'rounded-[4px] z-[9999]' }
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
+    });
+
+    if (result.isConfirmed) {
+      try {
+        // Call pay fine endpoint
+        await borrowingAPI.payFine(fine.borrowId, fine.amount);
+        
+        await Swal.fire({
           title: 'Payment Successful',
-          text: 'Thank you. Your account is clear.',
+          text: 'Thank you. Your account has been updated.',
           icon: 'success',
           showConfirmButton: false,
           timer: 1500,
           customClass: { popup: 'rounded-[4px] z-[9999]' }
         });
+        
+        // Refresh fines
+        fetchFines();
+      } catch (error) {
+        console.error('Payment error:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Payment Failed',
+          text: error.response?.data?.message || 'Failed to process payment',
+          timer: 3000,
+        });
       }
-    });
+    }
   };
 
   return (
@@ -102,7 +155,11 @@ export default function UserFines() {
         </div>
 
         <div className="p-0">
-          {filtered.length === 0 ? (
+          {loading ? (
+            <div className="py-16 flex items-center justify-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            </div>
+          ) : filtered.length === 0 ? (
             <div className="py-16 flex flex-col items-center justify-center text-gray-500">
               <Wallet size={48} className="text-gray-300 mb-4" />
               <p className="text-lg font-medium text-gray-900">No {activeTab} fines found</p>

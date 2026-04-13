@@ -49,6 +49,9 @@ router.post(
 );
 router.put('/:id', authenticate, authorize(ROLES.ADMIN, ROLES.LIBRARIAN), bookValidator, BookController.updateBook);
 
+// Download book file
+router.get('/:id/download', BookController.downloadBook);
+
 // Protected Routes (Admin only)
 router.delete('/:id', authenticate, authorize(ROLES.ADMIN,ROLES.LIBRARIAN), BookController.deleteBook);
 
