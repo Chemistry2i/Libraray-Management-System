@@ -253,7 +253,7 @@ class BorrowingService {
       const lateFeePerDay = request.fine_amount || 500;
       
       try {
-        const emailSent = await EmailService.sendEmail(request.email, 'borrowApproved', {
+        const emailSent = await EmailService.sendEmail(request.email, 'borrow_approved', {
           userName: request.username,
           bookTitle: request.title,
           dueDate: dueDate,
@@ -317,7 +317,7 @@ class BorrowingService {
 
       // Send rejection email - ENSURE delivery
       try {
-        const emailSent = await EmailService.sendEmail(request.email, 'borrowRejected', {
+        const emailSent = await EmailService.sendEmail(request.email, 'borrow_rejected', {
           userName: request.username,
           bookTitle: request.title,
           reason: rejectionReason || 'Not available at this time'

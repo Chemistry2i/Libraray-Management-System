@@ -35,10 +35,10 @@ export const reservationAPI = {
 
 // Review endpoints
 export const reviewAPI = {
-  getBookReviews: (bookId) => api.get(`/reviews/book/${bookId}`),
-  createReview: (reviewData) => api.post('/reviews', reviewData),
-  updateReview: (reviewId, reviewData) => api.put(`/reviews/${reviewId}`, reviewData),
-  deleteReview: (reviewId) => api.delete(`/reviews/${reviewId}`),
+  getBookReviews: (bookId) => api.get(`/books/${bookId}/reviews`),
+  createReview: (bookId, reviewData) => api.post(`/books/${bookId}/reviews`, reviewData),
+  updateReview: (bookId, reviewId, reviewData) => api.put(`/books/${bookId}/reviews/${reviewId}`, reviewData),
+  deleteReview: (bookId, reviewId) => api.delete(`/books/${bookId}/reviews/${reviewId}`),
 }
 
 // User endpoints

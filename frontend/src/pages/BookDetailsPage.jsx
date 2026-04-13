@@ -30,31 +30,45 @@ export default function BookDetailsPage() {
     try {
       setLoading(true)
       const response = await bookAPI.getById(id)
+      console.log('Book API response:', response.data)
+      
+      // Extract book data - handle multiple response structures
       const bookData = response.data?.data?.book || response.data?.data || null
+      console.log('Extracted book data:', bookData)
+      
+      if (!bookData) {
+        throw new Error('No book data received')
+      }
+      
       setBook(bookData)
 
       // Fetch reviews
       try {
         const reviewsResponse = await reviewAPI.getBookReviews(id)
+        console.log('Reviews response:', reviewsResponse.data)
         setReviews(reviewsResponse.data?.data?.reviews || [])
       } catch (err) {
-        console.log('No reviews available')
+        console.log('No reviews available or error:', err.message)
+        setReviews([])
       }
 
       // Fetch related books from same category
       if (bookData?.category_id) {
         try {
           const booksResponse = await bookAPI.getAll({ category: bookData.category_id, limit: 4 })
+          console.log('Related books response:', booksResponse.data)
+          const items = booksResponse.data?.data?.items || booksResponse.data?.data || []
           setRelatedBooks(
-            booksResponse.data?.data?.items?.filter(b => b.book_id !== id).slice(0, 3) || []
+            items.filter(b => b.book_id !== parseInt(id)).slice(0, 3) || []
           )
         } catch (err) {
-          console.log('No related books found')
+          console.log('No related books found or error:', err.message)
+          setRelatedBooks([])
         }
       }
     } catch (error) {
-      toast.error('Failed to load book details')
-      console.error(error)
+      console.error('Error fetching book details:', error)
+      toast.error('Failed to load book details: ' + (error.message || 'Unknown error'))
     } finally {
       setLoading(false)
     }
@@ -66,13 +80,25 @@ export default function BookDetailsPage() {
       return
     }
 
+    if (book.available_copies <= 0) {
+      toast.error('This book is currently out of stock')
+      return
+    }
+
     setActionLoading(true)
     try {
-      await borrowingAPI.borrowBook(id)
-      toast.success('Book borrowed successfully!')
-      fetchBookDetails()
+      console.log('Borrowing book:', id)
+      const response = await borrowingAPI.borrowBook(id)
+      console.log('Borrow response:', response.data)
+      
+      toast.success('Book borrowed successfully! Pending approval from librarian.')
+      
+      // Refresh book details
+      setTimeout(() => fetchBookDetails(), 500)
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to borrow book')
+      console.error('Borrow error:', error)
+      const errorMsg = error.response?.data?.message || error.message || 'Failed to borrow book'
+      toast.error(errorMsg)
     } finally {
       setActionLoading(false)
     }
@@ -86,11 +112,18 @@ export default function BookDetailsPage() {
 
     setActionLoading(true)
     try {
-      await reservationAPI.reserveBook(id)
+      console.log('Reserving book:', id)
+      const response = await reservationAPI.reserveBook(id)
+      console.log('Reserve response:', response.data)
+      
       toast.success('Book reserved successfully!')
-      fetchBookDetails()
+      
+      // Refresh book details
+      setTimeout(() => fetchBookDetails(), 500)
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to reserve book')
+      console.error('Reserve error:', error)
+      const errorMsg = error.response?.data?.message || error.message || 'Failed to reserve book'
+      toast.error(errorMsg)
     } finally {
       setActionLoading(false)
     }
@@ -103,15 +136,37 @@ export default function BookDetailsPage() {
     }
 
     try {
+      console.log('Downloading from:', book.book_file_url)
+      
+      // Construct full URL if relative path
+      let fileUrl = book.book_file_url
+      if (!fileUrl.startsWith('http')) {
+        // Get the API base URL from window or default
+        const baseUrl = window.location.origin
+        fileUrl = `${baseUrl}${fileUrl.startsWith('/') ? '' : '/'}${fileUrl}`
+      }
+      
+      console.log('Full download URL:', fileUrl)
+      
+      // Try to fetch and download
+      const response = await fetch(fileUrl)
+      if (!response.ok) {
+        throw new Error(`Failed to download: ${response.statusText}`)
+      }
+      
+      const blob = await response.blob()
       const link = document.createElement('a')
-      link.href = book.book_file_url
-      link.download = `${book.title}.pdf`
+      link.href = URL.createObjectURL(blob)
+      link.download = `${book.title || 'book'}.pdf`
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
+      URL.revokeObjectURL(link.href)
+      
       toast.success('Download started!')
     } catch (error) {
-      toast.error('Failed to download book')
+      console.error('Download error:', error)
+      toast.error('Failed to download book: ' + error.message)
     }
   }
 
@@ -126,37 +181,62 @@ export default function BookDetailsPage() {
       return
     }
 
+    if (reviewForm.rating < 1 || reviewForm.rating > 5) {
+      toast.error('Please select a valid rating (1-5)')
+      return
+    }
+
     setIsAddingReview(true)
     try {
-      await reviewAPI.createReview({
-        book_id: id,
+      console.log('Creating review for book:', id, reviewForm)
+      
+      const payload = {
         rating: reviewForm.rating,
         comment: reviewForm.comment
-      })
+      }
+      
+      const response = await reviewAPI.createReview(id, payload)
+      console.log('Review created:', response.data)
+      
       toast.success('Review added successfully!')
       setReviewForm({ rating: 5, comment: '' })
       setShowReviewForm(false)
-      fetchBookDetails()
+      
+      // Refresh book details to show new review
+      setTimeout(() => fetchBookDetails(), 500)
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to add review')
+      console.error('Review creation error:', error)
+      const errorMsg = error.response?.data?.message || error.message || 'Failed to add review'
+      toast.error(errorMsg)
     } finally {
       setIsAddingReview(false)
     }
   }
 
-  const handleShare = () => {
-    const url = window.location.href
-    const text = `Check out "${book.title}" by ${book.author}`
-    
-    if (navigator.share) {
-      navigator.share({
-        title: book.title,
-        text: text,
-        url: url
-      })
-    } else {
-      navigator.clipboard.writeText(url)
-      toast.success('Link copied to clipboard!')
+  const handleShare = async () => {
+    try {
+      const url = window.location.href
+      const text = `Check out "${book.title}" by ${book.author}`
+      
+      console.log('Sharing book:', { url, text })
+      
+      if (navigator.share) {
+        await navigator.share({
+          title: book.title,
+          text: text,
+          url: url
+        })
+        toast.success('Book shared successfully!')
+      } else {
+        // Fallback to clipboard
+        await navigator.clipboard.writeText(url)
+        toast.success('Link copied to clipboard!')
+      }
+    } catch (error) {
+      if (error.name !== 'AbortError') {
+        console.error('Share error:', error)
+        toast.error('Failed to share: ' + error.message)
+      }
     }
   }
 
@@ -475,9 +555,9 @@ export default function BookDetailsPage() {
                     {reviews.length > 0 ? (
                       <div className="space-y-4">
                         {reviews.map(review => (
-                          <div key={review.id} className="border border-gray-200 p-4 rounded-lg">
+                          <div key={review.review_id} className="border border-gray-200 p-4 rounded-lg">
                             <div className="flex items-center justify-between mb-2">
-                              <p className="font-semibold text-gray-900">{review.user_name || 'Anonymous'}</p>
+                              <p className="font-semibold text-gray-900">{review.username || 'Anonymous'}</p>
                               <div className="flex gap-1">
                                 {[...Array(5)].map((_, i) => (
                                   <FontAwesomeIcon 

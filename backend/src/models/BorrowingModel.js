@@ -333,6 +333,20 @@ class BorrowingModel {
     }
   }
 
+  // Check if user has borrowed a book (for review eligibility)
+  static async getUserBorrowedBooks(userId, bookId) {
+    try {
+      const [rows] = await pool.query(
+        `SELECT * FROM borrowing_records 
+         WHERE user_id = ? AND book_id = ? AND status IN ('active', 'returned')`,
+        [userId, bookId]
+      );
+      return rows;
+    } catch (error) {
+      throw new DatabaseError(error.message);
+    }
+  }
+
   // Update borrow status to overdue (run by scheduler)
   static async updateOverdueStatus() {
     try {

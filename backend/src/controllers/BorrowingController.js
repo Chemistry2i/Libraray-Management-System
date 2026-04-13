@@ -42,7 +42,7 @@ class BorrowingController {
 
   // Legacy checkout endpoint (redirects to request)
   static async checkout(req, res, next) {
-    return this.requestBorrow(req, res, next);
+    return BorrowingController.requestBorrow(req, res, next);
   }
 
   static async returnBook(req, res, next) {
