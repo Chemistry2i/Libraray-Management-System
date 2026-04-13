@@ -219,7 +219,7 @@ export default function HomePage() {
               </div>
 
               <img 
-                src="https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
+                src="https://images.unsplash.com/photo-1568667256549-094345857637?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
                 alt="Library Interface Mockup" 
                 className="absolute top-10 inset-x-0 w-full h-[calc(100%-40px)] object-cover"
               />

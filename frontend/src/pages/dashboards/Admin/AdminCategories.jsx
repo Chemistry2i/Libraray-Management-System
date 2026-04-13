@@ -105,7 +105,7 @@ const AdminCategories = () => {
 
   
   const filteredCategories = categories.filter(c => 
-    (c.name && c.name.toLowerCase().includes(searchTerm.toLowerCase())) || 
+    (c.category_name && c.category_name.toLowerCase().includes(searchTerm.toLowerCase())) || 
     (c.description && c.description.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
@@ -167,7 +167,7 @@ const AdminCategories = () => {
                     </td>
                     <td className="p-4 text-center">
                       <span className="inline-flex items-center justify-center bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold border border-blue-100 min-w-[30px]">
-                        {category.bookCount || 0}
+                        {category.book_count || 0}
                       </span>
                     </td>
                     <td className="p-4 text-right align-middle">
@@ -264,56 +264,49 @@ const AdminCategories = () => {
     
       {/* View Category Modal */}
       {viewItem && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white rounded-2xl w-full max-w-md shadow-airbnb-xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
-              <h2 className="text-xl font-bold text-gray-900">Category Details</h2>
-              <button onClick={() => setViewItem(null)} className="text-gray-400 hover:text-gray-600 transition-colors p-2 hover:bg-gray-100 rounded-full">
-                <X size={20} />
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+          <div className="bg-white rounded-[4px] shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-8 border-b border-gray-100 sticky top-0 bg-gradient-to-r from-primary/5 to-transparent">
+              <h2 className="text-2xl font-bold text-gray-900">Category Details</h2>
+              <button onClick={() => setViewItem(null)} className="text-gray-400 hover:text-gray-600 transition-colors hover:bg-gray-100 p-2 rounded-full">
+                <X size={24} />
               </button>
             </div>
-            <div className="p-6 space-y-4">
-              <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
-                 <p className="text-sm text-gray-500 font-bold mb-1">Category Name</p>
-                 <p className="text-gray-900 text-lg font-semibold">{viewItem.name}</p>
+            
+            <div className="p-8 space-y-6">
+              {/* Category Name */}
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Category Name</p>
+                <p className="text-3xl font-bold text-gray-900">{viewItem.category_name}</p>
               </div>
-              <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
-                 <p className="text-sm text-gray-500 font-bold mb-1">Description</p>
-                 <p className="text-gray-700">{viewItem.description || 'No description provided'}</p>
+
+              {/* Description */}
+              <div className="border-t border-gray-100 pt-6">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Description</p>
+                <p className="text-gray-700 leading-relaxed text-base">{viewItem.description || 'No description provided'}</p>
+              </div>
+
+              {/* Book Count Stats */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-gray-100">
+                <div className="bg-blue-50 rounded-lg p-6 text-center border border-blue-100">
+                  <p className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-2">Total Books</p>
+                  <p className="text-3xl font-bold text-blue-700">{viewItem.book_count || 0}</p>
+                </div>
+                <div className="bg-purple-50 rounded-lg p-6 text-center border border-purple-100">
+                  <p className="text-xs font-semibold text-purple-600 uppercase tracking-wide mb-2">Category ID</p>
+                  <p className="text-lg font-mono text-purple-700">{viewItem.category_id}</p>
+                </div>
               </div>
             </div>
-            <div className="p-6 border-t border-gray-100 bg-gray-50/50 flex justify-end">
-              <button type="button" onClick={() => setViewItem(null)} className="px-6 py-2.5 text-sm font-bold text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors shadow-sm">
+
+            {/* Action Buttons */}
+            <div className="border-t border-gray-100 bg-gray-50 p-8 flex justify-end gap-3">
+              <button onClick={() => setViewItem(null)} className="px-6 py-2.5 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-100 transition-colors">
                 Close
               </button>
-            </div>
-          </div>
-        </div>
-      )}
-    
-      {/* View Category Modal */}
-      {viewItem && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white rounded-2xl w-full max-w-md shadow-airbnb-xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
-              <h2 className="text-xl font-bold text-gray-900">Category Details</h2>
-              <button onClick={() => setViewItem(null)} className="text-gray-400 hover:text-gray-600 transition-colors p-2 hover:bg-gray-100 rounded-full">
-                <X size={20} />
-              </button>
-            </div>
-            <div className="p-6 space-y-4">
-              <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
-                 <p className="text-sm text-gray-500 font-bold mb-1">Category Name</p>
-                 <p className="text-gray-900 text-lg font-semibold">{viewItem.name}</p>
-              </div>
-              <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
-                 <p className="text-sm text-gray-500 font-bold mb-1">Description</p>
-                 <p className="text-gray-700">{viewItem.description || 'No description provided'}</p>
-              </div>
-            </div>
-            <div className="p-6 border-t border-gray-100 bg-gray-50/50 flex justify-end">
-              <button type="button" onClick={() => setViewItem(null)} className="px-6 py-2.5 text-sm font-bold text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors shadow-sm">
-                Close
+              <button onClick={() => { setViewItem(null); handleEditClick(viewItem); }} className="px-6 py-2.5 rounded-lg bg-primary text-white font-medium hover:bg-primary-dark transition-colors flex items-center gap-2">
+                <Edit size={18} />
+                Edit Category
               </button>
             </div>
           </div>

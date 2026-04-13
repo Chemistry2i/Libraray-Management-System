@@ -12,9 +12,12 @@ const AdminReservations = () => {
     try {
       setLoading(true);
       const res = await api.get('/reservations', { params: { limit: 100 } });
-      setReservations(res.data.data || []);
+      // Handle various response structures
+      const data = res.data?.data || res.data || [];
+      setReservations(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Failed to fetch reservations', error);
+      setReservations([]); // Ensure it's always an array
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -117,15 +120,17 @@ const AdminReservations = () => {
     }
   };
 
-  const filteredReservations = reservations.filter(r => {
-    const term = searchTerm.toLowerCase();
-    return (
-      r.title?.toLowerCase().includes(term) ||
-      r.username?.toLowerCase().includes(term) ||
-      r.email?.toLowerCase().includes(term) ||
-      r.reservation_id?.toString().includes(term)
-    );
-  });
+  const filteredReservations = Array.isArray(reservations) 
+    ? reservations.filter(r => {
+        const term = searchTerm.toLowerCase();
+        return (
+          r.title?.toLowerCase().includes(term) ||
+          r.username?.toLowerCase().includes(term) ||
+          r.email?.toLowerCase().includes(term) ||
+          r.reservation_id?.toString().includes(term)
+        );
+      })
+    : [];
 
   return (
     <div className="py-2">

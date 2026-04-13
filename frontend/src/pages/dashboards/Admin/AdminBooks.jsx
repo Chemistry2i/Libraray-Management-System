@@ -230,7 +230,7 @@ const AdminBooks = () => {
                     </td>
                     <td className="p-4 text-right align-middle">
                       <div className="flex items-center justify-end gap-2 text-gray-400">
-                        <button className="p-1.5 hover:text-blue-500 hover:bg-blue-50 rounded transition-colors" title="View details">
+                        <button onClick={() => setViewBook(book)} className="p-1.5 hover:text-blue-500 hover:bg-blue-50 rounded transition-colors" title="View details">
                           <Eye size={18} />
                         </button>
                         <button onClick={() => handleEditClick(book)} className="p-1.5 hover:text-primary hover:bg-primary/10 rounded transition-colors" title="Edit">
@@ -256,6 +256,104 @@ const AdminBooks = () => {
           </div>
         </div>
       </div>
+
+      {viewBook && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-8 border-b border-gray-100 sticky top-0 bg-gradient-to-r from-primary/5 to-transparent">
+              <h2 className="text-2xl font-bold text-gray-900">Book Details</h2>
+              <button onClick={() => setViewBook(null)} className="text-gray-400 hover:text-gray-600 transition-colors hover:bg-gray-100 p-2 rounded-full">
+                <X size={24} />
+              </button>
+            </div>
+            
+            <div className="p-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {/* Book Cover Section */}
+                <div className="md:col-span-1 flex flex-col items-center">
+                  <div className="w-full bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl overflow-hidden shadow-lg border border-gray-200 aspect-[3/4] flex items-center justify-center">
+                    {viewBook.cover_url ? (
+                      <img src={`http://localhost:5000${viewBook.cover_url}`} alt={viewBook.title} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="flex flex-col items-center justify-center text-gray-400">
+                        <Eye size={48} />
+                        <p className="text-sm mt-2 text-center">No cover image</p>
+                      </div>
+                    )}
+                  </div>
+                  <div className="mt-6 w-full">
+                    <span className={`inline-block px-4 py-2 rounded-full text-sm font-semibold border ${(viewBook.available_copies || 0) > 0 ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-700 border-red-200'}`}>
+                      {(viewBook.available_copies || 0) > 0 ? '✓ Available' : '✗ Out of Stock'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Book Information Section */}
+                <div className="md:col-span-2 space-y-6">
+                  {/* Title */}
+                  <div>
+                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Title</p>
+                    <p className="text-3xl font-bold text-gray-900">{viewBook.title}</p>
+                  </div>
+
+                  {/* Author */}
+                  <div>
+                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Author</p>
+                    <p className="text-lg text-gray-700">{viewBook.author}</p>
+                  </div>
+
+                  {/* Category */}
+                  <div>
+                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Category</p>
+                    <span className="inline-block bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm font-medium border border-primary/20">
+                      {viewBook.category_name || 'Uncategorized'}
+                    </span>
+                  </div>
+
+                  {/* ISBN & Publication Year */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">ISBN</p>
+                      <p className="text-gray-700 font-mono text-sm">{viewBook.isbn || 'Not available'}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Published</p>
+                      <p className="text-gray-700 text-sm">{viewBook.publication_year || 'Unknown'}</p>
+                    </div>
+                  </div>
+
+                  {/* Inventory */}
+                  <div className="grid grid-cols-3 gap-4 pt-4 border-t border-gray-100">
+                    <div className="bg-gray-50 rounded-lg p-4 text-center">
+                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Total Copies</p>
+                      <p className="text-2xl font-bold text-gray-900">{viewBook.total_copies || 0}</p>
+                    </div>
+                    <div className="bg-blue-50 rounded-lg p-4 text-center">
+                      <p className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-2">Available</p>
+                      <p className="text-2xl font-bold text-blue-700">{viewBook.available_copies || 0}</p>
+                    </div>
+                    <div className="bg-orange-50 rounded-lg p-4 text-center">
+                      <p className="text-xs font-semibold text-orange-600 uppercase tracking-wide mb-2">Borrowed</p>
+                      <p className="text-2xl font-bold text-orange-700">{(viewBook.total_copies || 0) - (viewBook.available_copies || 0)}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="mt-8 flex justify-end gap-3 border-t border-gray-100 pt-6">
+                <button onClick={() => setViewBook(null)} className="px-6 py-2.5 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-colors">
+                  Close
+                </button>
+                <button onClick={() => { setViewBook(null); handleEditClick(viewBook); }} className="px-6 py-2.5 rounded-lg bg-primary text-white font-medium hover:bg-primary-dark transition-colors flex items-center gap-2">
+                  <Edit size={18} />
+                  Edit Book
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {isModalOpen && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4">
