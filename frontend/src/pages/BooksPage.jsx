@@ -6,31 +6,29 @@ import { bookAPI } from '../api/endpoints'
 import { toast } from 'react-toastify'
 
 export default function BooksPage() {
-  const [books, setBooks] = useState([])
+  const [allBooks, setAllBooks] = useState([])
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('')
+  const [sortBy, setSortBy] = useState('latest')
 
   useEffect(() => {
     fetchBooks()
     fetchCategories()
-  }, [search, selectedCategory])
+  }, [])
 
   const fetchBooks = async () => {
     try {
       setLoading(true)
-      const response = await bookAPI.getAll({
-        search,
-        category: selectedCategory
-      })
+      const response = await bookAPI.getAll()
       // Response structure: { data: { items: [...], pagination: {...} } }
       const books = response.data?.data?.items || []
-      setBooks(Array.isArray(books) ? books : [])
+      setAllBooks(Array.isArray(books) ? books : [])
     } catch (error) {
       console.error('Failed to load books:', error)
       toast.error('Failed to load books')
-      setBooks([])
+      setAllBooks([])
     } finally {
       setLoading(false)
     }
@@ -47,6 +45,49 @@ export default function BooksPage() {
       setCategories([])
     }
   }
+
+  // Client-side filtering and sorting
+  const getFilteredAndSortedBooks = () => {
+    let filtered = [...allBooks]
+
+    // Filter by search term
+    if (search.trim()) {
+      const searchLower = search.toLowerCase()
+      filtered = filtered.filter(book => 
+        book.title?.toLowerCase().includes(searchLower) ||
+        book.author?.toLowerCase().includes(searchLower) ||
+        book.isbn?.toLowerCase().includes(searchLower)
+      )
+    }
+
+    // Filter by category
+    if (selectedCategory) {
+      filtered = filtered.filter(book => 
+        book.category_id === parseInt(selectedCategory)
+      )
+    }
+
+    // Sort
+    switch(sortBy) {
+      case 'title':
+        filtered.sort((a, b) => (a.title || '').localeCompare(b.title || ''))
+        break
+      case 'popular':
+        filtered.sort((a, b) => (b.times_borrowed || 0) - (a.times_borrowed || 0))
+        break
+      case 'rating':
+        filtered.sort((a, b) => (b.total_views || 0) - (a.total_views || 0))
+        break
+      case 'latest':
+      default:
+        filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+        break
+    }
+
+    return filtered
+  }
+
+  const filteredBooks = getFilteredAndSortedBooks()
 
   return (
     <div className="min-h-screen bg-light py-12">
@@ -105,7 +146,8 @@ export default function BooksPage() {
           {/* Sort */}
           <div>
             <select
-              defaultValue="latest"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
               className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             >
               <option value="latest">Latest</option>
@@ -116,14 +158,21 @@ export default function BooksPage() {
           </div>
         </div>
 
+        {/* Results Counter */}
+        {!loading && (
+          <div className="mb-6 text-sm text-gray-600">
+            Found <span className="font-semibold text-primary">{filteredBooks.length}</span> book{filteredBooks.length !== 1 ? 's' : ''}
+          </div>
+        )}
+
         {/* Books Grid */}
         {loading ? (
           <div className="flex justify-center items-center h-64">
             <div className="spinner w-12 h-12"></div>
           </div>
-        ) : books.length > 0 ? (
+        ) : filteredBooks.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {books.map((book) => (
+            {filteredBooks.map((book) => (
               <Link
                 key={book.book_id}
                 to={`/books/${book.book_id}`}
