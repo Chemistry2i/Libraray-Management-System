@@ -48,7 +48,7 @@ export default function RegisterPage() {
         password: formData.password,
       })
       toast.success(response.message || 'Registration successful!')
-      navigate('/user/dashboard')
+      navigate('/user')
     } catch (error) {
       toast.error(error.response?.data?.message || 'Registration failed')
     } finally {

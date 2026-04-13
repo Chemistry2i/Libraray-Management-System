@@ -58,7 +58,7 @@ export default function Navigation() {
                         <FontAwesomeIcon icon={faUser} className="mr-2 text-primary" />
                         Profile
                       </Link>
-                      <Link to="/user/dashboard" className="block px-4 py-2 hover:bg-light text-sm">
+                      <Link to="/user" className="block px-4 py-2 hover:bg-light text-sm">
                         <FontAwesomeIcon icon={faCog} className="mr-2 text-primary" />
                         Dashboard
                       </Link>
