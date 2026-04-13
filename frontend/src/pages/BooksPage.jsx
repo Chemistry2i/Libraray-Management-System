@@ -51,6 +51,16 @@ export default function BooksPage() {
   return (
     <div className="min-h-screen bg-light py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Back Link */}
+        <div className="mb-6">
+          <Link 
+            to="/user" 
+            className="text-primary font-semibold hover:opacity-70 transition-opacity"
+          >
+            ← Back to Dashboard
+          </Link>
+        </div>
+
         {/* Header */}
         <div className="mb-12">
           <h1 className="text-4xl font-bold text-dark mb-4">Browse Books</h1>
