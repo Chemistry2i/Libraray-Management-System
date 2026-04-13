@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBook, faArrowLeft, faBookmark, faDownload, faShoppingCart, faStar, faChevronDown, faChevronUp, faShare } from '@fortawesome/free-solid-svg-icons'
+import { faBook, faArrowLeft, faBookmark, faDownload, faShoppingCart, faStar, faChevronDown, faChevronUp, faShare, faEye } from '@fortawesome/free-solid-svg-icons'
 import { bookAPI, borrowingAPI, reservationAPI, reviewAPI } from '../api/endpoints'
 import { toast } from 'react-toastify'
 import Swal from 'sweetalert2'
@@ -376,16 +376,22 @@ export default function BookDetailsPage() {
           <div className="lg:col-span-1">
             <div className="bg-white rounded-xl shadow-lg overflow-hidden sticky top-8">
               {/* Cover Image */}
-              <div className="w-full h-96 bg-gradient-to-br from-primary to-secondary flex items-center justify-center overflow-hidden">
+              <div className="w-full h-96 bg-gradient-to-br from-primary to-secondary flex items-center justify-center overflow-hidden relative group">
                 {book.cover_url ? (
                   <img 
-                    src={book.cover_url} 
+                    src={`http://localhost:5000${book.cover_url}`} 
                     alt={book.title}
                     className="w-full h-full object-cover"
                   />
                 ) : (
                   <FontAwesomeIcon icon={faBook} className="text-white text-6xl" />
                 )}
+                
+                {/* View Count Badge */}
+                <div className="absolute bottom-4 left-4 bg-black/70 backdrop-blur-sm text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-black/80 transition-all">
+                  <FontAwesomeIcon icon={faEye} className="text-sm" />
+                  <span className="font-semibold text-base">{book?.total_views || 0}</span>
+                </div>
               </div>
 
               {/* Availability */}
@@ -745,7 +751,7 @@ export default function BookDetailsPage() {
                       <div className="w-full h-40 bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
                         {relBook.cover_url ? (
                           <img 
-                            src={relBook.cover_url}
+                            src={`http://localhost:5000${relBook.cover_url}`}
                             alt={relBook.title}
                             className="w-full h-full object-cover"
                           />

@@ -35,6 +35,29 @@ async function initializeTables() {
       )
     `);
     
+    // Add cover_url and book_file_url columns if they don't exist
+    try {
+      await connection.query(`
+        ALTER TABLE books ADD COLUMN cover_url VARCHAR(255) AFTER description
+      `);
+      console.log('✅ Added cover_url column to books');
+    } catch (err) {
+      if (err.code !== 'ER_DUP_FIELDNAME') {
+        console.log('cover_url column already exists');
+      }
+    }
+    
+    try {
+      await connection.query(`
+        ALTER TABLE books ADD COLUMN book_file_url VARCHAR(255) AFTER cover_url
+      `);
+      console.log('✅ Added book_file_url column to books');
+    } catch (err) {
+      if (err.code !== 'ER_DUP_FIELDNAME') {
+        console.log('book_file_url column already exists');
+      }
+    }
+    
     connection.release();
     console.log('✅ Database tables initialized');
   } catch (error) {

@@ -132,7 +132,7 @@ export default function BooksPage() {
                 <div className="w-full h-64 bg-gradient-to-br from-primary to-secondary flex items-center justify-center overflow-hidden">
                   {book.cover_url ? (
                     <img 
-                      src={book.cover_url} 
+                      src={`http://localhost:5000${book.cover_url}`} 
                       alt={book.title}
                       className="w-full h-full object-cover"
                     />
