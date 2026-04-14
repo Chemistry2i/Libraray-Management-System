@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Search, Download, BookOpen, Clock, Calendar } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { borrowingAPI } from '../../../api/endpoints';
+import { filterBySearch } from '../../../utils/searchUtils';
 
 export default function UserBorrowings() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -66,9 +67,7 @@ export default function UserBorrowings() {
     }
   };
 
-  const filtered = borrowings.filter(b => 
-    b.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filtered = filterBySearch(borrowings, searchTerm, ['title', 'author']);
 
   const handleDownload = async (book) => {
     if (!book.fileUrl) {

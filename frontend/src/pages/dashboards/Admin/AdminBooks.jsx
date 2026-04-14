@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Search, Plus, Filter, Edit, Trash2, MoreVertical, Eye, X, Upload } from 'lucide-react';
 import Swal from 'sweetalert2';
 import api from '../../../api/axios';
+import { filterBySearch } from '../../../utils/searchUtils';
 
 const AdminBooks = () => {
   const [books, setBooks] = useState([]);
@@ -147,6 +148,9 @@ const AdminBooks = () => {
     }
   };
 
+  // Client-side filtering
+  const filteredBooks = filterBySearch(books, searchTerm, ['title', 'author', 'isbn']);
+
   return (
     <div className="py-2">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
@@ -196,10 +200,10 @@ const AdminBooks = () => {
             <tbody className="divide-y text-sm">
               {loading ? (
                 <tr><td colSpan="6" className="p-4 text-center text-gray-500">Loading books...</td></tr>
-              ) : books.length === 0 ? (
+              ) : filteredBooks.length === 0 ? (
                 <tr><td colSpan="6" className="p-4 text-center text-gray-500">No books found.</td></tr>
               ) : (
-                books.map((book) => (
+                filteredBooks.map((book) => (
                   <tr key={book.book_id} className="hover:bg-gray-50/50 transition-colors group">
                     <td className="p-4">
                       <div className="flex items-center gap-3">
@@ -249,7 +253,7 @@ const AdminBooks = () => {
         </div>
         
         <div className="p-4 border-t border-gray-200 flex items-center justify-between bg-gray-50 font-medium text-sm text-gray-500">
-          <p>Showing {books.length} books</p>
+          <p>Showing {filteredBooks.length} books</p>
           <div className="flex items-center gap-1">
             <button className="px-3 py-1.5 rounded border border-gray-300 bg-white hover:bg-gray-50 transition-colors disabled:opacity-50">Previous</button>
             <button className="px-3 py-1.5 rounded border border-gray-300 bg-white hover:bg-gray-50 transition-colors">Next</button>

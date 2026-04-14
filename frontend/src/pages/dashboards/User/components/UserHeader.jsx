@@ -105,23 +105,23 @@ export default function UserHeader({ onMenuToggle }) {
         <div className="h-8 w-px bg-gray-200 hidden sm:block"></div>
 
         <div className="flex items-center gap-2 md:gap-3 relative shrink-0" ref={dropdownRef}>
-        <div className="hidden sm:flex items-center gap-2 md:gap-3">
-          <div className="text-right hidden md:block">
-            <p className="text-sm font-semibold text-gray-900">{user?.firstName}</p>
-            <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
+          <div className="hidden sm:flex items-center gap-2 md:gap-3">
+            <div className="text-right hidden md:block">
+              <p className="text-sm font-semibold text-gray-900">{user?.firstName}</p>
+              <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
+            </div>
+            <img 
+              src={user?.profile_image_url || `https://ui-avatars.com/api/?name=${user?.firstName} ${user?.lastName}&background=4f46e5&color=fff`} 
+              alt="Profile" 
+              className="w-8 h-8 md:w-9 md:h-9 rounded-full object-cover shrink-0"
+            />
           </div>
-          <img 
-            src={user?.profile_image_url || `https://ui-avatars.com/api/?name=${user?.firstName} ${user?.lastName}&background=4f46e5&color=fff`} 
-            alt="Profile" 
-            className="w-8 h-8 md:w-9 md:h-9 rounded-full object-cover shrink-0"
-          />
-        </div>
-        <button
-          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          className="flex items-center gap-1 py-2 px-2 rounded-lg hover:bg-gray-100 transition-colors shrink-0"
-        >
-          <ChevronDown size={16} className={`text-gray-500 transform transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
-        </button>
+          <button
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className="flex items-center gap-1 py-2 px-2 rounded-lg hover:bg-gray-100 transition-colors shrink-0"
+          >
+            <ChevronDown size={16} className={`text-gray-500 transform transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+          </button>
 
         {isDropdownOpen && (
           <div 
@@ -153,6 +153,7 @@ export default function UserHeader({ onMenuToggle }) {
             </button>
           </div>
         )}
+      </div>
       </div>
 
       {/* Notification Center */}
