@@ -65,6 +65,7 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/reservations', reservationRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/reviews', reviewRoutes);
 app.use('/api/books/:bookId/reviews', reviewRoutes);
 
 // Health Check

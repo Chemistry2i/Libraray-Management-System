@@ -61,6 +61,32 @@ class ReviewController {
     }
   }
 
+  // Get current user's reviews
+  static async getUserReviews(req, res, next) {
+    try {
+      const userId = req.user.user_id;
+      const pool = require('../config/database');
+
+      const [reviews] = await pool.query(
+        `SELECT r.review_id, r.rating, r.comment, r.created_at, 
+                b.book_id, b.title 
+         FROM reviews r
+         JOIN books b ON r.book_id = b.book_id
+         WHERE r.user_id = ?
+         ORDER BY r.created_at DESC`,
+        [userId]
+      );
+
+      sendSuccess(res, 'User reviews retrieved', {
+        items: reviews,
+        reviews: reviews,
+        total: reviews.length,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   // Create review for a book (only if user borrowed it)
   static async createReview(req, res, next) {
     try {
