@@ -31,11 +31,11 @@ const faqs = [
 export default function KamuliHomePage() {
   const [emailDraftOpened, setEmailDraftOpened] = useState(false)
   const prefersReducedMotion = useReducedMotion()
-  const scrollReveal = prefersReducedMotion ? {} : {
-    initial: { opacity: 0, y: 24 },
+  const scrollReveal = {
+    initial: { opacity: prefersReducedMotion ? 0.65 : 0, y: prefersReducedMotion ? 0 : 24 },
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true, amount: 0.12 },
-    transition: { duration: 0.55, ease: 'easeOut' },
+    transition: { duration: prefersReducedMotion ? 0.24 : 0.55, ease: 'easeOut' },
   }
   const title = 'A school library for curious minds.'
   const [typedTitle, setTypedTitle] = useState(() => prefersReducedMotion ? title : '')
