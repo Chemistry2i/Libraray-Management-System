@@ -147,6 +147,8 @@ npm install -g vercel
 vercel
 ```
 
+The included `vercel.json` rewrites client-side routes to `index.html`, so refreshing a nested React Router page works on Vercel.
+
 ### Deploy to Netlify
 ```bash
 npm install -g netlify-cli
