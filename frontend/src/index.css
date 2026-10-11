@@ -68,3 +68,23 @@ input:focus, textarea:focus, select:focus {
 .spinner {
   @apply border-4 border-gray-200 border-t-primary rounded-full animate-spin;
 }
+
+@keyframes contributor-marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.contributor-marquee-track {
+  animation: contributor-marquee-scroll 32s linear infinite;
+}
+
+.contributor-marquee:hover .contributor-marquee-track,
+.contributor-marquee:focus-within .contributor-marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contributor-marquee-track {
+    animation: none;
+  }
+}

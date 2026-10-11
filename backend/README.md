@@ -5,6 +5,20 @@
 - MySQL Server
 - npm or yarn
 
+## Railway database setup (new database)
+
+For a new Railway MySQL database, use the consolidated schema instead of importing `database/schema.sql` and then running every migration separately. The bundle includes the current table definitions, runtime `book_views` table, digital collections, Cloudinary metadata, and borrowing statistics views.
+
+Run from the repository root after selecting the Railway database connection values:
+
+```bash
+mysql -h YOUR_HOST -P YOUR_PORT -u YOUR_USERNAME -p YOUR_DATABASE < backend/tables/railway_schema.sql
+```
+
+This is for an **empty database only**. Do not run it as an upgrade over an existing installation. For an existing database, back it up and apply only the relevant incremental migrations in `backend/database/`.
+
+See [`tables/README.md`](tables/README.md) for details.
+
 ## Installation
 
 ### Step 1: Install Dependencies

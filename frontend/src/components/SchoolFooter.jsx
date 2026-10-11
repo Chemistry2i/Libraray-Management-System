@@ -1,7 +1,15 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Mail, MapPin, Phone } from 'lucide-react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faFacebookF, faInstagram, faYoutube } from '@fortawesome/free-brands-svg-icons'
 import { SCHOOL_BADGE, SCHOOL_NAME, SCHOOL_OFFICIAL_NAME } from '../constants/schoolBrand'
+
+const socialLinks = [
+  { name: 'Facebook', href: import.meta.env.VITE_SCHOOL_FACEBOOK_URL, icon: faFacebookF },
+  { name: 'Instagram', href: import.meta.env.VITE_SCHOOL_INSTAGRAM_URL, icon: faInstagram },
+  { name: 'YouTube', href: import.meta.env.VITE_SCHOOL_YOUTUBE_URL, icon: faYoutube },
+].filter((link) => typeof link.href === 'string' && /^https:\/\//i.test(link.href))
 
 export default function SchoolFooter() {
   return (
@@ -35,6 +43,16 @@ export default function SchoolFooter() {
             <Link to="/login" className="hover:text-amber-200">Sign in</Link>
           </div>
         </nav>
+      </div>
+      <div className="border-t border-white/10 px-5 py-4">
+        <div className="mx-auto flex max-w-7xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-xs font-bold uppercase tracking-wide text-white/70">Follow {SCHOOL_NAME}</p>
+          {socialLinks.length ? <nav aria-label="School social media" className="flex items-center gap-2">
+            {socialLinks.map((link) => <a key={link.name} href={link.href} target="_blank" rel="noreferrer" aria-label={link.name} title={link.name} className="flex size-9 items-center justify-center rounded-full border border-white/25 text-white/80 transition-colors hover:border-amber-300 hover:text-amber-200">
+              <FontAwesomeIcon icon={link.icon} />
+            </a>)}
+          </nav> : <p className="text-xs text-white/55">Official school social profile URLs have not been configured.</p>}
+        </div>
       </div>
       <div className="border-t border-white/10 px-5 py-3 text-center text-xs text-white/55">&copy; {new Date().getFullYear()} {SCHOOL_OFFICIAL_NAME}. Kamuli CU Library.</div>
     </footer>

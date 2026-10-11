@@ -173,14 +173,10 @@ export default function KamuliHomePage() {
           <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#a77914]">People behind the system</p>
           <h2 id="contributors-heading" className="mt-2 text-2xl font-bold text-[#102d4f]">Meet our contributors</h2>
         </div>
-        <div className="overflow-hidden" aria-label="Kamuli CU Library system contributors">
-          <motion.div
-            className="flex w-max"
-            animate={prefersReducedMotion ? { x: 0 } : { x: ['0%', '-50%'] }}
-            transition={{ duration: 24, repeat: prefersReducedMotion ? 0 : Infinity, ease: 'linear' }}
-          >
+        <div className="contributor-marquee" role="region" aria-label="Kamuli CU Library system contributors">
+          <div className="contributor-marquee-track flex w-max">
             {[0, 1].map((copy) => <div key={copy} aria-hidden={copy === 1} className="flex shrink-0 items-center justify-center gap-5 px-4" style={{ minWidth: 'max(100vw, 36rem)' }}>
-              {contributors.map((contributor) => <article key={`${copy}-${contributor.initials}`} aria-label={`${contributor.name}, system contributor`} className="w-64 shrink-0 overflow-hidden border border-slate-200 bg-white shadow-sm sm:w-72">
+              {contributors.map((contributor) => <article key={`${copy}-${contributor.initials}`} tabIndex={copy === 0 ? 0 : -1} aria-label={`${contributor.name}, system contributor`} className="w-64 shrink-0 overflow-hidden border border-slate-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-inset focus:ring-amber-400 sm:w-72">
                 <div aria-hidden="true" className="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-[#173b64] text-white">
                   <UserRound size={104} strokeWidth={1.1} className="absolute text-white/20" />
                   <span className="relative text-5xl font-bold text-white/90">{contributor.initials}</span>
@@ -193,7 +189,7 @@ export default function KamuliHomePage() {
                 </div>
               </article>)}
             </div>)}
-          </motion.div>
+          </div>
         </div>
       </motion.section>
 
