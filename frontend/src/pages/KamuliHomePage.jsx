@@ -14,6 +14,21 @@ const gallery = [
   { src: classImageThree, alt: 'A teacher sharing books with pupils', title: 'Stories shared' },
 ]
 
+const contributors = [
+  {
+    name: 'Mbawadde Doreen',
+    initials: 'MD',
+    email: 'doreen@example.invalid',
+    description: 'Contributing to a welcoming digital library experience for the school community.',
+  },
+  {
+    name: 'Ssenyonga Lucy',
+    initials: 'SL',
+    email: 'lucy@example.invalid',
+    description: 'Helping make school reading resources easier for pupils and teachers to discover.',
+  },
+]
+
 const readingImages = [
   { src: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=900&q=85', alt: 'Rows of books in a library', label: 'A world of books' },
   { src: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=900&q=85', alt: 'Books ready to be read and studied', label: 'Ideas to explore' },
@@ -150,6 +165,35 @@ export default function KamuliHomePage() {
             <figcaption className="px-4 py-4 text-base font-bold text-[#102d4f]">{item.title}</figcaption>
           </figure>)}
         </div>
+        </div>
+      </motion.section>
+
+      <motion.section {...scrollReveal} aria-labelledby="contributors-heading" className="overflow-hidden border-y border-slate-200 bg-[#f4f7fa] py-10 sm:py-12">
+        <div className="mx-auto mb-6 max-w-7xl px-5 sm:px-8">
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#a77914]">People behind the system</p>
+          <h2 id="contributors-heading" className="mt-2 text-2xl font-bold text-[#102d4f]">Meet our contributors</h2>
+        </div>
+        <div className="overflow-hidden" aria-label="Kamuli CU Library system contributors">
+          <motion.div
+            className="flex w-max"
+            animate={prefersReducedMotion ? { x: 0 } : { x: ['0%', '-50%'] }}
+            transition={{ duration: 24, repeat: prefersReducedMotion ? 0 : Infinity, ease: 'linear' }}
+          >
+            {[0, 1].map((copy) => <div key={copy} aria-hidden={copy === 1} className="flex shrink-0 items-center justify-center gap-5 px-4" style={{ minWidth: 'max(100vw, 36rem)' }}>
+              {contributors.map((contributor) => <article key={`${copy}-${contributor.initials}`} aria-label={`${contributor.name}, system contributor`} className="w-64 shrink-0 overflow-hidden border border-slate-200 bg-white shadow-sm sm:w-72">
+                <div aria-hidden="true" className="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-[#173b64] text-white">
+                  <UserRound size={104} strokeWidth={1.1} className="absolute text-white/20" />
+                  <span className="relative text-5xl font-bold text-white/90">{contributor.initials}</span>
+                  <span className="absolute bottom-3 left-3 border border-white/35 bg-[#102d4f]/80 px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-white">Portrait placeholder</span>
+                </div>
+                <div className="p-4">
+                  <h3 className="truncate font-bold text-[#102d4f]">{contributor.name}</h3>
+                  <p className="mt-1 min-h-12 text-xs leading-5 text-slate-600">{contributor.description}</p>
+                  <p className="mt-2 break-all border-t border-slate-100 pt-2 text-[11px] text-slate-500">Email placeholder: {contributor.email}</p>
+                </div>
+              </article>)}
+            </div>)}
+          </motion.div>
         </div>
       </motion.section>
 
