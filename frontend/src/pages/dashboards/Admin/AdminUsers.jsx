@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Search, Plus, Filter, Edit, Trash2, Eye, Shield, UserX, User, Mail, Phone, Calendar, X } from 'lucide-react';
 import Swal from 'sweetalert2';
 import api from '../../../api/axios';
@@ -23,6 +24,15 @@ const AdminUsers = () => {
   });
   const [formErrors, setFormErrors] = useState({});
   const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    if (!viewUser) return undefined;
+    const closeOnEscape = (event) => {
+      if (event.key === 'Escape') setViewUser(null);
+    };
+    document.addEventListener('keydown', closeOnEscape);
+    return () => document.removeEventListener('keydown', closeOnEscape);
+  }, [viewUser]);
 
   useEffect(() => {
     fetchUsers();
@@ -229,7 +239,7 @@ const AdminUsers = () => {
                     </td>
                     <td className="p-4 text-right align-middle">
                       <div className="flex items-center justify-end gap-2 text-gray-400">
-                        <button className="p-1.5 hover:text-blue-500 hover:bg-blue-50 rounded transition-colors" title="View Profile">
+                        <button onClick={() => setViewUser(user)} className="p-1.5 hover:text-blue-500 hover:bg-blue-50 rounded transition-colors" title="View Profile" aria-label={`View ${user.first_name} ${user.last_name}`}>
                           <Eye size={18} />
                         </button>
                         <button onClick={() => handleEditClick(user)} className="p-1.5 hover:text-primary hover:bg-primary/10 rounded transition-colors" title="Edit User">
@@ -257,8 +267,8 @@ const AdminUsers = () => {
         </div>
       </div>
 
-      {isModalOpen && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4">
+      {isModalOpen && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4" onMouseDown={(event) => { if (event.target === event.currentTarget && !isSaving) setIsModalOpen(false) }}>
           <div className="bg-white rounded-[4px] shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col">
             <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-white sticky top-0 z-10">
               <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
@@ -410,7 +420,41 @@ const AdminUsers = () => {
                 </form>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
+      )}
+
+      {viewUser && createPortal(
+        <div className="fixed inset-0 z-[10000] flex items-center justify-center overflow-y-auto bg-black/50 p-4" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setViewUser(null) }}>
+          <section role="dialog" aria-modal="true" aria-labelledby="view-user-title" className="my-8 w-full max-w-xl overflow-hidden rounded-xl bg-white shadow-2xl">
+            <div className="flex items-start justify-between border-b border-gray-200 p-6">
+              <div className="flex items-center gap-4">
+                {viewUser.profile_image_url
+                  ? <img src={viewUser.profile_image_url} alt="" className="h-14 w-14 rounded-full border border-gray-200 object-cover" />
+                  : <div className="flex h-14 w-14 items-center justify-center rounded-full bg-blue-100 text-lg font-bold text-blue-700">{viewUser.first_name?.[0] || ''}{viewUser.last_name?.[0] || ''}</div>}
+                <div>
+                  <h2 id="view-user-title" className="text-xl font-bold text-gray-900">{viewUser.first_name} {viewUser.last_name}</h2>
+                  <p className="mt-1 text-sm text-gray-500">User profile</p>
+                </div>
+              </div>
+              <button type="button" onClick={() => setViewUser(null)} aria-label="Close user profile" className="rounded-md p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-800"><X size={20} /></button>
+            </div>
+            <dl className="grid gap-4 p-6 sm:grid-cols-2">
+              <div><dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">Email</dt><dd className="mt-1 break-words text-sm text-gray-900">{viewUser.email || 'Not provided'}</dd></div>
+              <div><dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">Username</dt><dd className="mt-1 text-sm text-gray-900">{viewUser.username || 'Not provided'}</dd></div>
+              <div><dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">Phone</dt><dd className="mt-1 text-sm text-gray-900">{viewUser.phone || viewUser.phone_number || 'Not provided'}</dd></div>
+              <div><dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">Role</dt><dd className="mt-1">{getRoleBadge(viewUser.role)}</dd></div>
+              <div><dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">Account status</dt><dd className="mt-1">{getStatusBadge(viewUser.status)}</dd></div>
+              <div><dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">Joined</dt><dd className="mt-1 text-sm text-gray-900">{viewUser.created_at ? new Date(viewUser.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Unknown'}</dd></div>
+              <div className="sm:col-span-2"><dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">User ID</dt><dd className="mt-1 text-sm text-gray-900">{viewUser.user_id}</dd></div>
+            </dl>
+            <div className="flex justify-end gap-2 border-t border-gray-200 bg-gray-50 p-4">
+              <button type="button" onClick={() => { handleEditClick(viewUser); setViewUser(null) }} className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary-dark">Edit user</button>
+              <button type="button" onClick={() => setViewUser(null)} className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-white">Close</button>
+            </div>
+          </section>
+        </div>,
+        document.body
       )}
     </div>
   );

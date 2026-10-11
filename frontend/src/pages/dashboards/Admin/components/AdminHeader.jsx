@@ -2,14 +2,28 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Bell, Search, Menu, LogOut, ChevronDown, User } from 'lucide-react';
 import { useAuth } from '../../../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { notificationAPI } from '../../../../api/endpoints';
 import Swal from 'sweetalert2';
+import NotificationCenter from '../../User/components/NotificationCenter';
 import { SCHOOL_BADGE, SCHOOL_NAME } from '../../../../constants/schoolBrand';
 
 export default function AdminHeader() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
   const dropdownRef = useRef(null);
+
+  const fetchUnreadCount = async () => {
+    try {
+      const response = await notificationAPI.getNotifications();
+      const notifications = response.data?.data?.items || [];
+      setUnreadCount(Array.isArray(notifications) ? notifications.filter((item) => !item.read).length : 0);
+    } catch (error) {
+      console.error('Error fetching unread count:', error);
+    }
+  };
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -19,8 +33,11 @@ export default function AdminHeader() {
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
+    fetchUnreadCount();
+    const interval = setInterval(fetchUnreadCount, 30000);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      clearInterval(interval);
     };
   }, [dropdownRef]);
 
@@ -45,7 +62,8 @@ export default function AdminHeader() {
   };
 
   return (
-    <header className="h-20 bg-white border-b border-gray-200 px-8 flex items-center justify-between z-1 relative">
+    <>
+    <header className="h-20 bg-white border-b border-gray-200 px-8 flex items-center justify-between relative z-10">
       {/* Left side: Mobile menu toggle & Search */}
       <div className="flex items-center gap-6">
         <div className="flex shrink-0 items-center gap-2.5">
@@ -68,9 +86,14 @@ export default function AdminHeader() {
 
       {/* Right side: Notifications & User profile snippet */}
       <div className="flex items-center gap-5">
-        <button className="relative w-10 h-10 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 transition-colors">
+        <button
+          type="button"
+          onClick={() => setIsNotificationOpen(true)}
+          aria-label="Open notifications"
+          className="relative w-10 h-10 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 transition-colors"
+        >
           <Bell size={20} />
-          <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white"></span>
+          {unreadCount > 0 && <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white ring-2 ring-white">{unreadCount > 9 ? '9+' : unreadCount}</span>}
         </button>
 
         <div className="h-8 w-px bg-gray-200 hidden sm:block"></div>
@@ -118,5 +141,15 @@ export default function AdminHeader() {
         </div>
       </div>
     </header>
+    <NotificationCenter
+      isOpen={isNotificationOpen}
+      onClose={() => setIsNotificationOpen(false)}
+      onNotificationRead={fetchUnreadCount}
+      onViewAll={() => {
+        setIsNotificationOpen(false);
+        navigate('/user/notifications');
+      }}
+    />
+    </>
   );
 }

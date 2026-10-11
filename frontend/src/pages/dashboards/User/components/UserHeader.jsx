@@ -166,6 +166,10 @@ export default function UserHeader({ onMenuToggle }) {
         isOpen={isNotificationOpen} 
         onClose={() => setIsNotificationOpen(false)}
         onNotificationRead={fetchUnreadCount}
+        onViewAll={() => {
+          setIsNotificationOpen(false);
+          navigate('/user/notifications');
+        }}
       />
     </header>
   );

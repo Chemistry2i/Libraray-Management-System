@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Trash2, CheckCheck, Bell } from 'lucide-react';
 import { notificationAPI } from '../../../../api/endpoints';
 import { toast } from 'react-toastify';
 
-const NotificationCenter = ({ isOpen, onClose, onNotificationRead }) => {
+const NotificationCenter = ({ isOpen, onClose, onNotificationRead, onViewAll }) => {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -13,6 +14,15 @@ const NotificationCenter = ({ isOpen, onClose, onNotificationRead }) => {
       fetchNotifications();
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return undefined;
+    const closeOnEscape = (event) => {
+      if (event.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', closeOnEscape);
+    return () => document.removeEventListener('keydown', closeOnEscape);
+  }, [isOpen, onClose]);
 
   const fetchNotifications = async () => {
     try {
@@ -115,21 +125,22 @@ const NotificationCenter = ({ isOpen, onClose, onNotificationRead }) => {
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   };
 
-  return (
+  if (!isOpen) return null;
+
+  return createPortal(
     <>
       {/* Overlay */}
-      {isOpen && (
-        <div 
-          className="fixed inset-0 bg-black/30 z-40 transition-opacity"
-          onClick={onClose}
-        />
-      )}
+      <div
+        className="fixed inset-0 z-[1000] bg-black/30 transition-opacity"
+        onClick={onClose}
+      />
 
       {/* Notification Panel */}
       <div
-        className={`fixed right-0 top-0 h-full w-full sm:w-96 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-out overflow-hidden flex flex-col ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="notification-center-title"
+        className="fixed right-0 top-0 z-[1001] flex h-full w-full translate-x-0 transform flex-col overflow-hidden bg-white shadow-2xl transition-transform duration-300 ease-out sm:w-96"
       >
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-primary to-primary/90">
@@ -138,7 +149,7 @@ const NotificationCenter = ({ isOpen, onClose, onNotificationRead }) => {
               <Bell size={20} className="text-white" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white">Notifications</h2>
+              <h2 id="notification-center-title" className="text-lg font-bold text-white">Notifications</h2>
               {unreadCount > 0 && (
                 <p className="text-xs text-white/80">{unreadCount} unread</p>
               )}
@@ -231,13 +242,14 @@ const NotificationCenter = ({ isOpen, onClose, onNotificationRead }) => {
         {/* Footer */}
         {notifications.length > 0 && (
           <div className="p-4 border-t border-gray-200 bg-gray-50">
-            <button className="w-full py-2 text-sm font-semibold text-primary hover:bg-primary/5 rounded-lg transition-colors">
+            <button onClick={onViewAll} className="w-full py-2 text-sm font-semibold text-primary hover:bg-primary/5 rounded-lg transition-colors">
               View All Notifications
             </button>
           </div>
         )}
       </div>
-    </>
+    </>,
+    document.body
   );
 };
 
