@@ -141,8 +141,8 @@ export default function KamuliHomePage() {
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#a77914]">School life</p>
             <h2 className="mt-2 text-3xl font-bold text-[#102d4f]">Our learning community</h2>
+            <p className="mt-3 max-w-xl text-sm leading-6 text-slate-600">Pupils and teachers learn side by side every day. These moments capture the curiosity, teamwork and shared love of reading that make our school community special.</p>
           </div>
-          <p className="max-w-xl text-sm leading-6 text-slate-600">Reading is better when it is shared. Take a look inside the school’s learning spaces.</p>
         </div>
         <div className="grid gap-5 md:grid-cols-3">
           {gallery.map((item) => <figure key={item.title} className="group overflow-hidden border-b-2 border-[#d6b24a] bg-slate-50">

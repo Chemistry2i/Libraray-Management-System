@@ -85,7 +85,7 @@ export default function UserDashboard() {
 
   const statCards = [
     { title: 'Books Borrowed', value: stats?.booksBorrowed || 0, icon: BookOpen, color: 'text-indigo-500', bg: 'bg-indigo-50' },
-    { title: 'Reservations', value: stats?.reservations || 0, icon: Bookmark, color: 'text-pink-500', bg: 'bg-pink-50' },
+    { title: 'Reservations', value: stats?.reservations || 0, icon: Bookmark, color: 'text-primary', bg: 'bg-primary-light' },
     { title: 'Books Read', value: stats?.booksRead || 0, icon: TrendingUp, color: 'text-teal-500', bg: 'bg-teal-50' },
     { title: 'Pending Fines', value: `$${(parseFloat(stats?.totalFines) || 0).toFixed(2)}`, icon: Wallet, color: 'text-red-500', bg: 'bg-red-50' }
   ];

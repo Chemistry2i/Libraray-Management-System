@@ -9,7 +9,7 @@ export default function UserDashboard({ user }) {
   const navigate = useNavigate()
   const stats = [
     { title: 'Books Borrowed', value: '0', icon: faBookReader, color: 'text-indigo-500', bg: 'bg-indigo-50' },
-    { title: 'Reservations', value: '0', icon: faBookmark, color: 'text-pink-500', bg: 'bg-pink-50' },
+    { title: 'Reservations', value: '0', icon: faBookmark, color: 'text-primary', bg: 'bg-primary-light' },
     { title: 'Total Read', value: '0', icon: faChartLine, color: 'text-teal-500', bg: 'bg-teal-50' },
     { title: 'Pending Fines', value: '$0.00', icon: faWallet, color: 'text-green-500', bg: 'bg-green-50' },
   ]

@@ -7,7 +7,7 @@ export const confirmDialog = (title = 'Are you sure?', message = '', confirmText
     text: message,
     icon: 'warning',
     showCancelButton: true,
-    confirmButtonColor: '#FF6B6B',
+    confirmButtonColor: '#173B64',
     cancelButtonColor: '#6B7280',
     confirmButtonText: confirmText,
     cancelButtonText: cancelText
@@ -20,7 +20,7 @@ export const successAlert = (title = 'Success', message = '') => {
     title,
     text: message,
     icon: 'success',
-    confirmButtonColor: '#FF6B6B',
+    confirmButtonColor: '#173B64',
     timer: 2000
   })
 }
@@ -31,7 +31,7 @@ export const errorAlert = (title = 'Error', message = '') => {
     title,
     text: message,
     icon: 'error',
-    confirmButtonColor: '#FF6B6B'
+    confirmButtonColor: '#173B64'
   })
 }
 
@@ -41,7 +41,7 @@ export const infoAlert = (title = 'Info', message = '') => {
     title,
     text: message,
     icon: 'info',
-    confirmButtonColor: '#FF6B6B'
+    confirmButtonColor: '#173B64'
   })
 }
 
