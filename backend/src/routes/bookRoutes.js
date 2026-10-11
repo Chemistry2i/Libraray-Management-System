@@ -4,11 +4,10 @@ const router = express.Router();
 const BookController = require('../controllers/BookController');
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
+const { getUploadDirectory } = require('../utils/uploadDirectories');
 
 // Multer setup for book uploads
-const bookUploadDirectory = path.join(__dirname, '../../uploads/books');
-fs.mkdirSync(bookUploadDirectory, { recursive: true });
+const bookUploadDirectory = getUploadDirectory('books');
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => {
 		cb(null, bookUploadDirectory);

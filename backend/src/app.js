@@ -17,8 +17,8 @@ const dashboardRoutes = require('./routes/dashboardRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const digitalCollectionRoutes = require('./routes/digitalCollectionRoutes');
+const { getUploadDirectory } = require('./utils/uploadDirectories');
 
-const path = require('path');
 const app = express();
 
 app.use(helmet({
@@ -40,8 +40,8 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/uploads/books', express.static(path.join(__dirname, '../uploads/books')));
-app.use('/uploads/profile-images', express.static(path.join(__dirname, '../uploads/profile-images')));
+app.use('/uploads/books', express.static(getUploadDirectory('books')));
+app.use('/uploads/profile-images', express.static(getUploadDirectory('profile-images')));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/books', bookRoutes);

@@ -1,15 +1,14 @@
 const express = require('express');
-const fs = require('fs');
 const multer = require('multer');
 const path = require('path');
 const crypto = require('crypto');
 const DigitalCollectionController = require('../controllers/DigitalCollectionController');
 const { authenticate, authorize } = require('../middleware/auth');
 const { ROLES } = require('../constants/appConstants');
+const { getUploadDirectory } = require('../utils/uploadDirectories');
 
 const router = express.Router();
-const uploadDirectory = path.join(__dirname, '../../uploads/digital-objects');
-fs.mkdirSync(uploadDirectory, { recursive: true });
+const uploadDirectory = getUploadDirectory('digital-objects');
 
 const mimeByExtension = { '.pdf': 'application/pdf', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg' };
 const storage = multer.diskStorage({

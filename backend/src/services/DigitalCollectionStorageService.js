@@ -3,8 +3,9 @@ const https = require('https');
 const path = require('path');
 const { randomUUID } = require('crypto');
 const cloudinary = require('cloudinary').v2;
+const { getUploadDirectory } = require('../utils/uploadDirectories');
 
-const uploadDirectory = path.join(__dirname, '../../uploads/digital-objects');
+const uploadDirectory = getUploadDirectory('digital-objects');
 const hasCloudinaryConfig = Boolean(
   process.env.CLOUDINARY_URL
   || (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET)

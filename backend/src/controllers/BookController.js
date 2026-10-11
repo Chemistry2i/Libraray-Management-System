@@ -1,6 +1,8 @@
 const BookService = require('../services/BookService');
 const DigitalCollectionStorageService = require('../services/DigitalCollectionStorageService');
 const fs = require('fs');
+const path = require('path');
+const { getUploadDirectory } = require('../utils/uploadDirectories');
 const { sendSuccess, sendPaginated, sendError } = require('../utils/response');
 const { DEFAULT_PAGE, DEFAULT_LIMIT } = require('../constants/appConstants');
 
@@ -127,12 +129,9 @@ class BookController {
         return sendError(res, 'Book file not available', 404);
       }
 
-      const path = require('path');
-      const fs = require('fs');
-      
       // Extract filename from URL path
       const filename = book.book_file_url.split('/').pop();
-      const filepath = path.join(__dirname, '../../uploads/books', filename);
+      const filepath = path.join(getUploadDirectory('books'), filename);
       
       // Check if file exists
       if (!fs.existsSync(filepath)) {

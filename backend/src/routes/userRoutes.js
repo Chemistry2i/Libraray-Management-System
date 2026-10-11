@@ -2,16 +2,12 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
 const UserController = require('../controllers/UserController');
 const { authenticate, authorize } = require('../middleware/auth');
 const { ROLES } = require('../constants/appConstants');
+const { getUploadDirectory } = require('../utils/uploadDirectories');
 
-// Ensure upload directory exists
-const uploadDir = path.join(__dirname, '../../uploads/profile-images');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
+const uploadDir = getUploadDirectory('profile-images');
 
 // Configure multer for profile image uploads
 const profileImageStorage = multer.diskStorage({

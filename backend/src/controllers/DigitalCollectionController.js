@@ -4,8 +4,6 @@ const DigitalCollectionModel = require('../models/DigitalCollectionModel');
 const DigitalCollectionStorageService = require('../services/DigitalCollectionStorageService');
 const { sendSuccess, sendError } = require('../utils/response');
 
-const uploadDirectory = path.join(__dirname, '../../uploads/digital-objects');
-
 function sendObjectFile(res, object, download = false) {
   res.type(object.mime_type);
   const disposition = download ? 'attachment' : 'inline';
