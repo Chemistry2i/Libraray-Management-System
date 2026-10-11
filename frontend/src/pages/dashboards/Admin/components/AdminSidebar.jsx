@@ -3,12 +3,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { 
   faChartPie, faBook, faUsers, faExchangeAlt, 
   faMoneyBillWave, faCog, faSignOutAlt, faShieldAlt,
-  faClock, faTags, faChartLine, faStar
+  faClock, faTags, faChartLine, faStar, faImages
 } from '@fortawesome/free-solid-svg-icons'
 import { useAuth } from '../../../../context/AuthContext'
 
 const navItems = [
   { name: 'Overview', path: '/admin', icon: faChartPie },
+  { name: 'Digital Collections', path: '/admin/digital-collections', icon: faImages },
   { name: 'Books & Inventory', path: '/admin/books', icon: faBook },
   { name: 'Categories & Genres', path: '/admin/categories', icon: faTags },
   { name: 'Borrowing Management', path: '/admin/borrowing', icon: faExchangeAlt },

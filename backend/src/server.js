@@ -16,6 +16,7 @@ const reservationRoutes = require('./routes/reservationRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
+const digitalCollectionRoutes = require('./routes/digitalCollectionRoutes');
 
 // Import scheduler & models
 const { scheduleOverdueChecker } = require('./utils/ScheduleJobs');
@@ -67,6 +68,7 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/books/:bookId/reviews', reviewRoutes);
+app.use('/api/digital-collections', digitalCollectionRoutes);
 
 // Health Check
 app.get('/health', (req, res) => {

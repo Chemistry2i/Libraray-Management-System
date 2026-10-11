@@ -23,6 +23,13 @@ mysql -u root -p -e "CREATE DATABASE lms_db;"
 mysql -u root -p lms_db < database/schema.sql
 ```
 
+### Step 3.1: Add Digital Collections
+For an existing LMS database, apply the digital collections migration:
+```bash
+mysql -u root -p lms_db < database/schema_update_digital_collections.sql
+```
+This creates the collection and digital object tables. Uploaded digital files are stored in `backend/uploads/digital-objects` and are served through access-controlled API routes, not the public static uploads directory.
+
 ### Step 4: Configure .env
 ```bash
 cp .env.example .env

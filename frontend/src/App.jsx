@@ -20,6 +20,7 @@ import ReservationsPage from './pages/ReservationsPage'
 import ProfilePage from './pages/ProfilePage'
 import DashboardPage from './pages/DashboardPage'
 import NotFoundPage from './pages/NotFoundPage'
+import DigitalArchivePage from './pages/DigitalArchivePage'
 
 // Admin Pages Layout
 import AdminLayout from './pages/dashboards/Admin/AdminLayout'
@@ -33,6 +34,7 @@ import AdminReviews from './pages/dashboards/Admin/AdminReviews'
 import AdminSettings from './pages/dashboards/Admin/AdminSettings'
 import AdminFines from './pages/dashboards/Admin/AdminFines'
 import AdminReports from './pages/dashboards/Admin/AdminReports'
+import AdminDigitalCollections from './pages/dashboards/Admin/AdminDigitalCollections'
 
 // User Pages Layout
 import UserLayout from './pages/dashboards/User/UserLayout'
@@ -64,6 +66,7 @@ export default function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/books" element={<BooksPage />} />
             <Route path="/books/:id" element={<BookDetailsPage />} />
+            <Route path="/digital-collections" element={<DigitalArchivePage />} />
             <Route path="/my-books" element={<MyBooksPage />} />
             <Route path="/reservations" element={<ReservationsPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
@@ -73,6 +76,7 @@ export default function App() {
           {/* Admin Routes */}
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
+            <Route path="digital-collections" element={<AdminDigitalCollections />} />
             <Route path="books" element={<AdminBooks />} />
             <Route path="categories" element={<AdminCategories />} />
             <Route path="borrowing" element={<AdminBorrowing />} />

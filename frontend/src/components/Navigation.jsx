@@ -30,6 +30,7 @@ export default function Navigation() {
           <div className="hidden md:flex items-center space-x-8">
             <Link to="/" className="text-gray-700 hover:text-primary transition">Home</Link>
             <Link to="/books" className="text-gray-700 hover:text-primary transition">Books</Link>
+            <Link to="/digital-collections" className="text-gray-700 hover:text-primary transition">Digital Archive</Link>
             {isAuthenticated && (
               <>
                 <Link to="/user/my-books" className="text-gray-700 hover:text-primary transition">My Books</Link>
@@ -92,6 +93,7 @@ export default function Navigation() {
           <div className="md:hidden pb-4 space-y-2">
             <Link to="/" className="block px-4 py-2 text-gray-700 hover:bg-light rounded">Home</Link>
             <Link to="/books" className="block px-4 py-2 text-gray-700 hover:bg-light rounded">Books</Link>
+            <Link to="/digital-collections" className="block px-4 py-2 text-gray-700 hover:bg-light rounded">Digital Archive</Link>
             {isAuthenticated ? (
               <>
                 <Link to="/user/my-books" className="block px-4 py-2 text-gray-700 hover:bg-light rounded">My Books</Link>
