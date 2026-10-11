@@ -30,6 +30,12 @@ mysql -u root -p lms_db < database/schema_update_digital_collections.sql
 ```
 This creates the collection and digital object tables. Uploaded digital files are stored in `backend/uploads/digital-objects` and are served through access-controlled API routes, not the public static uploads directory.
 
+For an installation that already has the original digital collections tables, apply the analytics and rights-audit migration once:
+```bash
+mysql -u root -p lms_db < database/schema_update_digital_collection_enhancements.sql
+```
+This adds reviewer/evidence/expiry fields, rights history, and view/download event tables. Do not rerun this migration after it succeeds because its `ALTER TABLE` adds columns and a constraint.
+
 ### Step 4: Configure .env
 ```bash
 cp .env.example .env

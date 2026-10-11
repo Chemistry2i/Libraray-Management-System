@@ -3,24 +3,63 @@ import { ArrowUpRight, FileImage, FileText, Search } from 'lucide-react'
 import api from '../api/axios'
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'
+const materialTypes = [
+  'Historical Photograph', 'Newsletter', 'Report', 'Newspaper Clipping',
+  'Exam Paper', 'Poster', 'Local-History Document',
+]
 
 export default function DigitalArchivePage() {
   const [objects, setObjects] = useState([])
+  const [collections, setCollections] = useState([])
   const [search, setSearch] = useState('')
+  const [collectionId, setCollectionId] = useState('')
+  const [materialType, setMaterialType] = useState('')
+  const [sort, setSort] = useState('newest')
+  const [page, setPage] = useState(1)
+  const [pagination, setPagination] = useState({ page: 1, pages: 0, total: 0 })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
-    api.get('/digital-collections/public/objects')
-      .then(({ data }) => setObjects(data?.data?.objects || []))
-      .catch(() => setError('The digital archive is unavailable right now.'))
-      .finally(() => setLoading(false))
+    api.get('/digital-collections/public/collections')
+      .then(({ data }) => setCollections(data?.data?.collections || []))
+      .catch(() => setCollections([]))
   }, [])
 
-  const filteredObjects = objects.filter((object) => (
-    `${object.title} ${object.creator || ''} ${object.material_type} ${object.collection_title}`
-      .toLowerCase().includes(search.toLowerCase())
-  ))
+  useEffect(() => {
+    const timeout = window.setTimeout(() => setSearchQuery(search.trim()), 250)
+    return () => window.clearTimeout(timeout)
+  }, [search])
+
+  useEffect(() => {
+    let active = true
+    setLoading(true)
+    setError('')
+    api.get('/digital-collections/public/objects', {
+      params: {
+        search: searchQuery,
+        collection_id: collectionId || undefined,
+        material_type: materialType || undefined,
+        sort,
+        page,
+        limit: 12,
+      },
+    })
+      .then(({ data }) => {
+        if (!active) return
+        setObjects(data?.data?.objects || [])
+        setPagination(data?.data?.pagination || { page: 1, pages: 0, total: 0 })
+      })
+      .catch(() => { if (active) setError('The digital archive is unavailable right now.') })
+      .finally(() => { if (active) setLoading(false) })
+    return () => { active = false }
+  }, [searchQuery, collectionId, materialType, sort, page])
+
+  function resetPage(update) {
+    setPage(1)
+    update()
+  }
 
   return (
     <div className="flex-1 bg-[#f5f7f4]">
@@ -36,19 +75,34 @@ export default function DigitalArchivePage() {
         <div className="mb-7 flex flex-col gap-4 border-b border-gray-300 pb-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">Browse the collection</h2>
-            <p className="mt-1 text-sm text-gray-600">{objects.length} publicly available {objects.length === 1 ? 'item' : 'items'}</p>
+            <p className="mt-1 text-sm text-gray-600">{pagination.total} publicly available {pagination.total === 1 ? 'item' : 'items'}</p>
           </div>
-          <label className="relative w-full sm:max-w-sm">
-            <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
-            <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search title, creator, material…" className="w-full rounded-md border border-gray-300 bg-white py-2.5 pl-10 pr-3 text-sm focus:border-emerald-800 focus:outline-none focus:ring-2 focus:ring-emerald-800/15" />
-          </label>
+          <div className="grid w-full gap-2 sm:max-w-3xl sm:grid-cols-2 lg:grid-cols-4">
+            <label className="relative sm:col-span-2 lg:col-span-1">
+              <Search size={17} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
+              <input value={search} onChange={(event) => resetPage(() => setSearch(event.target.value))} placeholder="Search archive" className="w-full rounded-md border border-gray-300 bg-white py-2.5 pl-9 pr-3 text-sm focus:border-emerald-800 focus:outline-none focus:ring-2 focus:ring-emerald-800/15" />
+            </label>
+            <select aria-label="Filter by collection" value={collectionId} onChange={(event) => resetPage(() => setCollectionId(event.target.value))} className="rounded-md border border-gray-300 bg-white px-3 py-2.5 text-sm">
+              <option value="">All collections</option>
+              {collections.map((collection) => <option key={collection.collection_id} value={collection.collection_id}>{collection.title}</option>)}
+            </select>
+            <select aria-label="Filter by material type" value={materialType} onChange={(event) => resetPage(() => setMaterialType(event.target.value))} className="rounded-md border border-gray-300 bg-white px-3 py-2.5 text-sm">
+              <option value="">All material types</option>
+              {materialTypes.map((material) => <option key={material}>{material}</option>)}
+            </select>
+            <select aria-label="Sort archive" value={sort} onChange={(event) => resetPage(() => setSort(event.target.value))} className="rounded-md border border-gray-300 bg-white px-3 py-2.5 text-sm">
+              <option value="newest">Newest</option><option value="oldest">Oldest</option><option value="title">Title A-Z</option><option value="popular">Most viewed/downloaded</option>
+            </select>
+          </div>
         </div>
 
         {loading ? <p className="py-12 text-center text-sm text-gray-600">Loading digital archive…</p>
           : error ? <p role="alert" className="py-12 text-center text-sm text-rose-700">{error}</p>
-            : filteredObjects.length ? <div className="grid gap-x-8 gap-y-0 md:grid-cols-2">
-              {filteredObjects.map((object) => {
+            : objects.length ? <>
+              <div className="grid gap-x-8 gap-y-0 md:grid-cols-2">
+              {objects.map((object) => {
                 const fileUrl = `${apiBaseUrl}/digital-collections/public/objects/${object.object_id}/file`
+                const downloadUrl = `${apiBaseUrl}/digital-collections/public/objects/${object.object_id}/download`
                 const isPdf = object.mime_type === 'application/pdf'
                 return <article key={object.object_id} className="flex min-w-0 items-start gap-4 border-b border-gray-300 py-5">
                   <div className="flex size-12 shrink-0 items-center justify-center rounded-md bg-white text-emerald-800 ring-1 ring-gray-200">
@@ -58,13 +112,24 @@ export default function DigitalArchivePage() {
                     <p className="text-xs font-bold uppercase tracking-wide text-emerald-800">{object.collection_title}</p>
                     <h3 className="mt-1 truncate text-lg font-bold text-gray-900">{object.title}</h3>
                     <p className="mt-1 text-sm text-gray-600">{object.creator || 'Creator unknown'} · {object.material_type}</p>
-                    <a href={fileUrl} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-emerald-800 hover:underline">
-                      Open {isPdf ? 'document' : 'image'} <ArrowUpRight size={15} />
-                    </a>
+                    <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2">
+                      <a href={fileUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-sm font-semibold text-emerald-800 hover:underline">
+                        View {isPdf ? 'document' : 'image'} <ArrowUpRight size={15} />
+                      </a>
+                      <a href={downloadUrl} className="text-sm font-semibold text-gray-700 hover:text-emerald-800 hover:underline" download>Download</a>
+                    </div>
                   </div>
                 </article>
               })}
-            </div> : <p className="py-12 text-center text-sm text-gray-600">{objects.length ? 'No items match your search.' : 'No public digital objects are available yet.'}</p>}
+              </div>
+              {pagination.pages > 1 && <div className="mt-7 flex items-center justify-between border-t border-gray-300 pt-4 text-sm">
+                <span className="text-gray-600">Page {pagination.page} of {pagination.pages}</span>
+                <div className="flex gap-2">
+                  <button type="button" disabled={page <= 1 || loading} onClick={() => setPage((value) => Math.max(1, value - 1))} className="rounded border border-gray-300 px-3 py-2 font-semibold text-gray-700 disabled:opacity-40">Previous</button>
+                  <button type="button" disabled={page >= pagination.pages || loading} onClick={() => setPage((value) => Math.min(pagination.pages, value + 1))} className="rounded border border-gray-300 px-3 py-2 font-semibold text-gray-700 disabled:opacity-40">Next</button>
+                </div>
+              </div>}
+            </> : <p className="py-12 text-center text-sm text-gray-600">{pagination.total ? 'No items match these filters.' : 'No public digital objects are available yet.'}</p>}
       </main>
     </div>
   )

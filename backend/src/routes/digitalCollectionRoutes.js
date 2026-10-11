@@ -30,13 +30,21 @@ const upload = multer({
 const staffOnly = [authenticate, authorize(ROLES.ADMIN, ROLES.LIBRARIAN)];
 
 router.get('/public/objects', DigitalCollectionController.getPublicObjects);
+router.get('/public/collections', DigitalCollectionController.getPublicCollections);
 router.get('/public/objects/:objectId/file', DigitalCollectionController.getPublicFile);
+router.get('/public/objects/:objectId/download', DigitalCollectionController.downloadPublicFile);
+router.get('/admin/analytics', ...staffOnly, DigitalCollectionController.getAnalytics);
+router.get('/admin/export.csv', ...staffOnly, DigitalCollectionController.exportObjects);
 
 router.get('/collections', ...staffOnly, DigitalCollectionController.getCollections);
 router.post('/collections', ...staffOnly, DigitalCollectionController.createCollection);
+router.put('/collections/:collectionId', ...staffOnly, DigitalCollectionController.updateCollection);
 router.get('/collections/:collectionId/objects', ...staffOnly, DigitalCollectionController.getObjects);
 router.post('/collections/:collectionId/objects', ...staffOnly, upload.array('files', 15), DigitalCollectionController.uploadObjects);
+router.get('/objects/:objectId/rights-history', ...staffOnly, DigitalCollectionController.getRightsHistory);
 router.get('/objects/:objectId/file', ...staffOnly, DigitalCollectionController.getInternalFile);
+router.get('/objects/:objectId/download', ...staffOnly, DigitalCollectionController.downloadInternalFile);
+router.put('/objects/:objectId', ...staffOnly, DigitalCollectionController.updateObject);
 router.patch('/objects/:objectId', ...staffOnly, DigitalCollectionController.setPublicStatus);
 router.delete('/objects/:objectId', ...staffOnly, DigitalCollectionController.deleteObject);
 

@@ -1,3 +1,4 @@
+import React from 'react'
 import { Outlet, Navigate } from 'react-router-dom'
 import { useAuth } from '../../../context/AuthContext'
 import AdminSidebar from './components/AdminSidebar'
@@ -20,6 +21,10 @@ export default function AdminLayout() {
   // Protect route
   if (!user) {
     return <Navigate to="/login" replace />;
+  }
+
+  if (!['admin', 'librarian'].includes(user.role)) {
+    return <Navigate to="/dashboard" replace />;
   }
 
   return (
