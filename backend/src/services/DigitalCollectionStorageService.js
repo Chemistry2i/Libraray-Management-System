@@ -33,6 +33,7 @@ class DigitalCollectionStorageService {
         storage_provider: 'local',
         cloudinary_resource_type: null,
         cloudinary_version: null,
+        cloudinary_format: null,
       };
     }
 
@@ -51,6 +52,7 @@ class DigitalCollectionStorageService {
       storage_provider: 'cloudinary',
       cloudinary_resource_type: result.resource_type,
       cloudinary_version: result.version,
+      cloudinary_format: result.format,
     };
   }
 
@@ -65,6 +67,7 @@ class DigitalCollectionStorageService {
       type: 'authenticated',
       resource_type: object.cloudinary_resource_type,
       version: object.cloudinary_version,
+      format: object.cloudinary_format,
     });
 
     return new Promise((resolve, reject) => {

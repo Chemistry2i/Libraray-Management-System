@@ -5,6 +5,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { notificationAPI } from '../../../../api/endpoints';
 import Swal from 'sweetalert2';
 import NotificationCenter from './NotificationCenter';
+import { SCHOOL_BADGE, SCHOOL_NAME } from '../../../../constants/schoolBrand';
 
 export default function UserHeader({ onMenuToggle }) {
   const { user, logout } = useAuth();
@@ -68,6 +69,10 @@ export default function UserHeader({ onMenuToggle }) {
   return (
     <header className="h-16 md:h-20 bg-white border-b border-gray-200 px-4 md:px-8 flex items-center justify-between z-50 relative gap-4">
       <div className="flex items-center gap-3 md:gap-6 flex-1 min-w-0">
+        <div className="flex shrink-0 items-center gap-2">
+          <img src={SCHOOL_BADGE} alt="Kamuli CU school badge" className="size-9 rounded-full bg-white object-contain ring-1 ring-slate-200" />
+          <span className="hidden text-sm font-bold text-primary lg:block">{SCHOOL_NAME}</span>
+        </div>
         <button onClick={onMenuToggle} className="text-gray-500 hover:text-primary transition-colors md:hidden shrink-0">
           <Menu size={24} />
         </button>

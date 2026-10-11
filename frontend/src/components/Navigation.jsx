@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars, faTimes, faUser, faSignOutAlt, faBook, faBell, faCog } from '@fortawesome/free-solid-svg-icons'
+import { faBars, faTimes, faUser, faSignOutAlt, faBell, faCog } from '@fortawesome/free-solid-svg-icons'
 import { useAuth } from '../context/AuthContext.jsx'
+import { SCHOOL_BADGE, SCHOOL_NAME } from '../constants/schoolBrand'
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
@@ -20,10 +21,8 @@ export default function Navigation() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <FontAwesomeIcon icon={faBook} className="text-white text-lg" />
-            </div>
-            <span className="text-2xl font-bold text-primary">Blis</span>
+            <img src={SCHOOL_BADGE} alt="Kamuli Church of Uganda Primary School badge" className="size-10 rounded-full bg-white object-contain ring-1 ring-slate-200" />
+            <span className="text-base font-bold leading-tight text-primary sm:text-lg">{SCHOOL_NAME}</span>
           </Link>
 
           {/* Desktop Menu */}

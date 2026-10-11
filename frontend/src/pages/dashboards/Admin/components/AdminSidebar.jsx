@@ -7,6 +7,7 @@ import {
   faClock, faTags, faChartLine, faStar, faImages, faChartBar
 } from '@fortawesome/free-solid-svg-icons'
 import { useAuth } from '../../../../context/AuthContext'
+import { SCHOOL_BADGE, SCHOOL_NAME } from '../../../../constants/schoolBrand'
 
 const navItems = [
   { name: 'Overview', path: '/admin', icon: faChartPie },
@@ -31,13 +32,11 @@ export default function AdminSidebar() {
       {/* Brand Header */}
       <div className="h-20 flex items-center px-6 border-b border-gray-200">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-md">
-            <span className="text-white text-xl font-bold">B</span>
-          </div>
+          <img src={SCHOOL_BADGE} alt="Kamuli Church of Uganda Primary School badge" className="size-11 shrink-0 rounded-full bg-white object-contain ring-1 ring-slate-200" />
           <div>
-            <h1 className="text-xl font-bold tracking-tight text-gray-900">Blis Admin</h1>
+            <h1 className="text-base font-bold tracking-tight text-gray-900">{SCHOOL_NAME}</h1>
             <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold flex items-center gap-1">
-              <FontAwesomeIcon icon={faShieldAlt} className="text-success" /> Authorized
+              <FontAwesomeIcon icon={faShieldAlt} className="text-primary" /> School Library
             </p>
           </div>
         </div>

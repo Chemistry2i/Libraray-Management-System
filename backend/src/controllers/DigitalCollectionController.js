@@ -12,7 +12,16 @@ function sendObjectFile(res, object, download = false) {
   res.setHeader('Content-Disposition', `${disposition}; filename="${encodeURIComponent(object.original_filename)}"`);
   if (object.storage_provider === 'cloudinary') {
     res.setHeader('Cache-Control', 'private, no-store');
-    return DigitalCollectionStorageService.streamCloudinaryObject(res, object);
+    return DigitalCollectionStorageService.streamCloudinaryObject(res, object).catch((error) => {
+      console.error('Cloudinary digital file delivery failed:', error.message);
+      if (res.headersSent) {
+        res.destroy(error);
+        return;
+      }
+      res.removeHeader('Content-Disposition');
+      res.removeHeader('Cache-Control');
+      return sendError(res, 'Digital object file is temporarily unavailable', 502);
+    });
   }
   const filePath = DigitalCollectionStorageService.localPath(object);
   if (!fs.existsSync(filePath)) return sendError(res, 'Digital object file not found', 404);

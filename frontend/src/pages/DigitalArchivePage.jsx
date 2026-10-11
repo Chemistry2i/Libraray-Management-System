@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { ArrowUpRight, FileImage, FileText, Search } from 'lucide-react'
 import api from '../api/axios'
+import { SCHOOL_NAME } from '../constants/schoolBrand'
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'
 const materialTypes = [
@@ -65,7 +66,7 @@ export default function DigitalArchivePage() {
     <div className="flex-1 bg-[#f5f7f4]">
       <header className="border-b border-emerald-950/15 bg-[#173d35] text-white">
         <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8 sm:py-20">
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-200">Blis Library · Digital Archive</p>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-200">{SCHOOL_NAME} · Digital Archive</p>
           <h1 className="mt-3 max-w-3xl text-4xl font-bold leading-tight sm:text-5xl">Local records, preserved for discovery.</h1>
           <p className="mt-4 max-w-2xl text-base leading-7 text-emerald-50/85">Browse digitized photographs, documents, and publications cleared for public access.</p>
         </div>

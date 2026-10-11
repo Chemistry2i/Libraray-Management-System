@@ -1,6 +1,7 @@
+import React from 'react'
 import { Outlet } from 'react-router-dom'
 import Navigation from '../Navigation'
-import Footer from '../Footer'
+import Footer from '../SchoolFooter'
 import CommandPalette from '../CommandPalette'
 import { PageTransition } from '../PageTransition'
 import ScrollToTop from '../ScrollToTop'

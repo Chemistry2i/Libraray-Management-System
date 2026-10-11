@@ -25,15 +25,15 @@ const AdminSettings = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1">Library Name</label>
-              <input type="text" defaultValue="Blis Regional Library" className="w-full p-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" />
+              <input type="text" defaultValue="Kamuli CU Library" className="w-full p-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" />
             </div>
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1">Support Email</label>
-              <input type="email" defaultValue="support@blislibrary.edu" className="w-full p-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" />
+              <input type="email" defaultValue="kamulicupschool@gmail.com" className="w-full p-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" />
             </div>
             <div className="md:col-span-2">
               <label className="block text-sm font-semibold text-gray-700 mb-1">Welcome Message / Announcement</label>
-              <textarea rows="2" defaultValue="Welcome to Blis. Overdue fines currently waived until Nov 1st due to system upgrades." className="w-full p-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"></textarea>
+              <textarea rows="2" defaultValue="Welcome to the Kamuli CU school library." className="w-full p-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"></textarea>
             </div>
           </div>
         </div>

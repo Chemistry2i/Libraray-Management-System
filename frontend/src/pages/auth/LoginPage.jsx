@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope, faLock, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import { toast } from 'react-toastify'
 import { useAuth } from '../../context/AuthContext'
+import { APP_NAME } from '../../constants/appConstants'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -39,7 +40,7 @@ export default function LoginPage() {
       <div className="bg-white rounded-2xl shadow-airbnb-lg p-8">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-dark mb-2">Welcome Back</h1>
-          <p className="text-gray-600">Login to your Blis account</p>
+          <p className="text-gray-600">Sign in to {APP_NAME}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -107,7 +108,7 @@ export default function LoginPage() {
 
         {/* Register Link */}
         <p className="text-center mt-6 text-gray-600">
-          Don't have an account?{' '}
+          Don&apos;t have an account?{' '}
           <Link to="/register" className="text-primary font-semibold hover:underline">
             Sign up
           </Link>

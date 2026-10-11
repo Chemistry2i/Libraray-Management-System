@@ -7,9 +7,9 @@ import {
   CreditCard,
   MessageSquare,
   User,
-  Library,
   Bell
 } from 'lucide-react';
+import { SCHOOL_BADGE, SCHOOL_NAME } from '../../../../constants/schoolBrand';
 
 export default function UserSidebar({ onClose }) {
   const navItems = [
@@ -26,9 +26,9 @@ export default function UserSidebar({ onClose }) {
     <aside className="w-64 bg-white border-r border-gray-200 h-screen sticky top-0 flex flex-col z-40">
       {/* Logo Area */}
       <div className="h-20 flex items-center px-8 border-b border-gray-200">
-        <div className="flex items-center gap-3 text-primary">
-          <Library size={28} className="animate-pulse-slow" />
-          <span className="text-2xl font-bold tracking-tight">Blis.</span>
+        <div className="flex min-w-0 items-center gap-3 text-primary">
+          <img src={SCHOOL_BADGE} alt="Kamuli CU school badge" className="size-10 shrink-0 rounded-full bg-white object-contain ring-1 ring-slate-200" />
+          <span className="text-sm font-bold leading-tight tracking-tight">{SCHOOL_NAME}</span>
         </div>
       </div>
 

@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faEnvelope, faLock, faPhone, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import { toast } from 'react-toastify'
 import { useAuth } from '../../context/AuthContext'
 import { PasswordStrengthMeter } from '../../components/PasswordStrengthMeter'
+import { APP_NAME } from '../../constants/appConstants'
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -60,8 +61,8 @@ export default function RegisterPage() {
     <div className="w-full max-w-md">
       <div className="bg-white rounded-2xl shadow-airbnb-lg p-8">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-dark mb-2">Join Blis</h1>
-          <p className="text-gray-600">Create your library account</p>
+          <h1 className="text-3xl font-bold text-dark mb-2">Join {APP_NAME}</h1>
+          <p className="text-gray-600">Create your school library account</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">

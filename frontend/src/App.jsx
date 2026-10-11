@@ -13,7 +13,7 @@ import RegisterPage from './pages/auth/RegisterPage'
 import ForgotPasswordPage from './pages/auth/ForgotPasswordPage'
 
 // Pages - Main
-import HomePage from './pages/HomePage'
+import HomePage from './pages/KamuliHomePage'
 import BooksPage from './pages/BooksPage'
 import BookDetailsPage from './pages/BookDetailsPage'
 import MyBooksPage from './pages/MyBooksPage'

@@ -123,14 +123,15 @@ class DigitalCollectionModel {
         const [result] = await connection.query(
           `INSERT INTO digital_objects
            (collection_id, title, creator, material_type, file_path, original_filename,
-            storage_provider, cloudinary_resource_type, cloudinary_version,
+            storage_provider, cloudinary_resource_type, cloudinary_version, cloudinary_format,
             mime_type, file_size, rights_status, rights_assessment_notes, rights_assessed,
             is_public, rights_evidence_reference, rights_expires_at, rights_reviewed_by, rights_reviewed_at)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, TRUE, ?, ?, ?, ?, CURRENT_TIMESTAMP)`,
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, TRUE, ?, ?, ?, ?, CURRENT_TIMESTAMP)`,
           [
             collectionId, object.title, object.creator || null, object.material_type,
             object.file_path, object.original_filename, object.storage_provider || 'local',
             object.cloudinary_resource_type || null, object.cloudinary_version || null,
+            object.cloudinary_format || null,
             object.mime_type, object.file_size,
             object.rights_status, object.rights_assessment_notes, object.is_public,
             object.rights_evidence_reference || null, object.rights_expires_at || null, reviewerId,

@@ -3,6 +3,7 @@ import { Bell, Search, Menu, LogOut, ChevronDown, User } from 'lucide-react';
 import { useAuth } from '../../../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { SCHOOL_BADGE, SCHOOL_NAME } from '../../../../constants/schoolBrand';
 
 export default function AdminHeader() {
   const { user, logout } = useAuth();
@@ -47,6 +48,10 @@ export default function AdminHeader() {
     <header className="h-20 bg-white border-b border-gray-200 px-8 flex items-center justify-between z-1 relative">
       {/* Left side: Mobile menu toggle & Search */}
       <div className="flex items-center gap-6">
+        <div className="flex shrink-0 items-center gap-2.5">
+          <img src={SCHOOL_BADGE} alt="Kamuli CU school badge" className="size-10 rounded-full bg-white object-contain ring-1 ring-slate-200" />
+          <span className="hidden text-sm font-bold text-primary sm:block">{SCHOOL_NAME}</span>
+        </div>
         <button className="text-gray-500 hover:text-primary transition-colors lg:hidden">
           <Menu size={24} />
         </button>

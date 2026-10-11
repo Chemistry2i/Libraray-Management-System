@@ -28,7 +28,7 @@ For an existing LMS database, apply the digital collections migration:
 ```bash
 mysql -u root -p lms_db < database/schema_update_digital_collections.sql
 ```
-This creates the collection and digital object tables. Uploaded digital files are stored in `backend/uploads/digital-objects` and are served through access-controlled API routes, not the public static uploads directory.
+This creates the collection and digital object tables. Digital objects are served through access-controlled API routes, not the public static uploads directory.
 
 For an installation that already has the original digital collections tables, apply the analytics and rights-audit migration once:
 ```bash
@@ -36,11 +36,22 @@ mysql -u root -p lms_db < database/schema_update_digital_collection_enhancements
 ```
 This adds reviewer/evidence/expiry fields, rights history, and view/download event tables. Do not rerun this migration after it succeeds because its `ALTER TABLE` adds columns and a constraint.
 
+Apply the storage metadata migration once after the previous digital collection migrations:
+```bash
+mysql -u root -p lms_db < database/schema_update_digital_collection_cloudinary.sql
+```
+
+For existing digital collection installations, apply the Cloudinary storage metadata migration once:
+```bash
+mysql -u root -p lms_db < database/schema_update_digital_collection_cloudinary.sql
+```
+
 ### Step 4: Configure .env
 ```bash
 cp .env.example .env
-# Edit .env with your MySQL credentials
+# Set MySQL/JWT values and CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET.
 ```
+Digital collection files use Cloudinary authenticated assets when all three Cloudinary values are configured. API secrets stay on the backend; files stream through the rights-checked LMS routes. Without Cloudinary credentials, development falls back to private local storage.
 
 ### Step 5: Start Server
 ```bash
