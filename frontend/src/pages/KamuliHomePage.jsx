@@ -1,8 +1,8 @@
-import React from 'react'
-import { ArrowRight, BookOpen, MapPin, Phone, Mail, ChevronDown } from 'lucide-react'
+import React, { useState } from 'react'
+import { ArrowRight, BookOpen, MapPin, Phone, Mail, ChevronDown, Send } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
-import { SCHOOL_BADGE, SCHOOL_OFFICIAL_NAME } from '../constants/schoolBrand'
+import { SCHOOL_BADGE, SCHOOL_NAME, SCHOOL_OFFICIAL_NAME } from '../constants/schoolBrand'
 import heroImage from '../img/hero.jpeg'
 import classImageOne from '../img/class1.jpg'
 import classImageTwo from '../img/class2.jpg'
@@ -29,6 +29,7 @@ const faqs = [
 ]
 
 export default function KamuliHomePage() {
+  const [emailDraftOpened, setEmailDraftOpened] = useState(false)
   const prefersReducedMotion = useReducedMotion()
   const scrollReveal = prefersReducedMotion ? {} : {
     initial: { opacity: 0, y: 24 },
@@ -36,20 +37,43 @@ export default function KamuliHomePage() {
     viewport: { once: true, amount: 0.12 },
     transition: { duration: 0.55, ease: 'easeOut' },
   }
+  const title = 'A school library for curious minds.'
+  const titleVariants = {
+    hidden: {},
+    visible: { transition: { staggerChildren: prefersReducedMotion ? 0 : 0.13 } },
+  }
+  const wordVariants = {
+    hidden: {},
+    visible: { transition: { staggerChildren: prefersReducedMotion ? 0 : 0.035 } },
+  }
+  const letterVariants = {
+    hidden: { opacity: 0, y: 16 },
+    visible: { opacity: 1, y: 0, transition: { duration: prefersReducedMotion ? 0 : 0.24, ease: 'easeOut' } },
+  }
 
   return (
     <div className="w-full bg-white text-slate-900">
-      <motion.section {...scrollReveal} className="relative flex min-h-[80vh] items-end overflow-hidden bg-[#102d4f]">
+      <motion.section {...scrollReveal} className="relative flex min-h-[80vh] items-center overflow-hidden bg-[#102d4f]">
         <img src={heroImage} alt="The entrance to Kamuli Church of Uganda Primary School" className="absolute inset-0 size-full object-cover object-center" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#081a30]/95 via-[#0a2442]/50 to-[#102d4f]/5" />
-        <div className="relative mx-auto w-full max-w-7xl px-5 pb-10 pt-24 sm:px-8 sm:pb-14 md:pb-16">
+        <div className="relative mx-auto w-full max-w-7xl px-5 py-14 sm:px-8 md:py-16">
           <div className="max-w-3xl text-white">
             <div className="mb-6 inline-flex items-center gap-3 rounded-full border border-white/25 bg-white/10 p-2 pr-4 backdrop-blur-sm">
               <img src={SCHOOL_BADGE} alt="" className="size-10 rounded-full bg-white object-contain" />
               <span className="text-sm font-semibold">Kamuli CU Library</span>
             </div>
             <p className="text-sm font-bold uppercase tracking-[0.16em] text-amber-200">Read · Learn · Grow</p>
-            <h1 className="mt-3 max-w-3xl text-4xl font-bold leading-tight sm:text-5xl md:text-6xl">A school library for curious minds.</h1>
+            <motion.h1
+              aria-label={title}
+              initial={prefersReducedMotion ? false : 'hidden'}
+              animate="visible"
+              variants={titleVariants}
+              className="mt-3 max-w-3xl text-4xl font-bold leading-tight sm:text-5xl md:text-6xl"
+            >
+              {title.split(' ').map((word, wordIndex) => <motion.span key={`${word}-${wordIndex}`} aria-hidden="true" variants={wordVariants} className="mr-[0.24em] inline-block whitespace-nowrap last:mr-0">
+                {Array.from(word).map((letter, letterIndex) => <motion.span key={`${letter}-${letterIndex}`} variants={letterVariants} className="inline-block">{letter}</motion.span>)}
+              </motion.span>)}
+            </motion.h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-white/90 sm:text-lg">Find storybooks, textbooks and learning resources to support every pupil at {SCHOOL_OFFICIAL_NAME}.</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link to="/books" className="inline-flex items-center gap-2 rounded-md bg-white px-5 py-3 text-sm font-bold text-[#12365d] transition-colors hover:bg-amber-100">Explore the library <ArrowRight size={17} /></Link>
@@ -167,31 +191,87 @@ export default function KamuliHomePage() {
         </div>
       </motion.section>
 
-      <motion.section {...scrollReveal} className="flex items-center bg-[#f4f7fa]">
-        <div className="mx-auto grid w-full max-w-7xl gap-10 px-5 py-12 sm:px-8 md:grid-cols-2 md:items-center md:py-16">
+      <motion.section {...scrollReveal} id="contact" className="bg-[#f4f7fa]">
+        <div className="mx-auto grid w-full max-w-7xl gap-10 px-5 py-12 sm:px-8 md:grid-cols-2 md:gap-14 md:py-16">
           <div>
-            <div className="flex items-center gap-3"><img src={SCHOOL_BADGE} alt="Kamuli CU school badge" className="size-14 rounded-full border border-[#d1a93f] bg-white object-contain p-1" /><p className="text-xs font-bold uppercase tracking-[0.16em] text-[#a77914]">Visit our school</p></div>
+            <div className="flex items-center gap-3"><img src={SCHOOL_BADGE} alt="Kamuli CU school badge" className="size-14 rounded-xl border border-[#d1a93f] bg-white object-contain p-1" /><p className="text-xs font-bold uppercase tracking-[0.16em] text-[#a77914]">Visit or contact us</p></div>
             <h2 className="mt-5 text-3xl font-bold leading-tight text-[#102d4f]">{SCHOOL_OFFICIAL_NAME}</h2>
             <p className="mt-3 max-w-lg text-sm leading-6 text-slate-600">Serving pupils and families in Kireka, Kira Municipality, Wakiso District, Uganda.</p>
+            <address className="mt-6 grid content-start gap-4 border-y border-slate-200 py-5 not-italic text-sm">
+              <div className="flex items-start gap-3"><MapPin size={18} className="mt-0.5 shrink-0 text-[#a77914]" /><span className="text-slate-700">Kireka, Kira Municipality,<br />Wakiso District, Uganda<br />P.O. Box 30729, Kampala, Uganda</span></div>
+              <a href="tel:+256414285548" className="flex items-center gap-3 text-[#173b64] hover:text-[#a77914]"><Phone size={18} className="shrink-0 text-[#a77914]" />0414 285548</a>
+              <a href="mailto:kamulicupschool@gmail.com" className="flex items-center gap-3 break-all text-[#173b64] hover:text-[#a77914]"><Mail size={18} className="shrink-0 text-[#a77914]" />kamulicupschool@gmail.com</a>
+            </address>
+            <div className="mt-6 overflow-hidden rounded-md border border-slate-300 bg-slate-200">
+              <iframe
+                title="Map to Kamuli Church of Uganda Primary School in Kireka"
+                src="https://maps.google.com/maps?q=Kamuli%20Church%20of%20Uganda%20Primary%20School%2C%20Kireka%2C%20Wakiso%2C%20Uganda&z=15&output=embed"
+                className="h-64 w-full border-0 sm:h-72"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                allowFullScreen
+              />
+            </div>
+            <Link to="/books" className="mt-4 inline-flex w-fit items-center gap-2 border-b border-[#d1a93f] pb-1 text-sm font-semibold text-[#173b64] hover:text-[#a77914]">Browse library books <BookOpen size={16} /></Link>
           </div>
-          <address className="grid content-start gap-5 border-y border-slate-200 py-5 not-italic text-sm">
-            <div className="flex items-start gap-3"><MapPin size={18} className="mt-0.5 shrink-0 text-[#a77914]" /><span className="text-slate-700">Kireka, Kira Municipality,<br />Wakiso District, Uganda<br />P.O. Box 30729, Kampala, Uganda</span></div>
-            <a href="tel:+256414285548" className="flex items-center gap-3 text-[#173b64] hover:text-[#a77914]"><Phone size={18} className="shrink-0 text-[#a77914]" />0414 285548</a>
-            <a href="mailto:kamulicupschool@gmail.com" className="flex items-center gap-3 break-all text-[#173b64] hover:text-[#a77914]"><Mail size={18} className="shrink-0 text-[#a77914]" />kamulicupschool@gmail.com</a>
-            <Link to="/books" className="mt-2 inline-flex w-fit items-center gap-2 border-b border-[#d1a93f] pb-1 font-semibold text-[#173b64] hover:text-[#a77914]">Browse library books <BookOpen size={16} /></Link>
-          </address>
+
+          <div className="self-start bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:p-7">
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#a77914]">Get in touch</p>
+            <h3 className="mt-2 text-2xl font-bold text-[#102d4f]">Send the school a message</h3>
+            <p className="mt-2 text-sm leading-6 text-slate-600">Complete the form and your email app will prepare a message addressed to the school.</p>
+            <form className="mt-6 space-y-4" onSubmit={(event) => {
+              event.preventDefault()
+              const form = new FormData(event.currentTarget)
+              const subject = encodeURIComponent(String(form.get('subject')).trim())
+              const body = encodeURIComponent(`Name: ${String(form.get('name')).trim()}\nEmail: ${String(form.get('email')).trim()}\n\n${String(form.get('message')).trim()}`)
+              window.location.href = `mailto:kamulicupschool@gmail.com?subject=${subject}&body=${body}`
+              setEmailDraftOpened(true)
+            }}>
+              <label className="block text-sm font-semibold text-[#173b64]">Your name
+                <input required name="name" autoComplete="name" maxLength={100} className="mt-1.5 w-full rounded-md border border-slate-300 px-3 py-2.5 text-sm font-normal outline-none focus:border-[#173b64] focus:ring-2 focus:ring-[#173b64]/15" />
+              </label>
+              <label className="block text-sm font-semibold text-[#173b64]">Email address
+                <input required type="email" name="email" autoComplete="email" maxLength={254} className="mt-1.5 w-full rounded-md border border-slate-300 px-3 py-2.5 text-sm font-normal outline-none focus:border-[#173b64] focus:ring-2 focus:ring-[#173b64]/15" />
+              </label>
+              <label className="block text-sm font-semibold text-[#173b64]">Subject
+                <input required name="subject" maxLength={150} className="mt-1.5 w-full rounded-md border border-slate-300 px-3 py-2.5 text-sm font-normal outline-none focus:border-[#173b64] focus:ring-2 focus:ring-[#173b64]/15" />
+              </label>
+              <label className="block text-sm font-semibold text-[#173b64]">Message
+                <textarea required name="message" rows={5} maxLength={3000} className="mt-1.5 w-full resize-y rounded-md border border-slate-300 px-3 py-2.5 text-sm font-normal outline-none focus:border-[#173b64] focus:ring-2 focus:ring-[#173b64]/15" />
+              </label>
+              <button type="submit" className="inline-flex items-center gap-2 rounded-md bg-[#173b64] px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-[#102d4f]"><Send size={16} />Open email app</button>
+              {emailDraftOpened && <p role="status" className="text-sm leading-6 text-[#173b64]">Your email app should open with the message ready. Send it there to contact the school.</p>}
+            </form>
+          </div>
         </div>
       </motion.section>
 
-      <motion.section {...scrollReveal} className="flex items-center justify-center bg-[#173b64] px-5 py-12 text-center text-white sm:px-8 md:py-16">
-        <div className="w-full">
-        <p className="text-xs font-bold uppercase tracking-[0.16em] text-amber-200">Kamuli CU Library</p>
-        <h2 className="mx-auto mt-2 max-w-2xl text-3xl font-bold">Open a book. Find a new possibility.</h2>
-        <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-white/80">Browse available titles or sign in to manage your library activity.</p>
-        <div className="mt-5 flex flex-wrap justify-center gap-3">
-          <Link to="/books" className="inline-flex items-center gap-2 rounded-md bg-white px-5 py-3 text-sm font-bold text-[#102d4f] transition-colors hover:bg-amber-100">Browse books <ArrowRight size={16} /></Link>
-          <Link to="/login" className="rounded-md border border-white/60 px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-white/10">Sign in</Link>
-        </div>
+      <motion.section {...scrollReveal} className="flex min-h-[76vh] items-center bg-[#173b64] px-5 py-14 text-white sm:px-8 md:min-h-[82vh] md:py-20">
+        <div className="mx-auto grid w-full max-w-7xl gap-10 md:grid-cols-[1.1fr_0.9fr] md:items-center md:gap-16">
+          <div>
+            <div className="mb-5 flex items-center gap-3">
+              <img src={SCHOOL_BADGE} alt="" className="size-12 rounded-xl border border-amber-300/80 bg-white p-1 object-contain" />
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-amber-200">{SCHOOL_NAME}</p>
+            </div>
+            <h2 className="max-w-2xl text-4xl font-bold leading-tight sm:text-5xl">Open a book. Find a new possibility.</h2>
+            <p className="mt-4 max-w-xl text-base leading-7 text-white/80">Explore school books, discover the digital archive, or sign in to manage your library activity.</p>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Link to="/books" className="inline-flex items-center gap-2 rounded-md bg-white px-5 py-3 text-sm font-bold text-[#102d4f] transition-colors hover:bg-amber-100">Browse books <ArrowRight size={16} /></Link>
+              <Link to="/register" className="rounded-md border border-white/60 px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-white/10">Create account</Link>
+            </div>
+          </div>
+          <div className="border-t border-white/20 pt-6 md:border-l md:border-t-0 md:pl-8 md:pt-0">
+            <h3 className="text-sm font-bold uppercase tracking-wide text-amber-200">Quick links</h3>
+            <nav aria-label="Library quick links" className="mt-3 divide-y divide-white/15 border-y border-white/15">
+              <Link to="/digital-collections" className="flex items-center justify-between gap-4 py-4 text-sm font-semibold text-white/90 transition-colors hover:text-amber-200"><span>Explore digital collections</span><ArrowRight size={16} /></Link>
+              <Link to="/login" className="flex items-center justify-between gap-4 py-4 text-sm font-semibold text-white/90 transition-colors hover:text-amber-200"><span>Sign in to your library account</span><ArrowRight size={16} /></Link>
+              <a href="#contact" className="flex items-center justify-between gap-4 py-4 text-sm font-semibold text-white/90 transition-colors hover:text-amber-200"><span>Contact {SCHOOL_OFFICIAL_NAME}</span><ArrowRight size={16} /></a>
+            </nav>
+            <div className="mt-5 flex flex-col gap-2 text-sm text-white/75 sm:flex-row sm:flex-wrap sm:gap-x-5">
+              <a href="tel:+256414285548" className="hover:text-amber-200">0414 285548</a>
+              <a href="mailto:kamulicupschool@gmail.com" className="break-all hover:text-amber-200">kamulicupschool@gmail.com</a>
+            </div>
+          </div>
         </div>
       </motion.section>
     </div>
