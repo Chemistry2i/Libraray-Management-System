@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { FileImage, FileText, FolderPlus, LockKeyhole, Plus, ShieldCheck, Trash2, Upload } from 'lucide-react'
+import { FileImage, FileText, FolderPlus, LockKeyhole, Plus, ShieldCheck, Trash2, Upload, X } from 'lucide-react'
 import { toast } from 'react-toastify'
 import api from '../../../api/axios'
 
@@ -38,6 +38,7 @@ export default function AdminDigitalCollections() {
   const [objects, setObjects] = useState([])
   const [collectionForm, setCollectionForm] = useState(emptyCollection)
   const [editingCollection, setEditingCollection] = useState(false)
+  const [collectionModalOpen, setCollectionModalOpen] = useState(false)
   const [files, setFiles] = useState([])
   const [metadata, setMetadata] = useState([])
   const [previews, setPreviews] = useState(() => new Map())
@@ -59,6 +60,15 @@ export default function AdminDigitalCollections() {
   useEffect(() => {
     loadCollections()
   }, [])
+
+  useEffect(() => {
+    if (!collectionModalOpen) return undefined
+    const closeOnEscape = (event) => {
+      if (event.key === 'Escape' && !savingCollection) setCollectionModalOpen(false)
+    }
+    window.addEventListener('keydown', closeOnEscape)
+    return () => window.removeEventListener('keydown', closeOnEscape)
+  }, [collectionModalOpen, savingCollection])
 
   useEffect(() => {
     if (!selectedId) {
@@ -108,6 +118,7 @@ export default function AdminDigitalCollections() {
       const newId = data?.data?.collection_id
       setCollectionForm(emptyCollection)
       setEditingCollection(false)
+      setCollectionModalOpen(false)
       await loadCollections()
       if (newId) setSelectedId(String(newId))
       toast.success(editingCollection ? 'Collection updated' : 'Collection created')
@@ -127,6 +138,13 @@ export default function AdminDigitalCollections() {
       collection_value: selectedCollection.collection_value || '',
     })
     setEditingCollection(true)
+    setCollectionModalOpen(true)
+  }
+
+  function startCreateCollection() {
+    setCollectionForm(emptyCollection)
+    setEditingCollection(false)
+    setCollectionModalOpen(true)
   }
 
   function acceptFiles(fileList) {
@@ -319,39 +337,18 @@ export default function AdminDigitalCollections() {
           <h1 className="mt-1 text-3xl font-bold text-gray-900">Digital Collections</h1>
           <p className="mt-2 max-w-2xl text-sm text-gray-600">Organize digitized materials, document selection decisions, and control public access.</p>
         </div>
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <ShieldCheck size={18} className="text-emerald-700" />
-          Rights review required for every upload
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <ShieldCheck size={18} className="text-emerald-700" />
+            Rights review required for every upload
+          </div>
+          <button type="button" onClick={startCreateCollection} className="inline-flex items-center gap-2 rounded-md bg-emerald-800 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-900">
+            <Plus size={17} /> Create collection
+          </button>
         </div>
       </header>
 
-      <section className="grid gap-6 xl:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
-        <form onSubmit={createCollection} className="space-y-4 border-y border-gray-200 py-5">
-          <div className="flex items-center gap-2">
-            <FolderPlus size={19} className="text-emerald-700" />
-            <h2 className="text-lg font-bold text-gray-900">Create a collection</h2>
-          </div>
-          <label className="block text-sm font-semibold text-gray-700">Collection name
-            <input required maxLength={255} value={collectionForm.title} onChange={(event) => setCollectionForm({ ...collectionForm, title: event.target.value })} className="mt-1.5 w-full rounded-md border border-gray-300 px-3 py-2.5 font-normal focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/15" />
-          </label>
-          <label className="block text-sm font-semibold text-gray-700">Description
-            <textarea value={collectionForm.description} onChange={(event) => setCollectionForm({ ...collectionForm, description: event.target.value })} rows={2} className="mt-1.5 w-full rounded-md border border-gray-300 px-3 py-2.5 font-normal focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/15" />
-          </label>
-          <label className="block text-sm font-semibold text-gray-700">Selection criteria
-            <textarea required value={collectionForm.selection_criteria} onChange={(event) => setCollectionForm({ ...collectionForm, selection_criteria: event.target.value })} rows={3} className="mt-1.5 w-full rounded-md border border-gray-300 px-3 py-2.5 font-normal focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/15" />
-          </label>
-          <label className="block text-sm font-semibold text-gray-700">Collection value
-            <textarea required value={collectionForm.collection_value} onChange={(event) => setCollectionForm({ ...collectionForm, collection_value: event.target.value })} rows={3} className="mt-1.5 w-full rounded-md border border-gray-300 px-3 py-2.5 font-normal focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/15" />
-          </label>
-          <div className="flex flex-wrap gap-2">
-          <button disabled={savingCollection} className="inline-flex items-center gap-2 rounded-md bg-emerald-800 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-900 disabled:opacity-60">
-            <Plus size={17} /> {savingCollection ? 'Saving…' : editingCollection ? 'Save collection' : 'Create collection'}
-          </button>
-          {editingCollection && <button type="button" onClick={() => { setEditingCollection(false); setCollectionForm(emptyCollection) }} className="rounded-md border border-gray-300 px-4 py-2.5 text-sm font-semibold text-gray-700">Cancel</button>}
-          </div>
-        </form>
-
-        <div className="space-y-5 border-y border-gray-200 py-5">
+      <section className="space-y-5 border-y border-gray-200 py-5">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h2 className="text-lg font-bold text-gray-900">Collection contents</h2>
@@ -427,8 +424,40 @@ export default function AdminDigitalCollections() {
               {(uploading || uploadFailed) && <div className="h-2 overflow-hidden rounded bg-gray-200" role="progressbar" aria-valuenow={uploadProgress} aria-valuemin="0" aria-valuemax="100"><div className="h-full bg-emerald-700 transition-[width]" style={{ width: `${uploadProgress}%` }} /></div>}
             </>}
           </form>
-        </div>
       </section>
+
+      {collectionModalOpen && <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/40 p-4 backdrop-blur-sm" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget && !savingCollection) setCollectionModalOpen(false) }}>
+        <form role="dialog" aria-modal="true" aria-labelledby="collection-form-title" onSubmit={createCollection} className="my-8 w-full max-w-xl space-y-5 rounded-lg bg-white p-6 shadow-xl">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <FolderPlus size={21} className="mt-1 shrink-0 text-emerald-700" />
+              <div>
+                <h2 id="collection-form-title" className="text-xl font-bold text-gray-900">{editingCollection ? 'Edit collection' : 'Create a collection'}</h2>
+                <p className="mt-1 text-sm text-gray-500">Describe what belongs in this collection and why it matters.</p>
+              </div>
+            </div>
+            <button type="button" aria-label="Close collection form" disabled={savingCollection} onClick={() => setCollectionModalOpen(false)} className="rounded-md p-1.5 text-gray-500 hover:bg-gray-100 disabled:opacity-50"><X size={19} /></button>
+          </div>
+          <label className="block text-sm font-semibold text-gray-700">Collection name
+            <input required maxLength={255} autoFocus value={collectionForm.title} onChange={(event) => setCollectionForm({ ...collectionForm, title: event.target.value })} className="mt-1.5 w-full rounded-md border border-gray-300 px-3 py-2.5 font-normal focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/15" />
+          </label>
+          <label className="block text-sm font-semibold text-gray-700">Description <span className="font-normal text-gray-500">(optional)</span>
+            <textarea value={collectionForm.description} onChange={(event) => setCollectionForm({ ...collectionForm, description: event.target.value })} rows={2} className="mt-1.5 w-full rounded-md border border-gray-300 px-3 py-2.5 font-normal focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/15" />
+          </label>
+          <label className="block text-sm font-semibold text-gray-700">Selection criteria
+            <textarea required value={collectionForm.selection_criteria} onChange={(event) => setCollectionForm({ ...collectionForm, selection_criteria: event.target.value })} rows={3} className="mt-1.5 w-full rounded-md border border-gray-300 px-3 py-2.5 font-normal focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/15" />
+          </label>
+          <label className="block text-sm font-semibold text-gray-700">Collection value
+            <textarea required value={collectionForm.collection_value} onChange={(event) => setCollectionForm({ ...collectionForm, collection_value: event.target.value })} rows={3} className="mt-1.5 w-full rounded-md border border-gray-300 px-3 py-2.5 font-normal focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/15" />
+          </label>
+          <div className="flex justify-end gap-2 border-t border-gray-200 pt-4">
+            <button type="button" disabled={savingCollection} onClick={() => setCollectionModalOpen(false)} className="rounded-md border border-gray-300 px-4 py-2.5 text-sm font-semibold text-gray-700 disabled:opacity-50">Cancel</button>
+            <button disabled={savingCollection} className="inline-flex items-center gap-2 rounded-md bg-emerald-800 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-900 disabled:opacity-60">
+              <Plus size={17} /> {savingCollection ? 'Saving…' : editingCollection ? 'Save changes' : 'Create collection'}
+            </button>
+          </div>
+        </form>
+      </div>}
 
       <section>
         <div className="mb-3 flex items-center justify-between">

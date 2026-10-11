@@ -19,13 +19,11 @@ This is for an **empty database only**. Do not run it as an upgrade over an exis
 
 See [`tables/README.md`](tables/README.md) for details.
 
-## Vercel and Railway environment
+## Render and Railway environment
 
-The frontend's production API URL is `https://kamuli-cu-vrx.vercel.app/api`. Set `VITE_API_BASE_URL` to this value in the frontend's Vercel project settings, then redeploy the frontend. The backend allows `https://kamuli-cu.vercel.app` by default; set `CORS_ORIGINS` in backend settings to a comma-separated list if you use additional frontend domains.
+The backend is hosted at `https://kamulicu.onrender.com`. In the frontend's Vercel project settings, set `VITE_API_BASE_URL=https://kamulicu.onrender.com/api`, then redeploy the frontend. The backend allows `https://kamuli-cu.vercel.app` by default; set `CORS_ORIGINS` in Render to a comma-separated list if you use additional frontend domains.
 
-For the backend Vercel project, set the project Root Directory to `backend` so Vercel deploys the functions in `api/`. The Express app is exported as a serverless function; do not set a custom Build or Output Directory. Redeploy the backend after changing the Root Directory or adding environment variables.
-
-For a backend hosted on Vercel and MySQL hosted on Railway, set `MYSQLHOST`, `MYSQLPORT`, `MYSQLUSER`, `MYSQLPASSWORD`, and `MYSQLDATABASE` using the Railway database's **public TCP proxy** connection values. The private Railway hostname is only reachable from Railway services. Also set `JWT_SECRET` to a long random value and `NODE_ENV=production`. The backend accepts `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME` as overrides. Optional Cloudinary and email variables are listed in `.env.example`.
+For the Render backend service, use `backend` as the Root Directory, `npm install` as the Build Command, and `npm start` as the Start Command. For MySQL hosted on Railway, set `MYSQLHOST`, `MYSQLPORT`, `MYSQLUSER`, `MYSQLPASSWORD`, and `MYSQLDATABASE` using Railway's public TCP proxy connection values; the private Railway hostname is not reachable from Render. Also set `JWT_SECRET` to a long random value and `NODE_ENV=production`. The backend accepts `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME` as overrides, so remove stale `DB_*` values if configuring `MYSQL*`. Optional Cloudinary and email variables are listed in `.env.example`.
 
 ## Installation
 
