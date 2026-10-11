@@ -8,7 +8,7 @@ export default function SchoolFooter() {
     <footer className="border-t border-slate-200 bg-[#102d4f] text-white">
       <div className="mx-auto grid max-w-7xl gap-8 px-5 py-9 sm:px-8 md:grid-cols-[1fr_auto] md:items-center">
         <div className="flex items-start gap-3">
-          <img src={SCHOOL_BADGE} alt="Kamuli CU school badge" className="size-12 shrink-0 rounded-full bg-white object-contain" />
+          <img src={SCHOOL_BADGE} alt="Kamuli CU school badge" className="size-12 shrink-0 rounded-xl border border-amber-300/80 bg-white p-1 object-contain shadow-sm" />
           <div>
             <p className="font-bold">{SCHOOL_NAME}</p>
             <p className="mt-1 text-sm text-white/70">{SCHOOL_OFFICIAL_NAME}</p>

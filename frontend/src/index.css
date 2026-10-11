@@ -30,7 +30,11 @@ body {
 
 /* Airbnb-inspired button style */
 .btn-primary {
-  @apply px-6 py-3 bg-primary text-white rounded-lg font-semibold transition-all duration-300 hover:bg-primary-dark hover:shadow-airbnb;
+  @apply px-6 py-3 bg-primary text-white rounded-lg font-semibold transition-all duration-300;
+}
+
+.btn-primary:hover {
+  @apply bg-primary-dark shadow-airbnb;
 }
 
 .btn-secondary {

@@ -6,6 +6,7 @@ import { toast } from 'react-toastify'
 import { useAuth } from '../../context/AuthContext'
 import { PasswordStrengthMeter } from '../../components/PasswordStrengthMeter'
 import { APP_NAME } from '../../constants/appConstants'
+import { SCHOOL_BADGE, SCHOOL_OFFICIAL_NAME } from '../../constants/schoolBrand'
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -60,6 +61,10 @@ export default function RegisterPage() {
   return (
     <div className="w-full max-w-md">
       <div className="bg-white rounded-2xl shadow-airbnb-lg p-8">
+        <div className="mb-6 flex items-center justify-center gap-3">
+          <img src={SCHOOL_BADGE} alt={`${SCHOOL_OFFICIAL_NAME} badge`} className="size-14 rounded-xl border border-secondary/60 bg-white p-1 object-contain shadow-sm" />
+          <span className="max-w-48 text-left text-sm font-semibold leading-5 text-primary">{SCHOOL_OFFICIAL_NAME}</span>
+        </div>
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-dark mb-2">Join {APP_NAME}</h1>
           <p className="text-gray-600">Create your school library account</p>
