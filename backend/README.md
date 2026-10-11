@@ -53,6 +53,12 @@ cp .env.example .env
 ```
 Digital collection files use Cloudinary authenticated assets when all three Cloudinary values are configured. API secrets stay on the backend; files stream through the rights-checked LMS routes. Without Cloudinary credentials, development falls back to private local storage.
 
+For an existing LMS database, add the book-cover Cloudinary asset-ID column once:
+```bash
+mysql -u root -p lms_db < database/schema_update_book_cover_cloudinary.sql
+```
+New and replacement JPEG, PNG, or WebP book covers use the configured Cloudinary account; legacy covers and unconfigured development setups continue using their existing local URLs.
+
 ### Step 5: Start Server
 ```bash
 npm run dev

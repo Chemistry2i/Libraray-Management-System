@@ -105,7 +105,7 @@ const AdminBooks = () => {
     setIsSaving(true);
     
     const submitData = new FormData();
-    Object.keys(formData).forEach(key => {
+    Object.keys(formData).filter((key) => !(key === 'publication_year' && !formData[key])).forEach(key => {
       submitData.append(key, formData[key]);
     });
     

@@ -85,7 +85,7 @@ class BookModel {
       const { title, author, category_id, publication_year, publisher, description } = updateData;
       const assignments = ['title = ?', 'author = ?', 'category_id = ?', 'publication_year = ?', 'publisher = ?', 'description = ?'];
       const values = [title, author, category_id, publication_year, publisher, description];
-      if (Object.hasOwn(updateData, 'cover_url')) {
+      if (Object.prototype.hasOwnProperty.call(updateData, 'cover_url')) {
         assignments.push('cover_url = ?', 'cover_cloudinary_public_id = ?');
         values.push(updateData.cover_url, updateData.cover_cloudinary_public_id || null);
       }
