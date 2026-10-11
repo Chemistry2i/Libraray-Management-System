@@ -49,7 +49,7 @@ export const reviewAPI = {
 export const userAPI = {
   getProfile: () => api.get('/users/profile'),
   updateProfile: (userData) => api.put('/users/profile', userData),
-  uploadProfileImage: (formData) => api.post('/users/profile-image', formData, {
+  uploadProfileImage: (formData) => api.post('/users/profile/image', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   }),
   changePassword: (passwordData) => api.post('/users/change-password', passwordData),

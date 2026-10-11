@@ -15,7 +15,7 @@ const profileImageStorage = multer.diskStorage({
     cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
-    const userId = req.user?.userId || 'unknown';
+    const userId = req.params.id || req.user?.user_id || 'unknown';
     const uniqueName = `${userId}-${Date.now()}${path.extname(file.originalname)}`;
     cb(null, uniqueName);
   }
@@ -61,6 +61,8 @@ router.post('/profile/image', authenticate,
 // Admin & Librarian Routes
 router.get('/', authenticate, authorize(ROLES.ADMIN, ROLES.LIBRARIAN), UserController.getAllUsers);
 router.post('/', authenticate, authorize(ROLES.ADMIN, ROLES.LIBRARIAN), UserController.createUser);
+router.post('/:id/profile-image', authenticate, authorize(ROLES.ADMIN, ROLES.LIBRARIAN),
+  uploadProfileImage.single('profileImage'), handleMulterError, UserController.uploadProfileImage);
 router.get('/:id', authenticate, authorize(ROLES.ADMIN, ROLES.LIBRARIAN), UserController.getUser);
 router.put('/:id', authenticate, authorize(ROLES.ADMIN, ROLES.LIBRARIAN), UserController.updateUser);
 router.delete('/:id', authenticate, authorize(ROLES.ADMIN, ROLES.LIBRARIAN), UserController.deleteUser);

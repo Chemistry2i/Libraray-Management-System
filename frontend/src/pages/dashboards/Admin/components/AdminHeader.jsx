@@ -107,9 +107,11 @@ export default function AdminHeader() {
               <p className="text-sm font-bold text-gray-900">{user?.firstName} {user?.lastName}</p>
               <p className="text-xs text-gray-500 capitalize">{user?.role || 'Admin'}</p>
             </div>
-            <div className="w-10 h-10 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center border border-primary/20 shrink-0">
-              {user?.firstName?.charAt(0) || 'A'}
-            </div>
+            {user?.profile_image_url
+              ? <img src={user.profile_image_url} alt="Profile" className="h-10 w-10 shrink-0 rounded-full border border-primary/20 object-cover" />
+              : <div className="w-10 h-10 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center border border-primary/20 shrink-0">
+                {user?.firstName?.charAt(0) || 'A'}
+              </div>}
             <ChevronDown size={16} className={`text-gray-400 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
           </button>
 

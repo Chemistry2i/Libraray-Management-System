@@ -2,8 +2,9 @@ const UserService = require('../services/UserService');
 const UserModel = require('../models/UserModel');
 const { sendSuccess, sendPaginated } = require('../utils/response');
 const { DEFAULT_PAGE, DEFAULT_LIMIT } = require('../constants/appConstants');
-const config = require('../config/config');
+const fs = require('fs');
 const { hashPassword } = require('../services/PasswordService');
+const ProfileImageStorageService = require('../services/ProfileImageStorageService');
 const { NotFoundError, ConflictError } = require('../exceptions/AppError');
 
 class UserController {
@@ -97,21 +98,27 @@ class UserController {
   }
 
   static async uploadProfileImage(req, res, next) {
-    // existing upload code
+    let imageUrl;
     try {
-      if (!req.file) return sendSuccess(res, 'No file uploaded', null, 400);
-      if (!req.user || !req.user.user_id) return sendSuccess(res, 'User not authenticated', null, 401);
+      if (!req.file) return res.status(400).json({ success: false, message: 'Select a profile image first' });
+      if (!req.user || !req.user.user_id) return res.status(401).json({ success: false, message: 'User not authenticated' });
 
-      const userId = req.user.user_id;
-      const imageUrl = `${config.API_URL}/uploads/profile-images/${req.file.filename}`;
+      const userId = req.params.id || req.user.user_id;
+      imageUrl = await ProfileImageStorageService.store(req.file);
       const updatedUser = await UserService.uploadProfileImage(userId, imageUrl);
       
-      if (!updatedUser) return sendSuccess(res, 'User not found', null, 404);
+      if (!updatedUser) return res.status(404).json({ success: false, message: 'User not found' });
       
-      res.status(200).json({ success: true, message: 'Profile image uploaded successfully', data: { user: updatedUser, imageUrl }, timestamp: new Date().toISOString() });
+      sendSuccess(res, 'Profile image uploaded successfully', { user: updatedUser, imageUrl });
     } catch (error) {
-      if (!res.headersSent) {
-        res.status(500).json({ success: false, message: error.message || 'Image upload failed', timestamp: new Date().toISOString() });
+      next(error);
+    } finally {
+      if (req.file?.path && ProfileImageStorageService.shouldRemoveTemporaryFile()) {
+        try {
+          await fs.promises.rm(req.file.path, { force: true });
+        } catch (error) {
+          console.error('Could not remove temporary profile image:', error.message);
+        }
       }
     }
   }

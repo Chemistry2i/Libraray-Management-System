@@ -8,6 +8,8 @@ const AdminUsers = () => {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [viewUser, setViewUser] = useState(null);
+  const [profileImageFile, setProfileImageFile] = useState(null);
+  const [profileImagePreview, setProfileImagePreview] = useState('');
   const [loading, setLoading] = useState(true);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -24,6 +26,16 @@ const AdminUsers = () => {
   });
   const [formErrors, setFormErrors] = useState({});
   const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    if (!profileImageFile) {
+      setProfileImagePreview('');
+      return undefined;
+    }
+    const previewUrl = URL.createObjectURL(profileImageFile);
+    setProfileImagePreview(previewUrl);
+    return () => URL.revokeObjectURL(previewUrl);
+  }, [profileImageFile]);
 
   useEffect(() => {
     if (!viewUser) return undefined;
@@ -79,6 +91,7 @@ const AdminUsers = () => {
 
   const handleAddClick = () => {
     setEditingUser(null);
+    setProfileImageFile(null);
     setFormData({ 
       first_name: '', last_name: '', email: '', role: 'member', status: 'active', phone_number: '', username: '', password: ''
     });
@@ -88,6 +101,7 @@ const AdminUsers = () => {
 
   const handleEditClick = (user) => {
     setEditingUser(user);
+    setProfileImageFile(null);
     setFormData({ 
       first_name: user.first_name || '', 
       last_name: user.last_name || '', 
@@ -128,20 +142,49 @@ const AdminUsers = () => {
   const handleSaveModal = async (e) => {
     e.preventDefault();
     setIsSaving(true);
-    
+    let savedUserId = editingUser?.user_id;
+    let detailsSaved = false;
     try {
       if (editingUser) {
         await api.put(`/users/${editingUser.user_id}`, formData);
-        Swal.fire({ title: 'Updated!', text: 'User details have been successfully updated.', icon: 'success', timer: 2000, showConfirmButton: false });
+        detailsSaved = true;
       } else {
-        await api.post('/users', formData);
-        Swal.fire({ title: 'Created!', text: 'New user profile created successfully.', icon: 'success', timer: 2000, showConfirmButton: false });
+        const { data } = await api.post('/users', formData);
+        savedUserId = data?.data?.user_id;
+        detailsSaved = true;
+        if (!savedUserId) throw new Error('User was created, but the server did not return its ID.');
       }
+
+      if (profileImageFile) {
+        if (!savedUserId) throw new Error('Save the user before uploading a profile photo.');
+        const imageData = new FormData();
+        imageData.append('profileImage', profileImageFile);
+        await api.post(`/users/${savedUserId}/profile-image`, imageData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+      }
+
       setIsModalOpen(false);
-      fetchUsers();
+      setProfileImageFile(null);
+      await fetchUsers();
+      Swal.fire({
+        title: editingUser ? 'Updated!' : 'Created!',
+        text: editingUser ? 'User details have been successfully updated.' : 'New user profile created successfully.',
+        icon: 'success',
+        timer: 2000,
+        showConfirmButton: false,
+      });
     } catch (error) {
       console.error(error);
-      if (error.response?.data?.errors) {
+      if (detailsSaved && savedUserId) {
+        setEditingUser((current) => ({ ...(current || {}), user_id: savedUserId }));
+        await fetchUsers();
+        Swal.fire({
+          title: 'User saved; photo upload failed',
+          text: error.response?.data?.message || error.message || 'Could not upload the profile photo. Try again.',
+          icon: 'warning',
+        });
+      } else if (error.response?.data?.errors) {
         const errorsMap = {};
         error.response.data.errors.forEach(err => {
           errorsMap[err.path || err.param] = err.msg;
@@ -282,6 +325,18 @@ const AdminUsers = () => {
             
             <div className="overflow-y-auto w-full">
                 <form onSubmit={handleSaveModal} className="p-6">
+                  <div className="mb-6 flex flex-col items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 p-5">
+                    {profileImagePreview || editingUser?.profile_image_url
+                      ? <img src={profileImagePreview || editingUser.profile_image_url} alt="Profile preview" className="h-24 w-24 rounded-full border-2 border-white object-cover shadow" />
+                      : <div className="flex h-24 w-24 items-center justify-center rounded-full bg-blue-100 text-2xl font-bold text-blue-700">{formData.first_name?.[0] || ''}{formData.last_name?.[0] || ''}</div>}
+                    <div className="text-center">
+                      <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-100">
+                        <User size={16} /> {profileImageFile ? 'Choose a different photo' : 'Choose profile photo'}
+                        <input type="file" accept="image/jpeg,image/png,image/gif,image/webp" className="sr-only" onChange={(event) => setProfileImageFile(event.target.files?.[0] || null)} />
+                      </label>
+                      <p className="mt-2 text-xs text-gray-500">JPEG, PNG, GIF, or WebP. Maximum 5 MB.</p>
+                    </div>
+                  </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-1">First Name *</label>
