@@ -1,12 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { ArrowRight, BookOpen, MapPin, Phone, Mail, ChevronDown, Send, UserRound, Tag, MessageSquare } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
+import { useGSAP } from '@gsap/react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SCHOOL_BADGE, SCHOOL_NAME, SCHOOL_OFFICIAL_NAME } from '../constants/schoolBrand'
 import heroImage from '../img/hero.jpeg'
 import classImageOne from '../img/class1.jpg'
 import classImageTwo from '../img/class2.jpg'
 import classImageThree from '../img/class3.jpg'
+
+gsap.registerPlugin(useGSAP, ScrollTrigger)
 
 const gallery = [
   { src: classImageOne, alt: 'Pupils reading together in the school library', title: 'Learning together' },
@@ -46,55 +51,84 @@ const faqs = [
 export default function KamuliHomePage() {
   const [emailDraftOpened, setEmailDraftOpened] = useState(false)
   const prefersReducedMotion = useReducedMotion()
+  const heroRef = useRef(null)
+  const galleryRef = useRef(null)
+  const subjectsRef = useRef(null)
   const scrollReveal = {
     initial: { opacity: prefersReducedMotion ? 0.65 : 0, y: prefersReducedMotion ? 0 : 24 },
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true, amount: 0.12 },
     transition: { duration: prefersReducedMotion ? 0.24 : 0.55, ease: 'easeOut' },
   }
-  const title = 'A school library for curious minds.'
-  const [typedTitle, setTypedTitle] = useState(() => prefersReducedMotion ? title : '')
+  useGSAP(() => {
+    if (prefersReducedMotion) return
 
-  useEffect(() => {
-    if (prefersReducedMotion) {
-      setTypedTitle(title)
-      return undefined
-    }
+    const timeline = gsap.timeline({ defaults: { ease: 'power3.out' } })
+    timeline
+      .from('.hero-badge', { autoAlpha: 0, y: 16, duration: 0.45 })
+      .from('.hero-kicker', { autoAlpha: 0, y: 12, duration: 0.35 }, '-=0.18')
+      .from('.hero-title-line', { yPercent: 110, duration: 0.72, stagger: 0.13 }, '-=0.08')
+      .from('.hero-copy', { autoAlpha: 0, y: 14, duration: 0.45 }, '-=0.2')
+      .from('.hero-action', { autoAlpha: 0, y: 12, duration: 0.38, stagger: 0.12 }, '-=0.18')
+  }, { scope: heroRef, dependencies: [prefersReducedMotion], revertOnUpdate: true })
 
-    setTypedTitle('')
-    let currentLength = 0
-    const typingInterval = window.setInterval(() => {
-      currentLength += 1
-      setTypedTitle(title.slice(0, currentLength))
-      if (currentLength >= title.length) window.clearInterval(typingInterval)
-    }, 46)
+  useGSAP(() => {
+    if (prefersReducedMotion) return
+    const cards = gsap.utils.toArray('.gallery-card', galleryRef.current)
+    if (!cards.length) return
 
-    return () => window.clearInterval(typingInterval)
-  }, [prefersReducedMotion])
+    gsap.fromTo(cards,
+      { autoAlpha: 0, y: 36, clipPath: 'inset(0 0 14% 0)' },
+      {
+        autoAlpha: 1,
+        y: 0,
+        clipPath: 'inset(0 0 0% 0)',
+        duration: 0.72,
+        stagger: 0.14,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: galleryRef.current, start: 'top 76%', once: true },
+      }
+    )
+  }, { scope: galleryRef, dependencies: [prefersReducedMotion], revertOnUpdate: true })
+
+  useGSAP(() => {
+    if (prefersReducedMotion) return
+    const subjects = gsap.utils.toArray('.subject-chip', subjectsRef.current)
+    if (!subjects.length) return
+
+    gsap.fromTo(subjects,
+      { autoAlpha: 0, y: 18 },
+      {
+        autoAlpha: 1,
+        y: 0,
+        duration: 0.4,
+        stagger: 0.07,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: subjectsRef.current, start: 'top 82%', once: true },
+      }
+    )
+  }, { scope: subjectsRef, dependencies: [prefersReducedMotion], revertOnUpdate: true })
 
   return (
     <div className="w-full bg-white text-slate-900">
-      <motion.section {...scrollReveal} className="relative flex min-h-[80vh] items-center overflow-hidden bg-[#102d4f]">
+      <motion.section ref={heroRef} className="relative flex min-h-[80vh] items-center overflow-hidden bg-[#102d4f]">
         <img src={heroImage} alt="The entrance to Kamuli Church of Uganda Primary School" className="absolute inset-0 size-full object-cover object-center" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#081a30]/95 via-[#0a2442]/50 to-[#102d4f]/5" />
         <div className="relative mx-auto w-full max-w-7xl px-5 py-14 sm:px-8 md:py-16">
           <div className="max-w-3xl text-white">
-            <div className="mb-6 inline-flex items-center gap-3 rounded-full border border-white/25 bg-white/10 p-2 pr-4 backdrop-blur-sm">
+            <div className="hero-badge mb-6 inline-flex items-center gap-3 rounded-full border border-white/25 bg-white/10 p-2 pr-4 backdrop-blur-sm">
               <img src={SCHOOL_BADGE} alt="" className="size-10 rounded-full bg-white object-contain" />
               <span className="text-sm font-semibold">Kamuli CU Library</span>
             </div>
-            <p className="text-sm font-bold uppercase tracking-[0.16em] text-amber-200">Read · Learn · Grow</p>
-            <h1 aria-label={title} className="relative mt-3 max-w-3xl text-4xl font-bold leading-tight sm:text-5xl md:text-6xl">
-              <span aria-hidden="true" className="invisible">{title}</span>
-              <span aria-hidden="true" className="absolute inset-0">
-                {typedTitle}
-                {!prefersReducedMotion && <motion.span aria-hidden="true" animate={{ opacity: [1, 0, 1] }} transition={{ duration: 0.9, repeat: Infinity, ease: 'linear' }} className="ml-1 inline-block h-[0.85em] w-[2px] translate-y-[0.08em] bg-amber-300 align-baseline" />}
-              </span>
+            <p className="hero-kicker text-sm font-bold uppercase tracking-[0.16em] text-amber-200">Read · Learn · Grow</p>
+            <h1 className="mt-3 max-w-3xl text-4xl font-bold leading-tight sm:text-5xl md:text-6xl">
+              <span className="block overflow-hidden"><span className="hero-title-line block">A school library</span></span>
+              <span className="block overflow-hidden"><span className="hero-title-line block">for curious minds.</span></span>
             </h1>
-            <p className="mt-5 max-w-2xl text-base leading-7 text-white/90 sm:text-lg">Find storybooks, textbooks and learning resources to support every pupil at {SCHOOL_OFFICIAL_NAME}.</p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link to="/books" className="inline-flex items-center gap-2 rounded-md bg-white px-5 py-3 text-sm font-bold text-[#12365d] transition-colors hover:bg-amber-100">Explore the library <ArrowRight size={17} /></Link>
-              <Link to="/digital-collections" className="inline-flex items-center gap-2 rounded-md border border-white/70 bg-[#102d4f]/30 px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-white/10">Digital collection</Link>
+            <p className="hero-copy mt-5 max-w-2xl text-base leading-7 text-white/90 sm:text-lg">Find storybooks, textbooks and learning resources to support every pupil at {SCHOOL_OFFICIAL_NAME}.</p>
+            <div className="hero-actions mt-8 flex flex-wrap gap-3">
+              <Link to="/books" className="hero-action inline-flex items-center gap-2 rounded-md bg-white px-5 py-3 text-sm font-bold text-[#12365d] transition-colors hover:bg-amber-100">Explore the library <ArrowRight size={17} /></Link>
+              <Link to="/digital-collections" className="hero-action inline-flex items-center gap-2 rounded-md border border-white/70 bg-[#102d4f]/30 px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-white/10">Digital collection</Link>
             </div>
           </div>
         </div>
@@ -130,15 +164,15 @@ export default function KamuliHomePage() {
         </motion.div>
       </div>
 
-      <motion.section {...scrollReveal} className="flex items-center bg-[#f4f7fa]">
+      <motion.section ref={subjectsRef} {...scrollReveal} className="flex items-center bg-[#f4f7fa]">
         <div className="mx-auto grid w-full max-w-7xl gap-10 px-5 py-12 sm:px-8 md:grid-cols-[0.8fr_1.2fr] md:items-center md:py-16">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#a77914]">Explore by subject</p>
             <h2 className="mt-2 text-3xl font-bold leading-tight text-[#102d4f]">Learning resources for the school curriculum.</h2>
             <p className="mt-4 leading-7 text-slate-600">From class topics to reading for pleasure, browse the catalogue and find something that matches your interests or learning goals.</p>
             <div className="mt-5 flex flex-wrap gap-2.5">
-              {['English', 'Mathematics', 'Science', 'Social Studies', 'Christian Religious Education', 'Storybooks', 'Reference books'].map((subject) => <span key={subject} className="border border-[#c9d5e2] bg-white px-3.5 py-2 text-sm font-semibold text-[#173b64]">{subject}</span>)}
-              <Link to="/books" className="inline-flex items-center gap-2 bg-[#173b64] px-3.5 py-2 text-sm font-bold text-white transition-colors hover:bg-[#102d4f]">Browse catalogue <ArrowRight size={15} /></Link>
+              {['English', 'Mathematics', 'Science', 'Social Studies', 'Christian Religious Education', 'Storybooks', 'Reference books'].map((subject) => <span key={subject} className="subject-chip border border-[#c9d5e2] bg-white px-3.5 py-2 text-sm font-semibold text-[#173b64]">{subject}</span>)}
+              <Link to="/books" className="subject-chip inline-flex items-center gap-2 bg-[#173b64] px-3.5 py-2 text-sm font-bold text-white transition-colors hover:bg-[#102d4f]">Browse catalogue <ArrowRight size={15} /></Link>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3 sm:gap-4">
@@ -150,7 +184,7 @@ export default function KamuliHomePage() {
         </div>
       </motion.section>
 
-      <motion.section {...scrollReveal} className="flex items-center bg-white">
+      <motion.section ref={galleryRef} {...scrollReveal} className="flex items-center bg-white">
         <div className="mx-auto w-full max-w-7xl px-5 py-12 sm:px-8 md:py-16">
         <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
           <div>
@@ -160,7 +194,7 @@ export default function KamuliHomePage() {
           </div>
         </div>
         <div className="grid gap-5 md:grid-cols-3">
-          {gallery.map((item) => <figure key={item.title} className="group overflow-hidden border-b-2 border-[#d6b24a] bg-slate-50">
+          {gallery.map((item) => <figure key={item.title} className="gallery-card group overflow-hidden border-b-2 border-[#d6b24a] bg-slate-50">
             <div className="aspect-[4/3] overflow-hidden bg-slate-100"><img src={item.src} alt={item.alt} loading="lazy" className="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" /></div>
             <figcaption className="px-4 py-4 text-base font-bold text-[#102d4f]">{item.title}</figcaption>
           </figure>)}
