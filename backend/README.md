@@ -19,6 +19,12 @@ This is for an **empty database only**. Do not run it as an upgrade over an exis
 
 See [`tables/README.md`](tables/README.md) for details.
 
+## Vercel and Railway environment
+
+The frontend's production API URL is `https://kamuli-cu-vrx.vercel.app/api`. Set `VITE_API_BASE_URL` to this value in the frontend's Vercel project settings, then redeploy the frontend. The backend allows `https://kamuli-cu.vercel.app` by default; set `CORS_ORIGINS` in backend settings to a comma-separated list if you use additional frontend domains.
+
+For a backend hosted on Vercel and MySQL hosted on Railway, set `MYSQLHOST`, `MYSQLPORT`, `MYSQLUSER`, `MYSQLPASSWORD`, and `MYSQLDATABASE` using the Railway database's **public TCP proxy** connection values. The private Railway hostname is only reachable from Railway services. Also set `JWT_SECRET` to a long random value and `NODE_ENV=production`. The backend accepts `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME` as overrides. Optional Cloudinary and email variables are listed in `.env.example`.
+
 ## Installation
 
 ### Step 1: Install Dependencies
