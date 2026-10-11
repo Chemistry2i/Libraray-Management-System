@@ -6,7 +6,7 @@ const { sendSuccess, sendError } = require('../utils/response');
 const uploadDirectory = path.join(__dirname, '../../uploads/digital-objects');
 
 function sendObjectFile(res, object) {
-  const filePath = path.join(uploadDirectory, object.file_path);
+  const filePath = path.join(uploadDirectory, path.basename(object.file_path));
   if (!fs.existsSync(filePath)) return sendError(res, 'Digital object file not found', 404);
   res.type(object.mime_type);
   res.setHeader('Content-Disposition', `inline; filename="${encodeURIComponent(object.original_filename)}"`);
@@ -140,8 +140,8 @@ class DigitalCollectionController {
       if (typeof req.body.is_public !== 'boolean') return sendError(res, 'is_public must be a boolean', 400);
       const object = await DigitalCollectionModel.findObjectById(req.params.objectId);
       if (!object) return sendError(res, 'Digital object not found', 404);
-      if (req.body.is_public && object.rights_status === 'Sensitive - Restricted') {
-        return sendError(res, 'Sensitive restricted objects cannot be made public', 400);
+      if (req.body.is_public && (!object.rights_assessed || object.rights_status === 'Sensitive - Restricted')) {
+        return sendError(res, 'Only rights-assessed, non-restricted objects can be made public', 400);
       }
       await DigitalCollectionModel.setPublicStatus(req.params.objectId, req.body.is_public);
       sendSuccess(res, 'Digital object access updated');

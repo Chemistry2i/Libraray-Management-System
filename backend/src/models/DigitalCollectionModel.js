@@ -69,7 +69,7 @@ class DigitalCollectionModel {
 
   static async findObjectById(objectId, publicOnly = false) {
     const [rows] = await pool.query(
-      `SELECT * FROM digital_objects WHERE object_id = ?${publicOnly ? ' AND is_public = TRUE' : ''}`,
+      `SELECT * FROM digital_objects WHERE object_id = ?${publicOnly ? " AND is_public = TRUE AND rights_assessed = TRUE AND rights_status <> 'Sensitive - Restricted'" : ''}`,
       [objectId]
     );
     return rows[0] || null;
@@ -82,7 +82,9 @@ class DigitalCollectionModel {
         o.rights_status, o.created_at
        FROM digital_objects o
        JOIN digital_collections c ON c.collection_id = o.collection_id
-       WHERE o.is_public = TRUE ORDER BY o.created_at DESC`
+      WHERE o.is_public = TRUE AND o.rights_assessed = TRUE
+        AND o.rights_status <> 'Sensitive - Restricted'
+      ORDER BY o.created_at DESC`
     );
     return rows;
   }
@@ -90,8 +92,9 @@ class DigitalCollectionModel {
   static async setPublicStatus(objectId, isPublic) {
     const [result] = await pool.query(
       `UPDATE digital_objects SET is_public = ?
-       WHERE object_id = ? AND rights_status <> 'Sensitive - Restricted'`,
-      [isPublic, objectId]
+       WHERE object_id = ?
+         AND (? = FALSE OR (rights_assessed = TRUE AND rights_status <> 'Sensitive - Restricted'))`,
+      [isPublic, objectId, isPublic]
     );
     return result.affectedRows;
   }

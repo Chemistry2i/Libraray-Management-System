@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars, faTimes, faUser, faSignOutAlt, faHome, faBook, faBell, faCog } from '@fortawesome/free-solid-svg-icons'
+import { faBars, faTimes, faUser, faSignOutAlt, faBook, faBell, faCog } from '@fortawesome/free-solid-svg-icons'
 import { useAuth } from '../context/AuthContext.jsx'
 
 export default function Navigation() {
