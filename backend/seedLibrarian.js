@@ -13,10 +13,10 @@ const dbConfig = {
 };
 
 const librarian = {
-  first_name: 'Ggita',
-  last_name: 'Ibrahim',
+  first_name: 'Doreen',
+  last_name: 'Admin',
   email: 'admin@gmail.com',
-  username: 'Ggita Ibrahim',
+  username: 'Doreen',
   password: 'Admin@123', // plain text, will be hashed
   role: 'librarian'
 };
