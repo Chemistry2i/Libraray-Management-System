@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ArrowRight, BookOpen, MapPin, Phone, Mail, ChevronDown, Send } from 'lucide-react'
+import { ArrowRight, BookOpen, MapPin, Phone, Mail, ChevronDown, Send, UserRound, Tag, MessageSquare } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import { SCHOOL_BADGE, SCHOOL_NAME, SCHOOL_OFFICIAL_NAME } from '../constants/schoolBrand'
@@ -230,16 +230,28 @@ export default function KamuliHomePage() {
               setEmailDraftOpened(true)
             }}>
               <label className="block text-sm font-semibold text-[#173b64]">Your name
-                <input required name="name" autoComplete="name" maxLength={100} className="mt-1.5 w-full rounded-md border border-slate-300 px-3 py-2.5 text-sm font-normal outline-none focus:border-[#173b64] focus:ring-2 focus:ring-[#173b64]/15" />
+                <span className="relative mt-1.5 block">
+                  <UserRound aria-hidden="true" size={17} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input required name="name" autoComplete="name" maxLength={100} placeholder="Your full name" className="w-full rounded-md border border-slate-300 py-2.5 pl-10 pr-3 text-sm font-normal outline-none placeholder:text-slate-400 focus:border-[#173b64] focus:ring-2 focus:ring-[#173b64]/15" />
+                </span>
               </label>
               <label className="block text-sm font-semibold text-[#173b64]">Email address
-                <input required type="email" name="email" autoComplete="email" maxLength={254} className="mt-1.5 w-full rounded-md border border-slate-300 px-3 py-2.5 text-sm font-normal outline-none focus:border-[#173b64] focus:ring-2 focus:ring-[#173b64]/15" />
+                <span className="relative mt-1.5 block">
+                  <Mail aria-hidden="true" size={17} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input required type="email" name="email" autoComplete="email" maxLength={254} placeholder="you@example.com" className="w-full rounded-md border border-slate-300 py-2.5 pl-10 pr-3 text-sm font-normal outline-none placeholder:text-slate-400 focus:border-[#173b64] focus:ring-2 focus:ring-[#173b64]/15" />
+                </span>
               </label>
               <label className="block text-sm font-semibold text-[#173b64]">Subject
-                <input required name="subject" maxLength={150} className="mt-1.5 w-full rounded-md border border-slate-300 px-3 py-2.5 text-sm font-normal outline-none focus:border-[#173b64] focus:ring-2 focus:ring-[#173b64]/15" />
+                <span className="relative mt-1.5 block">
+                  <Tag aria-hidden="true" size={17} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input required name="subject" maxLength={150} placeholder="How can we help?" className="w-full rounded-md border border-slate-300 py-2.5 pl-10 pr-3 text-sm font-normal outline-none placeholder:text-slate-400 focus:border-[#173b64] focus:ring-2 focus:ring-[#173b64]/15" />
+                </span>
               </label>
               <label className="block text-sm font-semibold text-[#173b64]">Message
-                <textarea required name="message" rows={5} maxLength={3000} className="mt-1.5 w-full resize-y rounded-md border border-slate-300 px-3 py-2.5 text-sm font-normal outline-none focus:border-[#173b64] focus:ring-2 focus:ring-[#173b64]/15" />
+                <span className="relative mt-1.5 block">
+                  <MessageSquare aria-hidden="true" size={17} className="pointer-events-none absolute left-3 top-3 text-slate-400" />
+                  <textarea required name="message" rows={5} maxLength={3000} placeholder="Write your message to the school..." className="w-full resize-y rounded-md border border-slate-300 py-2.5 pl-10 pr-3 text-sm font-normal outline-none placeholder:text-slate-400 focus:border-[#173b64] focus:ring-2 focus:ring-[#173b64]/15" />
+                </span>
               </label>
               <button type="submit" className="inline-flex items-center gap-2 rounded-md bg-[#173b64] px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-[#102d4f]"><Send size={16} />Open email app</button>
               {emailDraftOpened && <p role="status" className="text-sm leading-6 text-[#173b64]">Your email app should open with the message ready. Send it there to contact the school.</p>}
