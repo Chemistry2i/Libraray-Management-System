@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ArrowRight, BookOpen, MapPin, Phone, Mail, ChevronDown, Send } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
@@ -38,18 +38,24 @@ export default function KamuliHomePage() {
     transition: { duration: 0.55, ease: 'easeOut' },
   }
   const title = 'A school library for curious minds.'
-  const titleVariants = {
-    hidden: {},
-    visible: { transition: { staggerChildren: prefersReducedMotion ? 0 : 0.13 } },
-  }
-  const wordVariants = {
-    hidden: {},
-    visible: { transition: { staggerChildren: prefersReducedMotion ? 0 : 0.035 } },
-  }
-  const letterVariants = {
-    hidden: { opacity: 0, y: 16 },
-    visible: { opacity: 1, y: 0, transition: { duration: prefersReducedMotion ? 0 : 0.24, ease: 'easeOut' } },
-  }
+  const [typedTitle, setTypedTitle] = useState(() => prefersReducedMotion ? title : '')
+
+  useEffect(() => {
+    if (prefersReducedMotion) {
+      setTypedTitle(title)
+      return undefined
+    }
+
+    setTypedTitle('')
+    let currentLength = 0
+    const typingInterval = window.setInterval(() => {
+      currentLength += 1
+      setTypedTitle(title.slice(0, currentLength))
+      if (currentLength >= title.length) window.clearInterval(typingInterval)
+    }, 46)
+
+    return () => window.clearInterval(typingInterval)
+  }, [prefersReducedMotion])
 
   return (
     <div className="w-full bg-white text-slate-900">
@@ -63,17 +69,13 @@ export default function KamuliHomePage() {
               <span className="text-sm font-semibold">Kamuli CU Library</span>
             </div>
             <p className="text-sm font-bold uppercase tracking-[0.16em] text-amber-200">Read · Learn · Grow</p>
-            <motion.h1
-              aria-label={title}
-              initial={prefersReducedMotion ? false : 'hidden'}
-              animate="visible"
-              variants={titleVariants}
-              className="mt-3 max-w-3xl text-4xl font-bold leading-tight sm:text-5xl md:text-6xl"
-            >
-              {title.split(' ').map((word, wordIndex) => <motion.span key={`${word}-${wordIndex}`} aria-hidden="true" variants={wordVariants} className="mr-[0.24em] inline-block whitespace-nowrap last:mr-0">
-                {Array.from(word).map((letter, letterIndex) => <motion.span key={`${letter}-${letterIndex}`} variants={letterVariants} className="inline-block">{letter}</motion.span>)}
-              </motion.span>)}
-            </motion.h1>
+            <h1 aria-label={title} className="relative mt-3 max-w-3xl text-4xl font-bold leading-tight sm:text-5xl md:text-6xl">
+              <span aria-hidden="true" className="invisible">{title}</span>
+              <span aria-hidden="true" className="absolute inset-0">
+                {typedTitle}
+                {!prefersReducedMotion && <motion.span aria-hidden="true" animate={{ opacity: [1, 0, 1] }} transition={{ duration: 0.9, repeat: Infinity, ease: 'linear' }} className="ml-1 inline-block h-[0.85em] w-[2px] translate-y-[0.08em] bg-amber-300 align-baseline" />}
+              </span>
+            </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-white/90 sm:text-lg">Find storybooks, textbooks and learning resources to support every pupil at {SCHOOL_OFFICIAL_NAME}.</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link to="/books" className="inline-flex items-center gap-2 rounded-md bg-white px-5 py-3 text-sm font-bold text-[#12365d] transition-colors hover:bg-amber-100">Explore the library <ArrowRight size={17} /></Link>
