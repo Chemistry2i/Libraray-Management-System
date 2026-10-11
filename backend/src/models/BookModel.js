@@ -43,7 +43,7 @@ class BookModel {
   static async create(bookData) {
     const connection = await pool.getConnection();
     try {
-      const { title, author, isbn, category_id, publication_year, publisher, description, total_copies, available_copies, cover_url, book_file_url } = bookData;
+      const { title, author, isbn, category_id, publication_year, publisher, description, total_copies, available_copies, cover_url, cover_cloudinary_public_id, book_file_url } = bookData;
       console.log('DEBUG: BookModel.create bookData:', bookData);
       
       // Start transaction
@@ -51,8 +51,8 @@ class BookModel {
 
       // Insert book record
       const [result] = await connection.query(
-        'INSERT INTO books (title, author, isbn, category_id, publication_year, publisher, description, total_copies, available_copies, cover_url, book_file_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [title, author, isbn, category_id, publication_year, publisher, description, total_copies, available_copies, cover_url, book_file_url]
+        'INSERT INTO books (title, author, isbn, category_id, publication_year, publisher, description, total_copies, available_copies, cover_url, cover_cloudinary_public_id, book_file_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [title, author, isbn, category_id, publication_year, publisher, description, total_copies, available_copies, cover_url, cover_cloudinary_public_id, book_file_url]
       );
 
       const bookId = result.insertId;
@@ -83,9 +83,15 @@ class BookModel {
   static async update(bookId, updateData) {
     try {
       const { title, author, category_id, publication_year, publisher, description } = updateData;
+      const assignments = ['title = ?', 'author = ?', 'category_id = ?', 'publication_year = ?', 'publisher = ?', 'description = ?'];
+      const values = [title, author, category_id, publication_year, publisher, description];
+      if (Object.hasOwn(updateData, 'cover_url')) {
+        assignments.push('cover_url = ?', 'cover_cloudinary_public_id = ?');
+        values.push(updateData.cover_url, updateData.cover_cloudinary_public_id || null);
+      }
       await pool.query(
-        'UPDATE books SET title = ?, author = ?, category_id = ?, publication_year = ?, publisher = ?, description = ? WHERE book_id = ?',
-        [title, author, category_id, publication_year, publisher, description, bookId]
+        `UPDATE books SET ${assignments.join(', ')} WHERE book_id = ?`,
+        [...values, bookId]
       );
       return true;
     } catch (error) {

@@ -6,6 +6,7 @@ import { bookAPI, borrowingAPI, reservationAPI, reviewAPI } from '../api/endpoin
 import { toast } from 'react-toastify'
 import Swal from 'sweetalert2'
 import { useAuth } from '../context/AuthContext'
+import { getBookCoverUrl } from '../utils/helpers'
 
 export default function BookDetailsPage() {
   const { id } = useParams()
@@ -378,8 +379,8 @@ export default function BookDetailsPage() {
               {/* Cover Image */}
               <div className="w-full h-96 bg-gradient-to-br from-primary to-secondary flex items-center justify-center overflow-hidden relative group">
                 {book.cover_url ? (
-                  <img 
-                    src={`http://localhost:5000${book.cover_url}`} 
+                  <img
+                    src={getBookCoverUrl(book.cover_url)}
                     alt={book.title}
                     className="w-full h-full object-cover"
                   />
@@ -750,8 +751,8 @@ export default function BookDetailsPage() {
                     >
                       <div className="w-full h-40 bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
                         {relBook.cover_url ? (
-                          <img 
-                            src={`http://localhost:5000${relBook.cover_url}`}
+                          <img
+                            src={getBookCoverUrl(relBook.cover_url)}
                             alt={relBook.title}
                             className="w-full h-full object-cover"
                           />

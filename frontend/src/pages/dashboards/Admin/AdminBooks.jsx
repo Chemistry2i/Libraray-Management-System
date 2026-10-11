@@ -3,6 +3,7 @@ import { Search, Plus, Filter, Edit, Trash2, MoreVertical, Eye, X, Upload } from
 import Swal from 'sweetalert2';
 import api from '../../../api/axios';
 import { filterBySearch } from '../../../utils/searchUtils';
+import { getBookCoverUrl } from '../../../utils/helpers';
 
 const AdminBooks = () => {
   const [books, setBooks] = useState([]);
@@ -113,12 +114,9 @@ const AdminBooks = () => {
 
     try {
       if (editingBook) {
-        await api.put(`/books/${editingBook.book_id}`, formData); // The backend validator doesn't expect form-data files for PUT in current code, but let's check
-        // Oh wait. The backend for PUT /:id doesn't parse form-data in BookController.updateBook!
-        // Right, PUT expects JSON because upload.fields() isn't in router.put('/:id')
-        // Let's just upload JSON for PUT.
-        
-        await api.put(`/books/${editingBook.book_id}`, formData);
+        await api.put(`/books/${editingBook.book_id}`, submitData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
         Swal.fire({ title: 'Updated!', text: 'Book details have been successfully updated.', icon: 'success', timer: 2000, showConfirmButton: false });
       } else {
         if (!files.cover || !files.book_file) {
@@ -209,7 +207,7 @@ const AdminBooks = () => {
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-14 bg-gray-200 rounded object-cover flex-shrink-0 border border-gray-300 overflow-hidden">
                           {book.cover_url ? (
-                            <img src={`http://localhost:5000${book.cover_url}`} alt="cover" className="w-full h-full object-cover" />
+                            <img src={getBookCoverUrl(book.cover_url)} alt="cover" className="w-full h-full object-cover" />
                           ) : null}
                         </div>
                         <div>
@@ -277,7 +275,7 @@ const AdminBooks = () => {
                 <div className="md:col-span-1 flex flex-col items-center">
                   <div className="w-full bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl overflow-hidden shadow-lg border border-gray-200 aspect-[3/4] flex items-center justify-center">
                     {viewBook.cover_url ? (
-                      <img src={`http://localhost:5000${viewBook.cover_url}`} alt={viewBook.title} className="w-full h-full object-cover" />
+                      <img src={getBookCoverUrl(viewBook.cover_url)} alt={viewBook.title} className="w-full h-full object-cover" />
                     ) : (
                       <div className="flex flex-col items-center justify-center text-gray-400">
                         <Eye size={48} />
@@ -371,28 +369,26 @@ const AdminBooks = () => {
             
             <form onSubmit={handleSaveModal} className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="md:col-span-2 flex gap-4">
-                  {!editingBook && (
-                    <>
-                      <div className="flex-1">
-                        <label className="block text-sm font-semibold text-gray-700 mb-1">Cover Image *</label>
-                        <input 
-                          type="file" 
-                          accept="image/*"
+                <div className="md:col-span-2 grid gap-4 sm:grid-cols-2">
+                      <div className="min-w-0">
+                        <label className="block text-sm font-semibold text-gray-700 mb-1">Cover Image {editingBook ? '(optional)' : '*'}</label>
+                        {editingBook?.cover_url && !files.cover && <img src={getBookCoverUrl(editingBook.cover_url)} alt={`${editingBook.title} cover`} className="mb-2 h-28 w-20 rounded-md border border-gray-200 object-cover" />}
+                        <input
+                          type="file"
+                          accept="image/jpeg,image/png,image/webp"
+                          required={!editingBook}
                           onChange={(e) => handleFileChange(e, 'cover')}
                           className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
                         />
                       </div>
-                      <div className="flex-1">
+                  {!editingBook && <div className="min-w-0">
                         <label className="block text-sm font-semibold text-gray-700 mb-1">E-Book File (PDF/EPUB) *</label>
                         <input 
                           type="file" 
                           onChange={(e) => handleFileChange(e, 'book_file')}
                           className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
                         />
-                      </div>
-                    </>
-                  )}
+                      </div>}
                 </div>
 
                 <div>

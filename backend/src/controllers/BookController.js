@@ -1,4 +1,6 @@
 const BookService = require('../services/BookService');
+const DigitalCollectionStorageService = require('../services/DigitalCollectionStorageService');
+const fs = require('fs');
 const { sendSuccess, sendPaginated, sendError } = require('../utils/response');
 const { DEFAULT_PAGE, DEFAULT_LIMIT } = require('../constants/appConstants');
 
@@ -37,6 +39,7 @@ class BookController {
   }
 
   static async createBook(req, res, next) {
+    let storedCover;
     try {
       // Multipart/form-data sends everything as strings. Parse numbers explicitly.
       const bookData = { 
@@ -48,31 +51,68 @@ class BookController {
       };
 
       if (req.files?.cover) {
-        bookData.cover_url = `/uploads/books/${req.files.cover[0].filename}`;
+        storedCover = await DigitalCollectionStorageService.storeBookCover(req.files.cover[0]);
+        bookData.cover_url = storedCover.url;
+        bookData.cover_cloudinary_public_id = storedCover.publicId;
       }
       if (req.files?.book_file) {
         bookData.book_file_url = `/uploads/books/${req.files.book_file[0].filename}`;
       }
 
       const bookId = await BookService.createBook(bookData);
+      if (storedCover?.provider === 'cloudinary') {
+        await fs.promises.rm(req.files.cover[0].path, { force: true });
+      }
       sendSuccess(res, 'Book added', { bookId }, 201);
     } catch (error) {
+      if (storedCover?.publicId) {
+        await DigitalCollectionStorageService.deleteBookCover(storedCover.publicId).catch(() => {});
+      }
+      for (const file of Object.values(req.files || {}).flat()) {
+        await fs.promises.rm(file.path, { force: true }).catch(() => {});
+      }
       next(error);
     }
   }
 
   static async updateBook(req, res, next) {
+    let storedCover;
     try {
-      await BookService.updateBook(req.params.id, req.body);
+      const currentBook = await BookService.getBookById(req.params.id);
+      const bookData = { ...req.body };
+      const coverFile = req.files?.cover?.[0];
+      if (coverFile) {
+        storedCover = await DigitalCollectionStorageService.storeBookCover(coverFile);
+        bookData.cover_url = storedCover.url;
+        bookData.cover_cloudinary_public_id = storedCover.publicId;
+      }
+      await BookService.updateBook(req.params.id, bookData);
+      if (coverFile && storedCover?.provider === 'cloudinary') {
+        await fs.promises.rm(coverFile.path, { force: true });
+      }
+      if (coverFile && currentBook.cover_cloudinary_public_id) {
+        await DigitalCollectionStorageService.deleteBookCover(currentBook.cover_cloudinary_public_id)
+          .catch((error) => console.error('Could not remove replaced Cloudinary cover:', error.message));
+      }
       sendSuccess(res, 'Book updated');
     } catch (error) {
+      if (storedCover?.publicId) {
+        await DigitalCollectionStorageService.deleteBookCover(storedCover.publicId).catch(() => {});
+      }
+      for (const file of Object.values(req.files || {}).flat()) {
+        await fs.promises.rm(file.path, { force: true }).catch(() => {});
+      }
       next(error);
     }
   }
 
   static async deleteBook(req, res, next) {
     try {
-      await BookService.deleteBook(req.params.id);
+      const deletedBook = await BookService.deleteBook(req.params.id);
+      if (deletedBook.cover_cloudinary_public_id) {
+        await DigitalCollectionStorageService.deleteBookCover(deletedBook.cover_cloudinary_public_id)
+          .catch((error) => console.error('Could not delete Cloudinary book cover:', error.message));
+      }
       sendSuccess(res, 'Book deleted');
     } catch (error) {
       next(error);

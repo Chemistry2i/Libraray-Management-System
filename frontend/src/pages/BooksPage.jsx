@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faFilter, faBook } from '@fortawesome/free-solid-svg-icons'
 import { bookAPI } from '../api/endpoints'
 import { toast } from 'react-toastify'
+import { getBookCoverUrl } from '../utils/helpers'
 
 export default function BooksPage() {
   const [allBooks, setAllBooks] = useState([])
@@ -180,8 +181,8 @@ export default function BooksPage() {
               >
                 <div className="w-full h-64 bg-gradient-to-br from-primary to-secondary flex items-center justify-center overflow-hidden">
                   {book.cover_url ? (
-                    <img 
-                      src={`http://localhost:5000${book.cover_url}`} 
+                    <img
+                      src={getBookCoverUrl(book.cover_url)}
                       alt={book.title}
                       className="w-full h-full object-cover"
                     />

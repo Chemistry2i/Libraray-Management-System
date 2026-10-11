@@ -56,6 +56,35 @@ class DigitalCollectionStorageService {
     };
   }
 
+  static async storeBookCover(file) {
+    if (!hasCloudinaryConfig) {
+      return {
+        url: `/uploads/books/${path.basename(file.filename)}`,
+        provider: 'local',
+        publicId: null,
+      };
+    }
+
+    const result = await cloudinary.uploader.upload(file.path, {
+      folder: 'kamuli-cu-library/book-covers',
+      public_id: randomUUID(),
+      resource_type: 'image',
+      overwrite: false,
+      use_filename: false,
+      unique_filename: false,
+    });
+    return {
+      url: result.secure_url,
+      provider: 'cloudinary',
+      publicId: result.public_id,
+    };
+  }
+
+  static async deleteBookCover(publicId) {
+    if (!publicId || !hasCloudinaryConfig) return;
+    await cloudinary.uploader.destroy(publicId, { resource_type: 'image', invalidate: true });
+  }
+
   static localPath(object) {
     return path.join(uploadDirectory, path.basename(object.file_path));
   }

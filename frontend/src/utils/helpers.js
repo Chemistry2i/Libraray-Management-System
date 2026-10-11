@@ -1,5 +1,13 @@
 // Utility functions for common tasks
 
+export const getBookCoverUrl = (coverUrl) => {
+  if (!coverUrl) return ''
+  if (/^https?:\/\//i.test(coverUrl)) return coverUrl
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'
+  const serverBaseUrl = apiBaseUrl.replace(/\/api\/?$/, '')
+  return `${serverBaseUrl}${coverUrl.startsWith('/') ? coverUrl : `/${coverUrl}`}`
+}
+
 // Format date
 export const formatDate = (date) => {
   return new Date(date).toLocaleDateString('en-US', {

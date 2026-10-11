@@ -56,7 +56,7 @@ class BookService {
       throw new NotFoundError('Book not found');
     }
     await BookModel.delete(bookId);
-    return true;
+    return book;
   }
 }
 

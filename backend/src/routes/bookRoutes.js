@@ -4,11 +4,14 @@ const router = express.Router();
 const BookController = require('../controllers/BookController');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 
 // Multer setup for book uploads
+const bookUploadDirectory = path.join(__dirname, '../../uploads/books');
+fs.mkdirSync(bookUploadDirectory, { recursive: true });
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => {
-		cb(null, path.join(__dirname, '../../uploads/books'));
+		cb(null, bookUploadDirectory);
 	},
 	filename: (req, file, cb) => {
 		const ext = path.extname(file.originalname);
@@ -16,7 +19,19 @@ const storage = multer.diskStorage({
 		cb(null, uniqueName);
 	}
 });
-const upload = multer({ storage });
+const upload = multer({
+	storage,
+	limits: { fileSize: 50 * 1024 * 1024, files: 2 },
+	fileFilter: (req, file, callback) => {
+		const extension = path.extname(file.originalname).toLowerCase();
+		if (file.fieldname === 'cover') {
+			const validCover = ['.jpg', '.jpeg', '.png', '.webp'].includes(extension)
+				&& ['image/jpeg', 'image/png', 'image/webp'].includes(file.mimetype);
+			return callback(validCover ? null : new Error('Book cover must be a JPEG, PNG, or WebP image'));
+		}
+		callback(null, true);
+	},
+});
 // Minimal test route for multer file upload debugging
 router.post('/test-upload', upload.fields([
 	{ name: 'cover', maxCount: 1 },
@@ -47,7 +62,7 @@ router.post(
 	bookValidator,
 	BookController.createBook
 );
-router.put('/:id', authenticate, authorize(ROLES.ADMIN, ROLES.LIBRARIAN), bookValidator, BookController.updateBook);
+router.put('/:id', authenticate, authorize(ROLES.ADMIN, ROLES.LIBRARIAN), upload.fields([{ name: 'cover', maxCount: 1 }]), bookValidator, BookController.updateBook);
 
 // Download book file
 router.get('/:id/download', BookController.downloadBook);
