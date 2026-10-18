@@ -11,8 +11,8 @@ const materialTypes = [
 ]
 
 const rightsStatuses = ['Public Domain', 'Copyrighted - Permitted', 'Sensitive - Restricted']
-const allowedFileTypes = '.pdf,.png,.jpg,.jpeg,.mp4,.webm,.mp3,.m4a,.wav,.ogg,.docx,.xlsx,.pptx,.txt,.md,.csv,.rtf'
-const acceptedFileName = /\.(pdf|png|jpe?g|mp4|webm|mp3|m4a|wav|ogg|docx|xlsx|pptx|txt|md|csv|rtf)$/i
+const allowedFileTypes = '.pdf,.png,.jpg,.jpeg,.gif,.webp,.bmp,.tif,.tiff,.mp4,.webm,.mov,.m4v,.mp3,.m4a,.wav,.ogg,.aac,.flac,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.odt,.ods,.odp,.txt,.md,.csv,.rtf'
+const acceptedFileName = /\.(pdf|png|jpe?g|gif|webp|bmp|tiff?|mp4|webm|mov|m4v|mp3|m4a|wav|ogg|aac|flac|docx?|xlsx?|pptx?|odt|ods|odp|txt|md|csv|rtf)$/i
 
 const emptyCollection = { title: '', description: '', selection_criteria: '', collection_value: '' }
 
@@ -370,7 +370,7 @@ export default function AdminDigitalCollections() {
             <button type="button" disabled={!selectedId} onClick={() => fileInput.current?.click()} onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.preventDefault(); acceptFiles(event.dataTransfer.files) }} className="flex min-h-28 w-full flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed border-gray-300 bg-gray-50 px-5 text-sm text-gray-600 hover:border-emerald-700 hover:bg-emerald-50/40 disabled:opacity-50">
               <Upload size={22} className="text-emerald-800" />
               <span className="font-semibold">Drop files here or choose files</span>
-              <span className="text-center text-xs">PDF, images, MP4/WebM, MP3/M4A/WAV/OGG, DOCX/XLSX/PPTX, TXT/Markdown/CSV/RTF · Up to 15 files</span>
+              <span className="text-center text-xs">PDF, common image/audio/video formats, DOC/DOCX/XLS/XLSX/PPT/PPTX/ODT/ODS/ODP, TXT/Markdown/CSV/RTF · Up to 15 files</span>
             </button>
             <input ref={fileInput} type="file" accept={allowedFileTypes} multiple className="hidden" onChange={(event) => acceptFiles(event.target.files)} />
 

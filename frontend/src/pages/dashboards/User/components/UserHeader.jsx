@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Bell, Search, Menu, LogOut, ChevronDown, User, LayoutDashboard } from 'lucide-react';
+import PropTypes from 'prop-types';
+import { Bell, Search, Menu, LogOut, ChevronDown, User, LayoutDashboard, BookOpen } from 'lucide-react';
 import { useAuth } from '../../../../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { notificationAPI } from '../../../../api/endpoints';
 import Swal from 'sweetalert2';
 import NotificationCenter from './NotificationCenter';
-import { SCHOOL_BADGE, SCHOOL_NAME } from '../../../../constants/schoolBrand';
+import { openGlobalSearch } from '../../../../components/CommandPalette';
 
 export default function UserHeader({ onMenuToggle }) {
   const { user, logout } = useAuth();
@@ -20,6 +21,10 @@ export default function UserHeader({ onMenuToggle }) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
       }
+
+      UserHeader.propTypes = {
+        onMenuToggle: PropTypes.func.isRequired,
+      };
     }
     document.addEventListener("mousedown", handleClickOutside);
     
@@ -69,21 +74,28 @@ export default function UserHeader({ onMenuToggle }) {
   return (
     <header className="h-16 md:h-20 bg-white border-b border-gray-200 px-4 md:px-8 flex items-center justify-between z-50 relative gap-4">
       <div className="flex items-center gap-3 md:gap-6 flex-1 min-w-0">
-        <div className="flex shrink-0 items-center gap-2">
-          <img src={SCHOOL_BADGE} alt="Kamuli CU school badge" className="size-9 rounded-full bg-white object-contain ring-1 ring-slate-200" />
-          <span className="hidden text-sm font-bold text-primary lg:block">{SCHOOL_NAME}</span>
+        <div className="hidden shrink-0 items-center gap-2 sm:flex">
+          <BookOpen size={20} className="text-primary" />
+          <div>
+            <p className="text-sm font-bold leading-tight text-gray-900">My library</p>
+            <p className="text-xs text-gray-500">Your reading space</p>
+          </div>
         </div>
         <button onClick={onMenuToggle} className="text-gray-500 hover:text-primary transition-colors md:hidden shrink-0">
           <Menu size={24} />
         </button>
         
         <div className="relative hidden sm:block w-full max-w-xs">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-          <input 
-            type="text" 
-            placeholder="Search books..." 
-            className="pl-10 pr-4 py-2 w-full bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-          />
+          <button
+            type="button"
+            onClick={() => openGlobalSearch()}
+            aria-label="Open global search"
+            className="flex w-full items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 py-2 pl-3 pr-4 text-left text-sm text-gray-500 transition-colors hover:border-primary/40 hover:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20"
+          >
+            <Search size={18} className="shrink-0 text-gray-400" />
+            <span className="flex-1">Search books or pages...</span>
+            <kbd className="rounded border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] text-gray-400">Ctrl K</kbd>
+          </button>
         </div>
       </div>
 

@@ -11,13 +11,38 @@ const router = express.Router();
 const uploadDirectory = getUploadDirectory('digital-objects');
 
 const mimeByExtension = {
-  '.pdf': ['application/pdf'], '.png': ['image/png'], '.jpg': ['image/jpeg'], '.jpeg': ['image/jpeg'],
-  '.mp4': ['video/mp4'], '.webm': ['video/webm'],
-  '.mp3': ['audio/mpeg'], '.m4a': ['audio/mp4'], '.wav': ['audio/wav', 'audio/x-wav'], '.ogg': ['audio/ogg'],
-  '.docx': ['application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
-  '.xlsx': ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
-  '.pptx': ['application/vnd.openxmlformats-officedocument.presentationml.presentation'],
-  '.txt': ['text/plain'], '.md': ['text/markdown'], '.csv': ['text/csv'], '.rtf': ['application/rtf', 'text/rtf'],
+  '.pdf': { type: 'application/pdf' },
+  '.png': { type: 'image/png' },
+  '.jpg': { type: 'image/jpeg' },
+  '.jpeg': { type: 'image/jpeg' },
+  '.gif': { type: 'image/gif' },
+  '.webp': { type: 'image/webp' },
+  '.bmp': { type: 'image/bmp', aliases: ['image/x-ms-bmp'] },
+  '.tif': { type: 'image/tiff' },
+  '.tiff': { type: 'image/tiff' },
+  '.mp4': { type: 'video/mp4' },
+  '.webm': { type: 'video/webm' },
+  '.mov': { type: 'video/quicktime' },
+  '.m4v': { type: 'video/x-m4v', aliases: ['video/mp4'] },
+  '.mp3': { type: 'audio/mpeg' },
+  '.m4a': { type: 'audio/mp4', aliases: ['audio/x-m4a'] },
+  '.wav': { type: 'audio/wav', aliases: ['audio/x-wav'] },
+  '.ogg': { type: 'audio/ogg' },
+  '.aac': { type: 'audio/aac', aliases: ['audio/x-aac'] },
+  '.flac': { type: 'audio/flac', aliases: ['audio/x-flac'] },
+  '.docx': { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', aliases: ['application/zip'] },
+  '.xlsx': { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', aliases: ['application/zip'] },
+  '.pptx': { type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation', aliases: ['application/zip'] },
+  '.doc': { type: 'application/msword' },
+  '.xls': { type: 'application/vnd.ms-excel', aliases: ['application/x-ole-storage'] },
+  '.ppt': { type: 'application/vnd.ms-powerpoint' },
+  '.odt': { type: 'application/vnd.oasis.opendocument.text', aliases: ['application/zip'] },
+  '.ods': { type: 'application/vnd.oasis.opendocument.spreadsheet', aliases: ['application/zip'] },
+  '.odp': { type: 'application/vnd.oasis.opendocument.presentation', aliases: ['application/zip'] },
+  '.txt': { type: 'text/plain' },
+  '.md': { type: 'text/markdown', aliases: ['text/plain'] },
+  '.csv': { type: 'text/csv', aliases: ['application/vnd.ms-excel', 'text/plain'] },
+  '.rtf': { type: 'application/rtf', aliases: ['text/rtf'] },
 };
 const storage = multer.diskStorage({
   destination: (req, file, callback) => callback(null, uploadDirectory),
@@ -28,9 +53,15 @@ const upload = multer({
   limits: { files: 15, fileSize: 25 * 1024 * 1024 },
   fileFilter: (req, file, callback) => {
     const extension = path.extname(file.originalname).toLowerCase();
-    if (!mimeByExtension[extension] || !mimeByExtension[extension].includes(file.mimetype)) {
+    const acceptedType = mimeByExtension[extension];
+    const genericMimeTypes = ['application/octet-stream', 'application/zip'];
+    if (!acceptedType || (file.mimetype
+      && file.mimetype !== acceptedType.type
+      && !acceptedType.aliases?.includes(file.mimetype)
+      && !genericMimeTypes.includes(file.mimetype))) {
       return callback(new Error('This file extension and MIME type are not supported'));
     }
+    file.mimetype = acceptedType.type;
     callback(null, true);
   },
 });

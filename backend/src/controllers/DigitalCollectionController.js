@@ -41,19 +41,42 @@ async function hasValidFileSignature(file) {
     if (file.mimetype === 'application/pdf') return header.subarray(0, 5).toString() === '%PDF-' && bytesRead >= 5;
     if (file.mimetype === 'image/png') return header.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]));
     if (file.mimetype === 'image/jpeg') return header[0] === 0xff && header[1] === 0xd8 && header[2] === 0xff;
+    if (file.mimetype === 'image/gif') {
+      return ['GIF87a', 'GIF89a'].includes(header.subarray(0, 6).toString());
+    }
+    if (file.mimetype === 'image/webp') {
+      return header.subarray(0, 4).toString() === 'RIFF' && header.subarray(8, 12).toString() === 'WEBP';
+    }
+    if (file.mimetype === 'image/bmp') return header.subarray(0, 2).toString() === 'BM';
+    if (file.mimetype === 'image/tiff') {
+      return ['II*\u0000', 'MM\u0000*'].includes(header.subarray(0, 4).toString());
+    }
     if (file.mimetype === 'video/mp4') return bytesRead >= 12 && header.subarray(4, 8).toString() === 'ftyp';
     if (file.mimetype === 'video/webm') return header.subarray(0, 4).equals(Buffer.from([0x1a, 0x45, 0xdf, 0xa3]));
+    if (file.mimetype === 'video/quicktime' || file.mimetype === 'video/x-m4v') {
+      return bytesRead >= 12 && header.subarray(4, 8).toString() === 'ftyp';
+    }
     if (file.mimetype === 'audio/mpeg') return header.subarray(0, 3).toString() === 'ID3'
       || (header[0] === 0xff && (header[1] & 0xe0) === 0xe0);
     if (file.mimetype === 'audio/mp4') return bytesRead >= 12 && header.subarray(4, 8).toString() === 'ftyp';
+    if (file.mimetype === 'audio/aac') return header[0] === 0xff && (header[1] & 0xf6) === 0xf0;
+    if (file.mimetype === 'audio/flac') return header.subarray(0, 4).toString() === 'fLaC';
     if (file.mimetype === 'audio/wav' || file.mimetype === 'audio/x-wav') {
       return header.subarray(0, 4).toString() === 'RIFF' && header.subarray(8, 12).toString() === 'WAVE';
     }
     if (file.mimetype === 'audio/ogg') return header.subarray(0, 4).toString() === 'OggS';
     if (file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
       || file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-      || file.mimetype === 'application/vnd.openxmlformats-officedocument.presentationml.presentation') {
+      || file.mimetype === 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+      || file.mimetype === 'application/vnd.oasis.opendocument.text'
+      || file.mimetype === 'application/vnd.oasis.opendocument.spreadsheet'
+      || file.mimetype === 'application/vnd.oasis.opendocument.presentation') {
       return header.subarray(0, 4).equals(Buffer.from([0x50, 0x4b, 0x03, 0x04]));
+    }
+    if (file.mimetype === 'application/msword'
+      || file.mimetype === 'application/vnd.ms-excel'
+      || file.mimetype === 'application/vnd.ms-powerpoint') {
+      return header.subarray(0, 8).equals(Buffer.from([0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1]));
     }
     if (file.mimetype === 'application/rtf' || file.mimetype === 'text/rtf') {
       return header.subarray(0, 5).toString() === '{\\rtf';
