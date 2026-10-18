@@ -133,7 +133,7 @@ export default function DigitalArchivePage() {
                     <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2">
                       <button type="button" onClick={() => viewObject(object)} className="inline-flex items-center gap-1.5 rounded-md bg-emerald-800 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-900">
                         <Eye size={15} /> View {isPdf || isDocument ? 'document' : isVideo ? 'video' : isAudio ? 'audio' : 'image'}
-                      </a>
+                      </button>
                       <a href={downloadUrl} className="inline-flex items-center gap-1.5 rounded-md border border-emerald-800 px-3 py-2 text-sm font-semibold text-emerald-900 hover:bg-emerald-50" download><Download size={15} />Download</a>
                     </div>
                   </div>
