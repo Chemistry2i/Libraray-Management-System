@@ -231,6 +231,36 @@ class DigitalCollectionModel {
     return result.affectedRows;
   }
 
+  static async findAuditEvents({ eventType, search, limit, offset }) {
+    const where = [];
+    const params = [];
+    if (eventType) {
+      where.push('e.event_type = ?');
+      params.push(eventType);
+    }
+    if (search) {
+      where.push('(o.title LIKE ? OR o.original_filename LIKE ? OR c.title LIKE ? OR u.email LIKE ? OR u.first_name LIKE ? OR u.last_name LIKE ?)');
+      const searchTerm = `%${search}%`;
+      params.push(searchTerm, searchTerm, searchTerm, searchTerm, searchTerm, searchTerm);
+    }
+    const whereSql = where.length ? `WHERE ${where.join(' AND ')}` : '';
+    const joins = `FROM digital_object_events e
+      JOIN digital_objects o ON o.object_id = e.object_id
+      JOIN digital_collections c ON c.collection_id = o.collection_id
+      LEFT JOIN users u ON u.user_id = e.user_id`;
+    const [[count]] = await pool.query(`SELECT COUNT(*) AS total ${joins} ${whereSql}`, params);
+    const [events] = await pool.query(
+      `SELECT e.event_id, e.object_id, e.event_type, e.user_id, e.created_at,
+              o.title AS object_title, o.original_filename, o.material_type,
+              c.title AS collection_title, u.first_name, u.last_name, u.email
+       ${joins} ${whereSql}
+       ORDER BY e.created_at DESC, e.event_id DESC
+       LIMIT ? OFFSET ?`,
+      [...params, limit, offset]
+    );
+    return { events, total: Number(count.total) };
+  }
+
   static async recordEvent(objectId, eventType, userId = null) {
     await pool.query(
       'INSERT INTO digital_object_events (object_id, event_type, user_id) VALUES (?, ?, ?)',

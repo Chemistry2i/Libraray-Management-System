@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Trash2, CheckCheck, Bell } from 'lucide-react';
+import PropTypes from 'prop-types';
+import { BadgeCheck, Bell, BookOpen, CalendarDays, CheckCheck, CircleX, CreditCard, Inbox, MailWarning, RotateCw, Trash2, X } from 'lucide-react';
 import { notificationAPI } from '../../../../api/endpoints';
 import { toast } from 'react-toastify';
 
@@ -8,6 +9,15 @@ const NotificationCenter = ({ isOpen, onClose, onNotificationRead, onViewAll }) 
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const notificationIcons = {
+    borrow_request: BookOpen,
+    borrow_approved: BadgeCheck,
+    borrow_rejected: CircleX,
+    reservation: CalendarDays,
+    payment: CreditCard,
+    renewal: RotateCw,
+    email_delivery_failed: MailWarning,
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -74,24 +84,7 @@ const NotificationCenter = ({ isOpen, onClose, onNotificationRead, onViewAll }) 
   };
 
   const getNotificationIcon = (type) => {
-    switch (type?.toLowerCase()) {
-      case 'borrow_request':
-        return '📚';
-      case 'borrow_approved':
-        return '✅';
-      case 'borrow_rejected':
-        return '❌';
-      case 'reservation':
-        return '🔔';
-      case 'payment':
-        return '💳';
-      case 'renewal':
-        return '🔄';
-      case 'email_delivery_failed':
-        return '📧';
-      default:
-        return '📩';
-    }
+    return notificationIcons[type?.toLowerCase()] || Inbox;
   };
 
   const getNotificationColor = (type) => {
@@ -188,8 +181,8 @@ const NotificationCenter = ({ isOpen, onClose, onNotificationRead, onViewAll }) 
                 >
                   <div className="flex gap-3">
                     {/* Icon */}
-                    <div className="text-2xl flex-shrink-0">
-                      {getNotificationIcon(notification.type)}
+                    <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-white/70 text-primary">
+                      {React.createElement(getNotificationIcon(notification.type), { size: 23, strokeWidth: 1.8 })}
                     </div>
 
                     {/* Content */}
@@ -251,6 +244,13 @@ const NotificationCenter = ({ isOpen, onClose, onNotificationRead, onViewAll }) 
     </>,
     document.body
   );
+};
+
+NotificationCenter.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onNotificationRead: PropTypes.func,
+  onViewAll: PropTypes.func.isRequired,
 };
 
 export default NotificationCenter;

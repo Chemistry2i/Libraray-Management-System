@@ -69,6 +69,47 @@ input:focus, textarea:focus, select:focus {
   @apply border-4 border-gray-200 border-t-primary rounded-full animate-spin;
 }
 
+.digital-document-preview h1,
+.digital-document-preview h2,
+.digital-document-preview h3 {
+  margin: 1rem 0 0.5rem;
+  font-weight: 700;
+}
+
+.digital-document-preview p,
+.digital-document-preview li {
+  margin: 0.5rem 0;
+  line-height: 1.65;
+}
+
+.digital-document-preview table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.digital-document-preview th,
+.digital-document-preview td {
+  border: 1px solid #d1d5db;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.digital-document-preview th {
+  background: #f3f4f6;
+  font-weight: 700;
+}
+
+.digital-document-preview img {
+  max-width: 100%;
+  height: auto;
+}
+
+.swal2-container {
+  z-index: 10000 !important;
+}
+
 @keyframes contributor-marquee-scroll {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }

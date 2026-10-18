@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, Check, Trash2, RefreshCw } from 'lucide-react';
+import { BadgeCheck, Bell, BookOpen, CalendarDays, Check, CircleX, CreditCard, Inbox, MailWarning, RefreshCw, RotateCw, Trash2 } from 'lucide-react';
 import { notificationAPI } from '../../../api/endpoints';
 import Swal from 'sweetalert2';
 
-const notificationEmojis = {
-  borrow_request: '📚',
-  borrow_approved: '✅',
-  borrow_rejected: '❌',
-  reservation: '📚',
-  payment: '💳',
-  renewal: '🔄',
-  email_delivery_failed: '⚠️',
+const notificationIcons = {
+  borrow_request: BookOpen,
+  borrow_approved: BadgeCheck,
+  borrow_rejected: CircleX,
+  reservation: CalendarDays,
+  payment: CreditCard,
+  renewal: RotateCw,
+  email_delivery_failed: MailWarning,
 };
 
 const notificationColors = {
@@ -256,8 +256,8 @@ export default function UserNotifications() {
                 {/* Content */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start gap-3">
-                    <span className="text-3xl flex-shrink-0">
-                      {notificationEmojis[notification.type] || '📬'}
+                    <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-white/70 text-primary">
+                      {React.createElement(notificationIcons[notification.type] || Inbox, { size: 23, strokeWidth: 1.8 })}
                     </span>
                     <div className="flex-1 min-w-0">
                       <h3

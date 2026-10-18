@@ -37,6 +37,7 @@ import AdminFines from './pages/dashboards/Admin/AdminFines'
 import AdminReports from './pages/dashboards/Admin/AdminReports'
 import AdminDigitalCollections from './pages/dashboards/Admin/AdminDigitalCollections'
 import AdminDigitalAnalytics from './pages/dashboards/Admin/AdminDigitalAnalytics'
+import AdminAuditLogs from './pages/dashboards/Admin/AdminAuditLogs'
 
 // User Pages Layout
 import UserLayout from './pages/dashboards/User/UserLayout'
@@ -80,6 +81,7 @@ export default function App() {
             <Route index element={<AdminDashboard />} />
             <Route path="digital-collections" element={<AdminDigitalCollections />} />
             <Route path="digital-analytics" element={<AdminDigitalAnalytics />} />
+            <Route path="audit-logs" element={<AdminAuditLogs />} />
             <Route path="books" element={<AdminBooks />} />
             <Route path="categories" element={<AdminCategories />} />
             <Route path="borrowing" element={<AdminBorrowing />} />

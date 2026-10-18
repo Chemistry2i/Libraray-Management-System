@@ -3,6 +3,7 @@ import { Outlet, Navigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import UserSidebar from './components/UserSidebar';
 import UserHeader from './components/UserHeader';
+import CommandPalette from '../../../components/CommandPalette';
 
 export default function UserLayout() {
   const { user, loading } = useAuth();
@@ -45,6 +46,7 @@ export default function UserLayout() {
           <Outlet />
         </main>
       </div>
+      <CommandPalette />
     </div>
   );
 }

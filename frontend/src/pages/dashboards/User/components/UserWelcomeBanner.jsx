@@ -10,7 +10,7 @@ const UserWelcomeBanner = ({ user }) => {
       
       <div className="relative z-10">
         <h1 className="text-lg md:text-3xl font-bold mb-2 md:mb-3 tracking-tight">
-          Welcome back, {user?.firstName || 'Reader'}! 📖
+          Welcome back, {user?.firstName || 'Reader'}!
         </h1>
         <p className="text-white/90 text-xs md:text-lg max-w-xl">
           Explore our collection, manage your borrowed books, and discover your next favorite read.

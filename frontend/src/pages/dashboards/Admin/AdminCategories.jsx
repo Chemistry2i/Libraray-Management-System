@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Search, Plus, Edit, Trash2, Eye, X } from 'lucide-react';
 import Swal from 'sweetalert2';
 import api from '../../../api/axios';
@@ -171,15 +172,18 @@ const AdminCategories = () => {
                       </span>
                     </td>
                     <td className="p-4 text-right align-middle">
-                      <div className="flex items-center justify-end gap-2 text-gray-400">
-                        <button onClick={() => setViewItem(category)} className="p-1.5 hover:text-blue-500 hover:bg-blue-50 rounded transition-colors" title="View details">
+                      <div className="flex flex-wrap items-center justify-end gap-1.5">
+                        <button onClick={() => setViewItem(category)} className="inline-flex items-center gap-1 rounded border border-blue-200 px-2 py-1.5 text-xs font-semibold text-blue-700 transition-colors hover:bg-blue-50 hover:text-blue-600" title="View details">
                           <Eye size={18} />
+                          View
                         </button>
-                        <button onClick={() => handleEditClick(category)} className="p-1.5 hover:text-primary hover:bg-primary/10 rounded transition-colors" title="Edit">
+                        <button onClick={() => handleEditClick(category)} className="inline-flex items-center gap-1 rounded border border-primary/30 px-2 py-1.5 text-xs font-semibold text-primary transition-colors hover:bg-primary/10 hover:text-primary" title="Edit">
                           <Edit size={18} />
+                          Edit
                         </button>
-                        <button onClick={() => handleDeleteClick(category.category_id)} className="p-1.5 hover:text-red-500 hover:bg-red-50 rounded transition-colors" title="Delete">
+                        <button onClick={() => handleDeleteClick(category.category_id)} className="inline-flex items-center gap-1 rounded border border-red-200 px-2 py-1.5 text-xs font-semibold text-red-700 transition-colors hover:bg-red-50 hover:text-red-600" title="Delete">
                           <Trash2 size={18} />
+                          Delete
                         </button>
                       </div>
                     </td>
@@ -200,7 +204,7 @@ const AdminCategories = () => {
         </div>
       </div>
 
-      {isModalOpen && (
+      {isModalOpen && createPortal(
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4">
           <div className="bg-white rounded-[4px] shadow-xl w-full max-w-lg max-h-[90vh] flex flex-col">
             <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-white sticky top-0 z-10">
@@ -260,10 +264,10 @@ const AdminCategories = () => {
             </div>
           </div>
         </div>
-      )}
+      , document.body)}
     
       {/* View Category Modal */}
-      {viewItem && (
+      {viewItem && createPortal(
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
           <div className="bg-white rounded-[4px] shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between p-8 border-b border-gray-100 sticky top-0 bg-gradient-to-r from-primary/5 to-transparent">
@@ -311,7 +315,7 @@ const AdminCategories = () => {
             </div>
           </div>
         </div>
-      )}
+      , document.body)}
     </div>
   );
 };

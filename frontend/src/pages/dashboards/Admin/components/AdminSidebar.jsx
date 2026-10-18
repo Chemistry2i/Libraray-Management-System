@@ -1,64 +1,78 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { 
-  faChartPie, faBook, faUsers, faExchangeAlt, 
-  faMoneyBillWave, faCog, faSignOutAlt, faShieldAlt,
-  faClock, faTags, faChartLine, faStar, faImages, faChartBar
-} from '@fortawesome/free-solid-svg-icons'
+import { ArrowLeftRight, Banknote, BarChart3, BookOpen, ChartLine, ClipboardList, Clock3, Images, LayoutDashboard, LogOut, Settings, ShieldCheck, Star, Tags, Users } from 'lucide-react'
 import { useAuth } from '../../../../context/AuthContext'
+import { useNavigate } from 'react-router-dom'
+import Swal from 'sweetalert2'
 import { SCHOOL_BADGE, SCHOOL_NAME } from '../../../../constants/schoolBrand'
 
 const navItems = [
-  { name: 'Overview', path: '/admin', icon: faChartPie },
-  { name: 'Digital Collections', path: '/admin/digital-collections', icon: faImages },
-  { name: 'Digital Analytics', path: '/admin/digital-analytics', icon: faChartBar },
-  { name: 'Books & Inventory', path: '/admin/books', icon: faBook },
-  { name: 'Categories & Genres', path: '/admin/categories', icon: faTags },
-  { name: 'Borrowing Management', path: '/admin/borrowing', icon: faExchangeAlt },
-  { name: 'Holds & Reservations', path: '/admin/reservations', icon: faClock },
-  { name: 'Patrons & Users', path: '/admin/users', icon: faUsers },
-  { name: 'Reviews & Moderation', path: '/admin/reviews', icon: faStar },
-  { name: 'Fines & Billing', path: '/admin/fines', icon: faMoneyBillWave },
-  { name: 'Reports & Analytics', path: '/admin/reports', icon: faChartLine },
-  { name: 'System Settings', path: '/admin/settings', icon: faCog },
+  { name: 'Overview', path: '/admin', icon: LayoutDashboard },
+  { name: 'Digital Collections', path: '/admin/digital-collections', icon: Images },
+  { name: 'Digital Analytics', path: '/admin/digital-analytics', icon: BarChart3 },
+  { name: 'Books & Inventory', path: '/admin/books', icon: BookOpen },
+  { name: 'Categories & Genres', path: '/admin/categories', icon: Tags },
+  { name: 'Borrowing Management', path: '/admin/borrowing', icon: ArrowLeftRight },
+  { name: 'Holds & Reservations', path: '/admin/reservations', icon: Clock3 },
+  { name: 'Patrons & Users', path: '/admin/users', icon: Users },
+  { name: 'Reviews & Moderation', path: '/admin/reviews', icon: Star },
+  { name: 'Fines & Billing', path: '/admin/fines', icon: Banknote },
+  { name: 'Reports & Analytics', path: '/admin/reports', icon: ChartLine },
+  { name: 'System Settings', path: '/admin/settings', icon: Settings },
+  { name: 'Audit Logs', path: '/admin/audit-logs', icon: ClipboardList },
 ]
 
 export default function AdminSidebar() {
   const { user, logout } = useAuth()
+  const navigate = useNavigate()
+
+  async function confirmLogout() {
+    const result = await Swal.fire({
+      title: 'Sign out?',
+      text: 'Are you sure you want to end your session?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#d1d5db',
+      confirmButtonText: 'Yes, log out',
+      customClass: { container: '!z-[10000]', popup: 'rounded-[4px]' },
+    })
+    if (result.isConfirmed) {
+      await logout()
+      navigate('/login')
+    }
+  }
 
   return (
-    <aside className="w-72 bg-white text-gray-800 flex flex-col min-h-screen sticky top-0 border-r border-gray-200 shadow-sm">
+    <aside className="flex h-screen w-72 shrink-0 flex-col border-r border-gray-200 bg-white text-gray-800 shadow-sm">
       {/* Brand Header */}
-      <div className="h-20 flex items-center px-6 border-b border-gray-200">
-        <div className="flex items-center space-x-3">
-          <img src={SCHOOL_BADGE} alt="Kamuli Church of Uganda Primary School badge" className="size-11 shrink-0 rounded-full bg-white object-contain ring-1 ring-slate-200" />
-          <div>
-            <h1 className="text-base font-bold tracking-tight text-gray-900">{SCHOOL_NAME}</h1>
-            <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold flex items-center gap-1">
-              <FontAwesomeIcon icon={faShieldAlt} className="text-primary" /> School Library
-            </p>
-          </div>
+      <div className="flex flex-col items-center gap-2 border-b border-gray-200 px-4 py-4 text-center">
+        <img src={SCHOOL_BADGE} alt="Kamuli Church of Uganda Primary School badge" className="size-16 shrink-0 rounded-full bg-white object-contain ring-1 ring-slate-200" />
+        <div>
+          <h1 className="text-base font-bold tracking-tight text-gray-900">{SCHOOL_NAME}</h1>
+          <p className="mt-1 flex items-center justify-center gap-1 text-[10px] font-semibold uppercase tracking-widest text-gray-500">
+            <ShieldCheck size={12} className="text-primary" /> School Library
+          </p>
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-4 py-8 space-y-2">
-        {navItems.map((item) => (
+      <nav className="min-h-0 flex-1 space-y-1 overflow-y-auto px-3 py-4">
+        {navItems.map(({ name, path, icon: Icon }) => (
           <NavLink
-            key={item.name}
-            to={item.path}
-            end={item.path === '/admin'}
+            key={name}
+            to={path}
+            end={path === '/admin'}
             className={({ isActive }) =>
-              `flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all duration-200 ${
-                isActive 
-                  ? 'bg-primary text-white font-bold shadow-md shadow-primary/20 scale-[1.02]' 
-                  : 'text-gray-500 hover:text-primary hover:bg-primary/5 font-medium'
+              `flex items-center gap-3 rounded-lg px-3 py-2.5 text-[17px] hover:text-[17px] transition-colors duration-200 ${
+                isActive
+                  ? 'bg-primary text-white font-semibold shadow-sm'
+                  : 'text-gray-500 hover:bg-primary/5 hover:text-primary font-medium'
               }`
             }
           >
-            <FontAwesomeIcon icon={item.icon} className="text-lg w-6" />
-            {item.name}
+            <Icon size={16} className="shrink-0" />
+            {name}
           </NavLink>
         ))}
       </nav>
@@ -75,10 +89,10 @@ export default function AdminSidebar() {
           </div>
         </div>
         <button 
-          onClick={logout}
+          onClick={confirmLogout}
           className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-white border border-gray-200 hover:bg-danger/10 text-gray-600 hover:text-danger hover:border-danger/30 transition-colors text-sm font-bold shadow-sm"
         >
-          <FontAwesomeIcon icon={faSignOutAlt} />
+          <LogOut size={16} />
           Secure Logout
         </button>
       </div>

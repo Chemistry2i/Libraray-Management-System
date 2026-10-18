@@ -52,6 +52,10 @@ const bookValidator = [
   body('author').trim().notEmpty().withMessage('Author is required'),
   body('isbn').optional().trim(),
   body('publication_year').optional().isInt(),
+  body('copies').optional().isInt({ min: 1 }).withMessage('Total copies must be a whole number greater than zero'),
+  body('available').optional().isInt({ min: 0 }).withMessage('Available copies must be a non-negative whole number')
+    .custom((value, { req }) => Number(value) <= Number(req.body.copies))
+    .withMessage('Available copies cannot exceed total copies'),
   requireBookFiles,
   handleValidationErrors,
 ];

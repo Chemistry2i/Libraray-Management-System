@@ -10,7 +10,7 @@ function sendObjectFile(res, object, download = false) {
   res.setHeader('Content-Disposition', `${disposition}; filename="${encodeURIComponent(object.original_filename)}"`);
   if (object.storage_provider === 'cloudinary') {
     res.setHeader('Cache-Control', 'private, no-store');
-    return DigitalCollectionStorageService.streamCloudinaryObject(res, object).catch((error) => {
+    return DigitalCollectionStorageService.streamCloudinaryObject(res, object, download).catch((error) => {
       console.error('Cloudinary digital file delivery failed:', error.message);
       if (res.headersSent) {
         res.destroy(error);
@@ -36,11 +36,54 @@ function validDate(value) {
 async function hasValidFileSignature(file) {
   const handle = await fs.promises.open(file.path, 'r');
   try {
-    const header = Buffer.alloc(8);
+    const header = Buffer.alloc(12);
     const { bytesRead } = await handle.read(header, 0, header.length, 0);
     if (file.mimetype === 'application/pdf') return header.subarray(0, 5).toString() === '%PDF-' && bytesRead >= 5;
     if (file.mimetype === 'image/png') return header.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]));
     if (file.mimetype === 'image/jpeg') return header[0] === 0xff && header[1] === 0xd8 && header[2] === 0xff;
+    if (file.mimetype === 'image/gif') {
+      return ['GIF87a', 'GIF89a'].includes(header.subarray(0, 6).toString());
+    }
+    if (file.mimetype === 'image/webp') {
+      return header.subarray(0, 4).toString() === 'RIFF' && header.subarray(8, 12).toString() === 'WEBP';
+    }
+    if (file.mimetype === 'image/bmp') return header.subarray(0, 2).toString() === 'BM';
+    if (file.mimetype === 'image/tiff') {
+      return ['II*\u0000', 'MM\u0000*'].includes(header.subarray(0, 4).toString());
+    }
+    if (file.mimetype === 'video/mp4') return bytesRead >= 12 && header.subarray(4, 8).toString() === 'ftyp';
+    if (file.mimetype === 'video/webm') return header.subarray(0, 4).equals(Buffer.from([0x1a, 0x45, 0xdf, 0xa3]));
+    if (file.mimetype === 'video/quicktime' || file.mimetype === 'video/x-m4v') {
+      return bytesRead >= 12 && header.subarray(4, 8).toString() === 'ftyp';
+    }
+    if (file.mimetype === 'audio/mpeg') return header.subarray(0, 3).toString() === 'ID3'
+      || (header[0] === 0xff && (header[1] & 0xe0) === 0xe0);
+    if (file.mimetype === 'audio/mp4') return bytesRead >= 12 && header.subarray(4, 8).toString() === 'ftyp';
+    if (file.mimetype === 'audio/aac') return header[0] === 0xff && (header[1] & 0xf6) === 0xf0;
+    if (file.mimetype === 'audio/flac') return header.subarray(0, 4).toString() === 'fLaC';
+    if (file.mimetype === 'audio/wav' || file.mimetype === 'audio/x-wav') {
+      return header.subarray(0, 4).toString() === 'RIFF' && header.subarray(8, 12).toString() === 'WAVE';
+    }
+    if (file.mimetype === 'audio/ogg') return header.subarray(0, 4).toString() === 'OggS';
+    if (file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      || file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      || file.mimetype === 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+      || file.mimetype === 'application/vnd.oasis.opendocument.text'
+      || file.mimetype === 'application/vnd.oasis.opendocument.spreadsheet'
+      || file.mimetype === 'application/vnd.oasis.opendocument.presentation') {
+      return header.subarray(0, 4).equals(Buffer.from([0x50, 0x4b, 0x03, 0x04]));
+    }
+    if (file.mimetype === 'application/msword'
+      || file.mimetype === 'application/vnd.ms-excel'
+      || file.mimetype === 'application/vnd.ms-powerpoint') {
+      return header.subarray(0, 8).equals(Buffer.from([0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1]));
+    }
+    if (file.mimetype === 'application/rtf' || file.mimetype === 'text/rtf') {
+      return header.subarray(0, 5).toString() === '{\\rtf';
+    }
+    if (file.mimetype === 'text/plain' || file.mimetype === 'text/markdown' || file.mimetype === 'text/csv') {
+      return bytesRead > 0 && !header.subarray(0, bytesRead).includes(0);
+    }
     return false;
   } finally {
     await handle.close();
@@ -150,16 +193,30 @@ class DigitalCollectionController {
             || (item.rights_expires_at && item.rights_expires_at < new Date().toISOString().slice(0, 10)))));
       const batchSize = files.reduce((total, file) => total + file.size, 0);
 
-      if (!files.length || files.length > 15 || batchSize > 150 * 1024 * 1024
-        || req.body.rights_confirmed !== 'true' || !validMetadata) {
+      let validationError;
+      if (!files.length) {
+        validationError = 'Choose at least one file to upload';
+      } else if (files.length > 15) {
+        validationError = 'Upload no more than 15 files at a time';
+      } else if (batchSize > 150 * 1024 * 1024) {
+        validationError = 'The combined upload size cannot exceed 150 MB';
+      } else if (!Array.isArray(metadata) || metadata.length !== files.length) {
+        validationError = 'Each selected file must have matching metadata';
+      } else if (req.body.rights_confirmed !== 'true') {
+        validationError = 'Confirm the rights assessment before uploading';
+      } else if (!validMetadata) {
+        validationError = 'Complete the title, material type, rights status, notes, and access settings for every file';
+      }
+
+      if (validationError) {
         files.forEach((file) => fs.rmSync(file.path, { force: true }));
-        return sendError(res, 'Upload requires 1–15 files totaling at most 150 MB, matching metadata, a completed rights assessment, and no public restricted items', 400);
+        return sendError(res, validationError, 400);
       }
 
       for (const file of files) {
         if (!await hasValidFileSignature(file)) {
           files.forEach((item) => fs.rmSync(item.path, { force: true }));
-          return sendError(res, 'A file does not match its declared PDF, PNG, or JPEG type', 400);
+          return sendError(res, 'The file contents do not match its declared type', 400);
         }
       }
 
@@ -366,6 +423,29 @@ class DigitalCollectionController {
         toExclusive.toISOString().slice(0, 19).replace('T', ' ')
       );
       sendSuccess(res, 'Digital collection analytics retrieved', analytics);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getAuditLogs(req, res, next) {
+    try {
+      const page = Math.max(1, Number.parseInt(req.query.page, 10) || 1);
+      const limit = Math.min(100, Math.max(1, Number.parseInt(req.query.limit, 10) || 25));
+      const eventType = req.query.event_type || '';
+      if (eventType && !['view', 'download'].includes(eventType)) {
+        return sendError(res, 'Invalid audit event type', 400);
+      }
+      const result = await DigitalCollectionModel.findAuditEvents({
+        eventType,
+        search: typeof req.query.search === 'string' ? req.query.search.trim().slice(0, 160) : '',
+        limit,
+        offset: (page - 1) * limit,
+      });
+      sendSuccess(res, 'Digital object audit logs retrieved', {
+        ...result,
+        pagination: { page, limit, total: result.total, pages: Math.ceil(result.total / limit) },
+      });
     } catch (error) {
       next(error);
     }

@@ -17,6 +17,7 @@ router.delete('/:reviewId', authenticate, ReviewController.deleteReview);
 
 // Admin routes
 router.get('/admin/all', authenticate, authorize(ROLES.ADMIN, ROLES.LIBRARIAN), ReviewController.getAllReviews);
+router.put('/admin/:reviewId', authenticate, authorize(ROLES.ADMIN, ROLES.LIBRARIAN), ReviewController.adminUpdateReview);
 router.delete('/admin/:reviewId', authenticate, authorize(ROLES.ADMIN, ROLES.LIBRARIAN), ReviewController.adminDeleteReview);
 
 module.exports = router;
