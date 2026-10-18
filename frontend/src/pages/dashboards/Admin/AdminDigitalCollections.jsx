@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Download, Eye, FileImage, FileText, FolderPlus, History, LockKeyhole, Music2, Pencil, Plus, ShieldCheck, Trash2, Upload, Video, X } from 'lucide-react'
 import { toast } from 'react-toastify'
 import api from '../../../api/axios'
+import DigitalObjectPreview from '../../../components/DigitalObjectPreview'
 
 const materialTypes = [
   'Historical Photograph', 'Newsletter', 'Report', 'Newspaper Clipping',
@@ -9,8 +10,8 @@ const materialTypes = [
 ]
 
 const rightsStatuses = ['Public Domain', 'Copyrighted - Permitted', 'Sensitive - Restricted']
-const allowedFileTypes = '.pdf,.png,.jpg,.jpeg,.mp4,.webm,.mp3,.m4a,.wav,.ogg,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf'
-const acceptedFileName = /\.(pdf|png|jpe?g|mp4|webm|mp3|m4a|wav|ogg|docx?|xlsx?|pptx?|txt|csv|rtf)$/i
+const allowedFileTypes = '.pdf,.png,.jpg,.jpeg,.mp4,.webm,.mp3,.m4a,.wav,.ogg,.docx,.xlsx,.pptx,.txt,.md,.csv,.rtf'
+const acceptedFileName = /\.(pdf|png|jpe?g|mp4|webm|mp3|m4a|wav|ogg|docx|xlsx|pptx|txt|md|csv|rtf)$/i
 
 const emptyCollection = { title: '', description: '', selection_criteria: '', collection_value: '' }
 
@@ -368,7 +369,7 @@ export default function AdminDigitalCollections() {
             <button type="button" disabled={!selectedId} onClick={() => fileInput.current?.click()} onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.preventDefault(); acceptFiles(event.dataTransfer.files) }} className="flex min-h-28 w-full flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed border-gray-300 bg-gray-50 px-5 text-sm text-gray-600 hover:border-emerald-700 hover:bg-emerald-50/40 disabled:opacity-50">
               <Upload size={22} className="text-emerald-800" />
               <span className="font-semibold">Drop files here or choose files</span>
-              <span className="text-center text-xs">PDF, images, MP4/WebM, MP3/M4A/WAV/OGG, DOC/DOCX, XLS/XLSX, PPT/PPTX, TXT/CSV/RTF · Up to 15 files</span>
+              <span className="text-center text-xs">PDF, images, MP4/WebM, MP3/M4A/WAV/OGG, DOCX/XLSX/PPTX, TXT/Markdown/CSV/RTF · Up to 15 files</span>
             </button>
             <input ref={fileInput} type="file" accept={allowedFileTypes} multiple className="hidden" onChange={(event) => acceptFiles(event.target.files)} />
 
@@ -494,15 +495,7 @@ export default function AdminDigitalCollections() {
             <button type="button" aria-label="Close preview" onClick={() => setPreviewFile(null)} className="rounded-md p-1.5 text-gray-600 hover:bg-gray-100"><X size={19} /></button>
           </div>
           <div className="flex min-h-0 flex-1 items-center justify-center overflow-auto bg-gray-100 p-3">
-            {previewFile.object.mime_type === 'application/pdf'
-              ? <iframe title={previewFile.object.title} src={previewFile.url} className="h-[75vh] w-full bg-white" />
-              : previewFile.object.mime_type?.startsWith('image/')
-                ? <img src={previewFile.url} alt={previewFile.object.title} className="max-h-[75vh] max-w-full object-contain" />
-                : previewFile.object.mime_type?.startsWith('video/')
-                  ? <video src={previewFile.url} controls playsInline className="max-h-[75vh] max-w-full" />
-                  : previewFile.object.mime_type?.startsWith('audio/')
-                    ? <audio src={previewFile.url} controls className="w-full max-w-xl" />
-                    : <div className="space-y-3 p-8 text-center"><p className="text-sm text-gray-600">This document type can be downloaded but cannot be previewed in the browser.</p><button type="button" onClick={() => downloadFile(previewFile.object)} className="inline-flex items-center gap-1.5 rounded-md bg-emerald-800 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-900"><Download size={15} />Download document</button></div>}
+            <DigitalObjectPreview object={previewFile.object} url={previewFile.url} onDownload={downloadFile} />
           </div>
         </section>
       </div>}

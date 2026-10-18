@@ -50,7 +50,7 @@ const AdminBorrowing = () => {
     const daysOverdue = isOverdue ? Math.ceil((new Date() - new Date(borrowing.due_date)) / (1000 * 60 * 60 * 24)) : 0;
     
     Swal.fire({
-      title: '📖 Mark Book as Returned',
+      title: 'Mark Book as Returned',
       html: `
         <div class="text-left space-y-4">
           <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
@@ -146,7 +146,7 @@ const AdminBorrowing = () => {
             });
           } else {
             Swal.fire({
-              title: '✅ Returned Successfully!',
+              title: 'Returned Successfully!',
               html: `
                 <p class="text-gray-700">
                   The book has been marked as returned for <strong>${patronName}</strong>. No fines applicable.
@@ -162,7 +162,7 @@ const AdminBorrowing = () => {
         } catch (error) {
           console.error('Error returning book:', error);
           Swal.fire({
-            title: '❌ Error',
+            title: 'Error',
             text: error.response?.data?.message || 'Failed to return book',
             icon: 'error',
             confirmButtonColor: '#ef4444'
@@ -182,7 +182,7 @@ const AdminBorrowing = () => {
     });
     
     Swal.fire({
-      title: '✅ Approve Borrowing Request',
+      title: 'Approve Borrowing Request',
       html: `
         <div class="text-left space-y-4">
           <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
@@ -246,7 +246,7 @@ const AdminBorrowing = () => {
           console.log('Approve response:', res.data);
           
           Swal.fire({
-            title: '✅ Approved Successfully!',
+            title: 'Approved Successfully!',
             html: `
               <div class="text-left">
                 <p class="mb-4 text-gray-700">
@@ -268,7 +268,7 @@ const AdminBorrowing = () => {
         } catch (error) {
           console.error('Error approving borrow request:', error);
           Swal.fire({
-            title: '❌ Error',
+            title: 'Error',
             text: error.response?.data?.message || 'Failed to approve borrowing request',
             icon: 'error',
             confirmButtonColor: '#ef4444'
@@ -282,7 +282,7 @@ const AdminBorrowing = () => {
     const patronName = `${borrowing.first_name || borrowing.username} ${borrowing.last_name || ''}`;
     
     Swal.fire({
-      title: '❌ Reject Borrowing Request',
+      title: 'Reject Borrowing Request',
       html: `
         <div class="text-left space-y-4">
           <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded">
@@ -377,7 +377,7 @@ const AdminBorrowing = () => {
         } catch (error) {
           console.error('Error rejecting borrow request:', error);
           Swal.fire({
-            title: '❌ Error',
+            title: 'Error',
             text: error.response?.data?.message || 'Failed to reject borrowing request',
             icon: 'error',
             confirmButtonColor: '#ef4444'

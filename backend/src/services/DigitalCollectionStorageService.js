@@ -91,28 +91,50 @@ class DigitalCollectionStorageService {
   }
 
   static async streamCloudinaryObject(res, object) {
-    const url = cloudinary.url(object.file_path, {
-      secure: true,
-      sign_url: true,
+    const resourceType = object.cloudinary_resource_type || 'raw';
+    const extension = path.extname(object.file_path);
+    const rawIdIncludesExtension = resourceType === 'raw'
+      && extension.slice(1).toLowerCase() === String(object.cloudinary_format || '').toLowerCase();
+    const publicId = rawIdIncludesExtension ? object.file_path.slice(0, -extension.length) : object.file_path;
+    const url = cloudinary.utils.private_download_url(publicId, object.cloudinary_format, {
+      resource_type: resourceType,
       type: 'authenticated',
-      resource_type: object.cloudinary_resource_type,
-      version: object.cloudinary_version,
-      format: object.cloudinary_format,
+      expires_at: Math.floor(Date.now() / 1000) + 600,
     });
 
     return new Promise((resolve, reject) => {
-      const upstream = https.get(url, (response) => {
-        if (response.statusCode !== 200) {
-          response.resume();
-          reject(new Error(`Cloudinary delivery failed with status ${response.statusCode}`));
-          return;
-        }
-        response.pipe(res);
-        response.on('end', resolve);
-        response.on('error', reject);
-      });
-      upstream.setTimeout(30000, () => upstream.destroy(new Error('Cloudinary delivery timed out')));
-      upstream.on('error', reject);
+      let redirectCount = 0;
+      const requestFile = (target) => {
+        const upstream = https.get(target, (response) => {
+          if ([301, 302, 303, 307, 308].includes(response.statusCode) && response.headers.location) {
+            response.resume();
+            if (redirectCount >= 5) {
+              reject(new Error('Cloudinary delivery exceeded the redirect limit'));
+              return;
+            }
+            const redirectedUrl = new URL(response.headers.location, target);
+            if (redirectedUrl.protocol !== 'https:'
+              || !(redirectedUrl.hostname === 'cloudinary.com' || redirectedUrl.hostname.endsWith('.cloudinary.com'))) {
+              reject(new Error('Cloudinary returned an invalid delivery redirect'));
+              return;
+            }
+            redirectCount += 1;
+            requestFile(redirectedUrl);
+            return;
+          }
+          if (response.statusCode !== 200) {
+            response.resume();
+            reject(new Error(`Cloudinary delivery failed with status ${response.statusCode}`));
+            return;
+          }
+          response.pipe(res);
+          response.on('end', resolve);
+          response.on('error', reject);
+        });
+        upstream.setTimeout(30000, () => upstream.destroy(new Error('Cloudinary delivery timed out')));
+        upstream.on('error', reject);
+      };
+      requestFile(url);
     });
   }
 

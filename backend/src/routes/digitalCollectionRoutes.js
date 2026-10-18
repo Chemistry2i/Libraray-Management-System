@@ -14,13 +14,10 @@ const mimeByExtension = {
   '.pdf': ['application/pdf'], '.png': ['image/png'], '.jpg': ['image/jpeg'], '.jpeg': ['image/jpeg'],
   '.mp4': ['video/mp4'], '.webm': ['video/webm'],
   '.mp3': ['audio/mpeg'], '.m4a': ['audio/mp4'], '.wav': ['audio/wav', 'audio/x-wav'], '.ogg': ['audio/ogg'],
-  '.doc': ['application/msword'],
   '.docx': ['application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
-  '.xls': ['application/vnd.ms-excel'],
   '.xlsx': ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
-  '.ppt': ['application/vnd.ms-powerpoint'],
   '.pptx': ['application/vnd.openxmlformats-officedocument.presentationml.presentation'],
-  '.txt': ['text/plain'], '.csv': ['text/csv'], '.rtf': ['application/rtf', 'text/rtf'],
+  '.txt': ['text/plain'], '.md': ['text/markdown'], '.csv': ['text/csv'], '.rtf': ['application/rtf', 'text/rtf'],
 };
 const storage = multer.diskStorage({
   destination: (req, file, callback) => callback(null, uploadDirectory),
@@ -44,6 +41,7 @@ router.get('/public/collections', DigitalCollectionController.getPublicCollectio
 router.get('/public/objects/:objectId/file', DigitalCollectionController.getPublicFile);
 router.get('/public/objects/:objectId/download', DigitalCollectionController.downloadPublicFile);
 router.get('/admin/analytics', ...staffOnly, DigitalCollectionController.getAnalytics);
+router.get('/admin/audit-logs', ...staffOnly, DigitalCollectionController.getAuditLogs);
 router.get('/admin/export.csv', ...staffOnly, DigitalCollectionController.exportObjects);
 
 router.get('/collections', ...staffOnly, DigitalCollectionController.getCollections);

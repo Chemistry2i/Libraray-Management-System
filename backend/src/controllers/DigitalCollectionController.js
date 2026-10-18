@@ -55,14 +55,10 @@ async function hasValidFileSignature(file) {
       || file.mimetype === 'application/vnd.openxmlformats-officedocument.presentationml.presentation') {
       return header.subarray(0, 4).equals(Buffer.from([0x50, 0x4b, 0x03, 0x04]));
     }
-    if (file.mimetype === 'application/msword' || file.mimetype === 'application/vnd.ms-excel'
-      || file.mimetype === 'application/vnd.ms-powerpoint') {
-      return header.subarray(0, 8).equals(Buffer.from([0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1]));
-    }
     if (file.mimetype === 'application/rtf' || file.mimetype === 'text/rtf') {
       return header.subarray(0, 5).toString() === '{\\rtf';
     }
-    if (file.mimetype === 'text/plain' || file.mimetype === 'text/csv') {
+    if (file.mimetype === 'text/plain' || file.mimetype === 'text/markdown' || file.mimetype === 'text/csv') {
       return bytesRead > 0 && !header.subarray(0, bytesRead).includes(0);
     }
     return false;
@@ -390,6 +386,29 @@ class DigitalCollectionController {
         toExclusive.toISOString().slice(0, 19).replace('T', ' ')
       );
       sendSuccess(res, 'Digital collection analytics retrieved', analytics);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getAuditLogs(req, res, next) {
+    try {
+      const page = Math.max(1, Number.parseInt(req.query.page, 10) || 1);
+      const limit = Math.min(100, Math.max(1, Number.parseInt(req.query.limit, 10) || 25));
+      const eventType = req.query.event_type || '';
+      if (eventType && !['view', 'download'].includes(eventType)) {
+        return sendError(res, 'Invalid audit event type', 400);
+      }
+      const result = await DigitalCollectionModel.findAuditEvents({
+        eventType,
+        search: typeof req.query.search === 'string' ? req.query.search.trim().slice(0, 160) : '',
+        limit,
+        offset: (page - 1) * limit,
+      });
+      sendSuccess(res, 'Digital object audit logs retrieved', {
+        ...result,
+        pagination: { page, limit, total: result.total, pages: Math.ceil(result.total / limit) },
+      });
     } catch (error) {
       next(error);
     }
