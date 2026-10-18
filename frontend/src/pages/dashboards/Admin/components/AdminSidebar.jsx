@@ -66,7 +66,7 @@ export default function AdminSidebar() {
             to={path}
             end={path === '/admin'}
             className={({ isActive }) =>
-              `flex items-center gap-3 rounded-lg px-3 py-2.5 text-base transition-colors duration-200 ${
+              `flex items-center gap-3 rounded-lg px-3 py-2.5 text-base transition-colors duration-200 lg:text-xl ${
                 isActive
                   ? 'bg-primary text-white font-semibold shadow-sm'
                   : 'text-gray-500 hover:bg-primary/5 hover:text-primary font-medium'

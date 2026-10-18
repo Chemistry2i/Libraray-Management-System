@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { Download, Eye, FileImage, FileText, FolderPlus, History, LockKeyhole, Music2, Pencil, Plus, ShieldCheck, Trash2, Upload, Video, X } from 'lucide-react'
 import { toast } from 'react-toastify'
 import api from '../../../api/axios'
@@ -427,7 +428,7 @@ export default function AdminDigitalCollections() {
           </form>
       </section>
 
-      {collectionModalOpen && <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/40 p-4 backdrop-blur-sm" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget && !savingCollection) setCollectionModalOpen(false) }}>
+      {collectionModalOpen && createPortal(<div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/40 p-4 backdrop-blur-sm" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget && !savingCollection) setCollectionModalOpen(false) }}>
         <form role="dialog" aria-modal="true" aria-labelledby="collection-form-title" onSubmit={createCollection} className="my-8 w-full max-w-xl space-y-5 rounded-lg bg-white p-6 shadow-xl">
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-start gap-3">
@@ -458,7 +459,7 @@ export default function AdminDigitalCollections() {
             </button>
           </div>
         </form>
-      </div>}
+      </div>, document.body)}
 
       <section>
         <div className="mb-3 flex items-center justify-between">
@@ -488,7 +489,7 @@ export default function AdminDigitalCollections() {
         </div>
       </section>
 
-      {previewFile && <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setPreviewFile(null) }}>
+      {previewFile && createPortal(<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setPreviewFile(null) }}>
         <section role="dialog" aria-modal="true" aria-labelledby="digital-object-preview-title" className="flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-lg bg-white shadow-xl">
           <div className="flex items-center justify-between gap-4 border-b border-gray-200 px-4 py-3">
             <h2 id="digital-object-preview-title" className="truncate font-semibold text-gray-900">{previewFile.object.title}</h2>
@@ -498,9 +499,9 @@ export default function AdminDigitalCollections() {
             <DigitalObjectPreview object={previewFile.object} url={previewFile.url} onDownload={downloadFile} />
           </div>
         </section>
-      </div>}
+      </div>, document.body)}
 
-      {editingObject && <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/40 p-4" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setEditingObject(null) }}>
+      {editingObject && createPortal(<div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/40 p-4" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setEditingObject(null) }}>
         <form role="dialog" aria-modal="true" aria-labelledby="edit-digital-object-title" onSubmit={saveObject} className="my-8 max-h-[90vh] w-full max-w-2xl space-y-4 overflow-y-auto rounded-lg bg-white p-6 shadow-xl">
           <div><h2 id="edit-digital-object-title" className="text-xl font-bold text-gray-900">Edit digital object</h2><p className="mt-1 text-sm text-gray-500">Rights changes require a new review confirmation and are added to the audit history.</p></div>
           <div className="grid gap-3 sm:grid-cols-2">
@@ -516,14 +517,14 @@ export default function AdminDigitalCollections() {
           <label className="flex items-start gap-2 border-t border-gray-200 pt-4 text-sm text-gray-700"><input type="checkbox" checked={rightsReviewConfirmed} onChange={(event) => setRightsReviewConfirmed(event.target.checked)} className="mt-0.5 size-4 accent-emerald-800" />I reviewed the current rights evidence and confirm the assessment if rights fields change.</label>
           <div className="flex justify-end gap-2"><button type="button" onClick={() => setEditingObject(null)} className="rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700">Cancel</button><button disabled={savingObject} className="rounded-md bg-emerald-800 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50">{savingObject ? 'Saving…' : 'Save changes'}</button></div>
         </form>
-      </div>}
+      </div>, document.body)}
 
-      {rightsHistory && <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setRightsHistory(null) }}>
+      {rightsHistory && createPortal(<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setRightsHistory(null) }}>
         <section role="dialog" aria-modal="true" aria-labelledby="rights-history-title" className="max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-6 shadow-xl">
           <div className="flex items-start justify-between gap-4"><div><h2 id="rights-history-title" className="text-xl font-bold text-gray-900">Rights review history</h2><p className="mt-1 text-sm text-gray-600">{rightsHistory.object.title}</p></div><button type="button" onClick={() => setRightsHistory(null)} className="rounded border border-gray-300 px-3 py-1.5 text-sm font-semibold text-gray-700">Close</button></div>
           <div className="mt-5 divide-y divide-gray-200">{rightsHistory.entries.length ? rightsHistory.entries.map((entry) => <article key={entry.history_id} className="space-y-1 py-4 text-sm"><div className="flex flex-wrap justify-between gap-2"><strong className="text-gray-900">{entry.rights_status}</strong><span className="text-gray-500">{new Date(entry.reviewed_at).toLocaleString()}</span></div><p className="text-gray-700">{entry.rights_assessment_notes}</p><p className="text-xs text-gray-500">Reviewed by {entry.first_name ? `${entry.first_name} ${entry.last_name}` : 'staff account unavailable'}{entry.evidence_reference ? ` · Evidence: ${entry.evidence_reference}` : ''}{entry.expires_at ? ` · Expires: ${dateInputValue(entry.expires_at)}` : ''}</p></article>) : <p className="py-8 text-center text-sm text-gray-500">No rights history found.</p>}</div>
         </section>
-      </div>}
+      </div>, document.body)}
     </div>
   )
 }

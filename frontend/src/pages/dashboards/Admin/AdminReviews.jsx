@@ -126,13 +126,13 @@ const AdminReviews = () => {
 
         {/* Table */}
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="w-full min-w-[900px] table-fixed border-collapse text-left">
             <thead>
               <tr className="bg-gray-50 text-gray-600 text-sm border-b border-gray-200">
-                <th className="p-4 font-semibold w-1/4">Book & Patron</th>
-                <th className="p-4 font-semibold w-1/12">Rating</th>
-                <th className="p-4 font-semibold w-2/5">Comment</th>
-                <th className="p-4 font-semibold w-1/6 text-right">Actions</th>
+                <th className="w-1/4 p-4 font-semibold">Book & Patron</th>
+                <th className="w-[12%] p-4 font-semibold">Rating</th>
+                <th className="w-[34%] p-4 font-semibold">Comment</th>
+                <th className="w-36 whitespace-nowrap p-4 text-right font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y text-sm">
@@ -155,16 +155,16 @@ const AdminReviews = () => {
                     <td className="p-4">
                       {renderStars(review.rating)}
                     </td>
-                    <td className="p-4">
-                      <p className="text-gray-600 text-sm max-w-sm whitespace-pre-wrap break-words" title={review.comment}>
+                    <td className="max-w-[18rem] p-4">
+                      <p className="max-w-[18rem] break-words whitespace-pre-wrap text-sm text-gray-600" title={review.comment}>
                         {review.comment || <span className="text-gray-400 italic">No comment provided</span>}
                       </p>
                       {review.helpful_count > 0 && (
                         <p className="text-xs text-emerald-600 mt-1 font-medium">{review.helpful_count} people found this helpful</p>
                       )}
                     </td>
-                    <td className="p-4 text-right align-middle">
-                      <div className="flex items-center justify-end gap-1.5">
+                    <td className="whitespace-nowrap p-4 text-right align-middle">
+                      <div className="flex flex-nowrap items-center justify-end gap-1.5">
                         <button 
                           onClick={() => handleDeleteReview(review.review_id)}
                           className="inline-flex items-center gap-1 rounded border border-red-200 px-2 py-1.5 text-xs font-semibold text-red-700 transition-colors hover:bg-red-50 hover:text-red-600" title="Delete Moderation">
