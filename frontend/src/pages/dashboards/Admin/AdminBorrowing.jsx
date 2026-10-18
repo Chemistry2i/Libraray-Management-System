@@ -520,9 +520,10 @@ const AdminBorrowing = () => {
                       </div>
                     </td>
                     <td className="p-4 text-right align-middle">
-                      <div className="flex items-center justify-end gap-2 text-gray-400">
-                        <button className="p-1.5 hover:text-blue-500 hover:bg-blue-50 rounded transition-colors" title="View Details">
+                      <div className="flex flex-wrap items-center justify-end gap-1.5">
+                        <button className="inline-flex items-center gap-1 rounded px-2 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-blue-50 hover:text-blue-600" title="View Details">
                           <Eye size={18} />
+                          View
                         </button>
                         
                         {/* Show approve/reject for pending requests */}
@@ -530,17 +531,19 @@ const AdminBorrowing = () => {
                           <>
                             <button 
                               onClick={() => handleApproveBorrow(borrowing)}
-                              className="p-1.5 hover:text-green-600 hover:bg-green-50 rounded transition-colors" 
+                              className="inline-flex items-center gap-1 rounded px-2 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-green-50 hover:text-green-700"
                               title="Approve Request"
                             >
                               <ThumbsUp size={18} />
+                              Approve
                             </button>
                             <button 
                               onClick={() => handleRejectBorrow(borrowing)}
-                              className="p-1.5 hover:text-red-600 hover:bg-red-50 rounded transition-colors" 
+                              className="inline-flex items-center gap-1 rounded px-2 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-red-50 hover:text-red-600"
                               title="Reject Request"
                             >
                               <AlertCircle size={18} />
+                              Reject
                             </button>
                           </>
                         )}
@@ -549,10 +552,11 @@ const AdminBorrowing = () => {
                         {borrowing.status?.toLowerCase() === 'active' && (
                           <button 
                             onClick={() => handleReturnBook(borrowing)} 
-                            className="p-1.5 hover:text-green-600 hover:bg-green-50 rounded transition-colors" 
+                            className="inline-flex items-center gap-1 rounded px-2 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-green-50 hover:text-green-700"
                             title="Mark as Returned"
                           >
                             <CheckCircle size={18} />
+                            Return
                           </button>
                         )}
                       </div>

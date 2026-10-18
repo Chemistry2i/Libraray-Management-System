@@ -171,15 +171,18 @@ const AdminCategories = () => {
                       </span>
                     </td>
                     <td className="p-4 text-right align-middle">
-                      <div className="flex items-center justify-end gap-2 text-gray-400">
-                        <button onClick={() => setViewItem(category)} className="p-1.5 hover:text-blue-500 hover:bg-blue-50 rounded transition-colors" title="View details">
+                      <div className="flex flex-wrap items-center justify-end gap-1.5">
+                        <button onClick={() => setViewItem(category)} className="inline-flex items-center gap-1 rounded px-2 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-blue-50 hover:text-blue-600" title="View details">
                           <Eye size={18} />
+                          View
                         </button>
-                        <button onClick={() => handleEditClick(category)} className="p-1.5 hover:text-primary hover:bg-primary/10 rounded transition-colors" title="Edit">
+                        <button onClick={() => handleEditClick(category)} className="inline-flex items-center gap-1 rounded px-2 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-primary/10 hover:text-primary" title="Edit">
                           <Edit size={18} />
+                          Edit
                         </button>
-                        <button onClick={() => handleDeleteClick(category.category_id)} className="p-1.5 hover:text-red-500 hover:bg-red-50 rounded transition-colors" title="Delete">
+                        <button onClick={() => handleDeleteClick(category.category_id)} className="inline-flex items-center gap-1 rounded px-2 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-red-50 hover:text-red-600" title="Delete">
                           <Trash2 size={18} />
+                          Delete
                         </button>
                       </div>
                     </td>
