@@ -46,15 +46,13 @@ export default function AdminSidebar() {
   return (
     <aside className="flex h-screen w-72 shrink-0 flex-col border-r border-gray-200 bg-white text-gray-800 shadow-sm">
       {/* Brand Header */}
-      <div className="h-20 flex items-center px-6 border-b border-gray-200">
-        <div className="flex items-center space-x-3">
-          <img src={SCHOOL_BADGE} alt="Kamuli Church of Uganda Primary School badge" className="size-11 shrink-0 rounded-full bg-white object-contain ring-1 ring-slate-200" />
-          <div>
-            <h1 className="text-base font-bold tracking-tight text-gray-900">{SCHOOL_NAME}</h1>
-            <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold flex items-center gap-1">
-              <ShieldCheck size={12} className="text-primary" /> School Library
-            </p>
-          </div>
+      <div className="flex flex-col items-center gap-2 border-b border-gray-200 px-4 py-4 text-center">
+        <img src={SCHOOL_BADGE} alt="Kamuli Church of Uganda Primary School badge" className="size-16 shrink-0 rounded-full bg-white object-contain ring-1 ring-slate-200" />
+        <div>
+          <h1 className="text-base font-bold tracking-tight text-gray-900">{SCHOOL_NAME}</h1>
+          <p className="mt-1 flex items-center justify-center gap-1 text-[10px] font-semibold uppercase tracking-widest text-gray-500">
+            <ShieldCheck size={12} className="text-primary" /> School Library
+          </p>
         </div>
       </div>
 
@@ -66,7 +64,7 @@ export default function AdminSidebar() {
             to={path}
             end={path === '/admin'}
             className={({ isActive }) =>
-              `flex items-center gap-3 rounded-lg px-3 py-2.5 text-base transition-colors duration-200 lg:text-[17px] ${
+              `flex items-center gap-3 rounded-lg px-3 py-2.5 text-[17px] hover:text-[17px] transition-colors duration-200 ${
                 isActive
                   ? 'bg-primary text-white font-semibold shadow-sm'
                   : 'text-gray-500 hover:bg-primary/5 hover:text-primary font-medium'
