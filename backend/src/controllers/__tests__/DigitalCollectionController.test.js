@@ -5,6 +5,7 @@ const path = require('path');
 jest.mock('../../models/DigitalCollectionModel', () => ({
   findPublicObjects: jest.fn(),
   findPublicCollections: jest.fn(),
+  findAuditEvents: jest.fn(),
   findObjectById: jest.fn(),
   findCollectionById: jest.fn(),
   createObjects: jest.fn(),
@@ -49,6 +50,19 @@ describe('DigitalCollectionController', () => {
       search: 'town', collectionId: 4, materialType: 'Report', sort: 'title', limit: 20, offset: 20,
     });
     expect(res.body.data.pagination).toEqual({ page: 2, limit: 20, total: 0, pages: 0 });
+  });
+
+  test('filters and paginates digital object audit logs', async () => {
+    DigitalCollectionModel.findAuditEvents.mockResolvedValue({ events: [], total: 31 });
+    const req = { query: { event_type: 'download', search: 'annual', page: '2', limit: '20' } };
+    const res = makeResponse();
+
+    await DigitalCollectionController.getAuditLogs(req, res, jest.fn());
+
+    expect(DigitalCollectionModel.findAuditEvents).toHaveBeenCalledWith({
+      eventType: 'download', search: 'annual', limit: 20, offset: 20,
+    });
+    expect(res.body.data.pagination).toEqual({ page: 2, limit: 20, total: 31, pages: 2 });
   });
 
   test('does not track or deliver a private object from the public file endpoint', async () => {

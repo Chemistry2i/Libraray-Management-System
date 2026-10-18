@@ -64,7 +64,10 @@ router.post(
 	bookValidator,
 	BookController.createBook
 );
-router.put('/:id', authenticate, authorize(ROLES.ADMIN, ROLES.LIBRARIAN), upload.fields([{ name: 'cover', maxCount: 1 }]), handleBookUploadError, bookValidator, BookController.updateBook);
+router.put('/:id', authenticate, authorize(ROLES.ADMIN, ROLES.LIBRARIAN), upload.fields([
+	{ name: 'cover', maxCount: 1 },
+	{ name: 'book_file', maxCount: 1 }
+]), handleBookUploadError, bookValidator, BookController.updateBook);
 
 // Download book file
 router.get('/:id/download', BookController.downloadBook);

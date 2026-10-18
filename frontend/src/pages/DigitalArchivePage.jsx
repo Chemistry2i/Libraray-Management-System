@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Download, Eye, FileImage, FileText, Music2, Search, Video, X } from 'lucide-react'
 import api from '../api/axios'
 import { SCHOOL_NAME } from '../constants/schoolBrand'
+import DigitalObjectPreview from '../components/DigitalObjectPreview'
 
 const materialTypes = [
   'Historical Photograph', 'Newsletter', 'Report', 'Newspaper Clipping',
@@ -156,13 +157,13 @@ export default function DigitalArchivePage() {
             <button type="button" aria-label="Close preview" onClick={() => setPreviewFile(null)} className="rounded-md p-1.5 text-gray-600 hover:bg-gray-100"><X size={19} /></button>
           </div>
           <div className="flex min-h-[50vh] flex-1 items-center justify-center overflow-auto bg-gray-100 p-4">
-            {previewFile.loading ? <p className="text-sm text-gray-600">Loading preview…</p>
-              : previewFile.error ? <p role="alert" className="text-sm text-rose-700">{previewFile.error}</p>
-                : previewFile.object.mime_type === 'application/pdf' ? <iframe title={previewFile.object.title} src={previewFile.url} className="h-[75vh] w-full bg-white" />
-                  : previewFile.object.mime_type?.startsWith('image/') ? <img src={previewFile.url} alt={previewFile.object.title} className="max-h-[75vh] max-w-full object-contain" />
-                    : previewFile.object.mime_type?.startsWith('video/') ? <video src={previewFile.url} controls playsInline className="max-h-[75vh] max-w-full" />
-                      : previewFile.object.mime_type?.startsWith('audio/') ? <audio src={previewFile.url} controls className="w-full max-w-xl" />
-                        : <div className="space-y-3 p-8 text-center"><p className="text-sm text-gray-700">This document format cannot be previewed in the browser.</p><a href={api.getUri({ url: `/digital-collections/public/objects/${previewFile.object.object_id}/download` })} className="inline-flex items-center gap-1.5 rounded-md bg-emerald-800 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-900"><Download size={15} />Download document</a></div>}
+            <DigitalObjectPreview
+              object={previewFile.object}
+              url={previewFile.url}
+              loading={previewFile.loading}
+              error={previewFile.error}
+              downloadUrl={api.getUri({ url: `/digital-collections/public/objects/${previewFile.object.object_id}/download` })}
+            />
           </div>
         </section>
       </div>}

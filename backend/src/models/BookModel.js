@@ -1,5 +1,5 @@
 const pool = require('../config/database');
-const { DatabaseError } = require('../exceptions/AppError');
+const { DatabaseError, ValidationError } = require('../exceptions/AppError');
 
 class BookModel {
   static async findAll(limit, offset) {
@@ -81,21 +81,72 @@ class BookModel {
   }
 
   static async update(bookId, updateData) {
+    const connection = await pool.getConnection();
     try {
-      const { title, author, category_id, publication_year, publisher, description } = updateData;
-      const assignments = ['title = ?', 'author = ?', 'category_id = ?', 'publication_year = ?', 'publisher = ?', 'description = ?'];
-      const values = [title, author, category_id, publication_year, publisher, description];
+      await connection.beginTransaction();
+      const editableColumns = ['title', 'author', 'isbn', 'category_id', 'publication_year', 'publisher', 'description', 'book_file_url'];
+      const assignments = [];
+      const values = [];
+      editableColumns.forEach((column) => {
+        if (Object.prototype.hasOwnProperty.call(updateData, column)) {
+          assignments.push(`\`${column}\` = ?`);
+          values.push(updateData[column]);
+        }
+      });
       if (Object.prototype.hasOwnProperty.call(updateData, 'cover_url')) {
         assignments.push('cover_url = ?', 'cover_cloudinary_public_id = ?');
         values.push(updateData.cover_url, updateData.cover_cloudinary_public_id || null);
       }
-      await pool.query(
+      if (Object.prototype.hasOwnProperty.call(updateData, 'total_copies')) {
+        const requestedTotal = Number(updateData.total_copies);
+        if (!Number.isInteger(requestedTotal) || requestedTotal < 1) {
+          throw new ValidationError('Total copies must be a whole number greater than zero');
+        }
+        const [copies] = await connection.query(
+          'SELECT copy_id, status FROM book_copies WHERE book_id = ? ORDER BY copy_id FOR UPDATE',
+          [bookId]
+        );
+        const [openLoans] = await connection.query(
+          'SELECT copy_id FROM borrowing_records WHERE book_id = ? AND status <> \'returned\'',
+          [bookId]
+        );
+        const referencedCopyIds = new Set(openLoans.map((loan) => Number(loan.copy_id)));
+        const protectedCopies = copies.filter((copy) => copy.status !== 'available' || referencedCopyIds.has(Number(copy.copy_id)));
+        if (requestedTotal < protectedCopies.length) {
+          throw new ValidationError(`Total copies cannot be lower than ${protectedCopies.length}; some copies are borrowed, reserved, damaged, or have open requests`);
+        }
+
+        const deleteCount = Math.max(0, copies.length - requestedTotal);
+        const removableCopies = copies
+          .filter((copy) => copy.status === 'available' && !referencedCopyIds.has(Number(copy.copy_id)))
+          .slice(0, deleteCount);
+        if (removableCopies.length) {
+          await connection.query(
+            `DELETE FROM book_copies WHERE copy_id IN (${removableCopies.map(() => '?').join(', ')})`,
+            removableCopies.map((copy) => copy.copy_id)
+          );
+        }
+        const copiesToAdd = requestedTotal - (copies.length - removableCopies.length);
+        for (let index = 0; index < copiesToAdd; index += 1) {
+          await connection.query('INSERT INTO book_copies (book_id, status) VALUES (?, \'available\')', [bookId]);
+        }
+        const currentAvailable = copies.filter((copy) => copy.status === 'available').length;
+        assignments.push('total_copies = ?', 'available_copies = ?');
+        values.push(requestedTotal, currentAvailable - removableCopies.length + copiesToAdd);
+      }
+      if (!assignments.length) throw new ValidationError('No book fields were supplied for update');
+      await connection.query(
         `UPDATE books SET ${assignments.join(', ')} WHERE book_id = ?`,
         [...values, bookId]
       );
+      await connection.commit();
       return true;
     } catch (error) {
+      await connection.rollback();
+      if (error.statusCode) throw error;
       throw new DatabaseError(error.message);
+    } finally {
+      connection.release();
     }
   }
 

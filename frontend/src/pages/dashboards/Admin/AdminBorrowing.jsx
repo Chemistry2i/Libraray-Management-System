@@ -50,7 +50,7 @@ const AdminBorrowing = () => {
     const daysOverdue = isOverdue ? Math.ceil((new Date() - new Date(borrowing.due_date)) / (1000 * 60 * 60 * 24)) : 0;
     
     Swal.fire({
-      title: '📖 Mark Book as Returned',
+      title: 'Mark Book as Returned',
       html: `
         <div class="text-left space-y-4">
           <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
@@ -146,7 +146,7 @@ const AdminBorrowing = () => {
             });
           } else {
             Swal.fire({
-              title: '✅ Returned Successfully!',
+              title: 'Returned Successfully!',
               html: `
                 <p class="text-gray-700">
                   The book has been marked as returned for <strong>${patronName}</strong>. No fines applicable.
@@ -162,7 +162,7 @@ const AdminBorrowing = () => {
         } catch (error) {
           console.error('Error returning book:', error);
           Swal.fire({
-            title: '❌ Error',
+            title: 'Error',
             text: error.response?.data?.message || 'Failed to return book',
             icon: 'error',
             confirmButtonColor: '#ef4444'
@@ -182,7 +182,7 @@ const AdminBorrowing = () => {
     });
     
     Swal.fire({
-      title: '✅ Approve Borrowing Request',
+      title: 'Approve Borrowing Request',
       html: `
         <div class="text-left space-y-4">
           <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
@@ -246,7 +246,7 @@ const AdminBorrowing = () => {
           console.log('Approve response:', res.data);
           
           Swal.fire({
-            title: '✅ Approved Successfully!',
+            title: 'Approved Successfully!',
             html: `
               <div class="text-left">
                 <p class="mb-4 text-gray-700">
@@ -268,7 +268,7 @@ const AdminBorrowing = () => {
         } catch (error) {
           console.error('Error approving borrow request:', error);
           Swal.fire({
-            title: '❌ Error',
+            title: 'Error',
             text: error.response?.data?.message || 'Failed to approve borrowing request',
             icon: 'error',
             confirmButtonColor: '#ef4444'
@@ -282,7 +282,7 @@ const AdminBorrowing = () => {
     const patronName = `${borrowing.first_name || borrowing.username} ${borrowing.last_name || ''}`;
     
     Swal.fire({
-      title: '❌ Reject Borrowing Request',
+      title: 'Reject Borrowing Request',
       html: `
         <div class="text-left space-y-4">
           <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded">
@@ -377,7 +377,7 @@ const AdminBorrowing = () => {
         } catch (error) {
           console.error('Error rejecting borrow request:', error);
           Swal.fire({
-            title: '❌ Error',
+            title: 'Error',
             text: error.response?.data?.message || 'Failed to reject borrowing request',
             icon: 'error',
             confirmButtonColor: '#ef4444'
@@ -520,9 +520,10 @@ const AdminBorrowing = () => {
                       </div>
                     </td>
                     <td className="p-4 text-right align-middle">
-                      <div className="flex items-center justify-end gap-2 text-gray-400">
-                        <button className="p-1.5 hover:text-blue-500 hover:bg-blue-50 rounded transition-colors" title="View Details">
+                      <div className="flex flex-wrap items-center justify-end gap-1.5">
+                        <button className="inline-flex items-center gap-1 rounded px-2 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-blue-50 hover:text-blue-600" title="View Details">
                           <Eye size={18} />
+                          View
                         </button>
                         
                         {/* Show approve/reject for pending requests */}
@@ -530,17 +531,19 @@ const AdminBorrowing = () => {
                           <>
                             <button 
                               onClick={() => handleApproveBorrow(borrowing)}
-                              className="p-1.5 hover:text-green-600 hover:bg-green-50 rounded transition-colors" 
+                              className="inline-flex items-center gap-1 rounded px-2 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-green-50 hover:text-green-700"
                               title="Approve Request"
                             >
                               <ThumbsUp size={18} />
+                              Approve
                             </button>
                             <button 
                               onClick={() => handleRejectBorrow(borrowing)}
-                              className="p-1.5 hover:text-red-600 hover:bg-red-50 rounded transition-colors" 
+                              className="inline-flex items-center gap-1 rounded px-2 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-red-50 hover:text-red-600"
                               title="Reject Request"
                             >
                               <AlertCircle size={18} />
+                              Reject
                             </button>
                           </>
                         )}
@@ -549,10 +552,11 @@ const AdminBorrowing = () => {
                         {borrowing.status?.toLowerCase() === 'active' && (
                           <button 
                             onClick={() => handleReturnBook(borrowing)} 
-                            className="p-1.5 hover:text-green-600 hover:bg-green-50 rounded transition-colors" 
+                            className="inline-flex items-center gap-1 rounded px-2 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-green-50 hover:text-green-700"
                             title="Mark as Returned"
                           >
                             <CheckCircle size={18} />
+                            Return
                           </button>
                         )}
                       </div>

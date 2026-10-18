@@ -164,11 +164,12 @@ const AdminReviews = () => {
                       )}
                     </td>
                     <td className="p-4 text-right align-middle">
-                      <div className="flex items-center justify-end gap-2 text-gray-400">
+                      <div className="flex items-center justify-end gap-1.5">
                         <button 
                           onClick={() => handleDeleteReview(review.review_id)}
-                          className="p-1.5 hover:text-red-500 hover:bg-red-50 rounded transition-colors" title="Delete Moderation">
+                          className="inline-flex items-center gap-1 rounded px-2 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-red-50 hover:text-red-600" title="Delete Moderation">
                           <Trash2 size={18} />
+                          Delete
                         </button>
                       </div>
                     </td>

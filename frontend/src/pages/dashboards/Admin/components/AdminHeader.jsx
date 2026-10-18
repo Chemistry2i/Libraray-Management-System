@@ -63,7 +63,7 @@ export default function AdminHeader() {
 
   return (
     <>
-    <header className="h-20 bg-white border-b border-gray-200 px-8 flex items-center justify-between relative z-10">
+    <header className="h-20 bg-white border-b border-gray-200 px-8 flex items-center justify-between relative z-20">
       {/* Left side: Mobile menu toggle & Search */}
       <div className="flex items-center gap-6">
         <div className="flex shrink-0 items-center gap-2.5">

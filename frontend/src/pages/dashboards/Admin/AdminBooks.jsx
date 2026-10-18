@@ -105,7 +105,7 @@ const AdminBooks = () => {
     setIsSaving(true);
     
     const submitData = new FormData();
-    Object.keys(formData).filter((key) => !(key === 'publication_year' && !formData[key])).forEach(key => {
+    Object.keys(formData).filter((key) => key !== 'available' && !(key === 'publication_year' && !formData[key])).forEach(key => {
       submitData.append(key, formData[key]);
     });
     
@@ -231,15 +231,18 @@ const AdminBooks = () => {
                       </span>
                     </td>
                     <td className="p-4 text-right align-middle">
-                      <div className="flex items-center justify-end gap-2 text-gray-400">
-                        <button onClick={() => setViewBook(book)} className="p-1.5 hover:text-blue-500 hover:bg-blue-50 rounded transition-colors" title="View details">
+                      <div className="flex flex-wrap items-center justify-end gap-1.5">
+                        <button onClick={() => setViewBook(book)} className="inline-flex items-center gap-1 rounded px-2 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-blue-50 hover:text-blue-600" title="View details">
                           <Eye size={18} />
+                          View
                         </button>
-                        <button onClick={() => handleEditClick(book)} className="p-1.5 hover:text-primary hover:bg-primary/10 rounded transition-colors" title="Edit">
+                        <button onClick={() => handleEditClick(book)} className="inline-flex items-center gap-1 rounded px-2 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-primary/10 hover:text-primary" title="Edit">
                           <Edit size={18} />
+                          Edit
                         </button>
-                        <button onClick={() => handleDeleteClick(book.book_id)} className="p-1.5 hover:text-red-500 hover:bg-red-50 rounded transition-colors" title="Delete">
+                        <button onClick={() => handleDeleteClick(book.book_id)} className="inline-flex items-center gap-1 rounded px-2 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-red-50 hover:text-red-600" title="Delete">
                           <Trash2 size={18} />
+                          Delete
                         </button>
                       </div>
                     </td>
@@ -381,14 +384,17 @@ const AdminBooks = () => {
                           className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
                         />
                       </div>
-                  {!editingBook && <div className="min-w-0">
-                        <label className="block text-sm font-semibold text-gray-700 mb-1">E-Book File (PDF/EPUB) *</label>
+                  <div className="min-w-0">
+                        <label className="block text-sm font-semibold text-gray-700 mb-1">E-Book File (PDF/EPUB) {editingBook ? '(optional)' : '*'}</label>
                         <input 
                           type="file" 
+                          accept=".pdf,.epub,application/pdf,application/epub+zip"
+                          required={!editingBook}
                           onChange={(e) => handleFileChange(e, 'book_file')}
                           className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
                         />
-                      </div>}
+                        {editingBook?.book_file_url && <p className="mt-1 text-xs text-gray-500">Current e-book stays in place unless you choose a replacement.</p>}
+                      </div>
                 </div>
 
                 <div>
@@ -421,18 +427,15 @@ const AdminBooks = () => {
                   <input type="number" placeholder="e.g. 1925" value={formData.publication_year} onChange={(e) => {setFormData({...formData, publication_year: e.target.value}); setFormErrors({...formErrors, publication_year: null});}} className={`w-full p-2.5 border rounded-lg text-sm outline-none transition-all ${formErrors.publication_year ? 'border-red-500 focus:ring-2 focus:ring-red-200' : 'border-gray-300 focus:ring-2 focus:ring-primary/20'}`} />
                   {formErrors.publication_year && <p className="text-red-500 text-xs mt-1 font-medium">{formErrors.publication_year}</p>}
                 </div>
-                {!editingBook && (
-                  <>
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-1">Total Copies</label>
-                      <input type="number" min="1" placeholder="e.g. 5" required value={formData.copies} onChange={(e) => setFormData({...formData, copies: parseInt(e.target.value)})} className="w-full p-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 outline-none" />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-1">Available Copies</label>
-                      <input type="number" min="0" placeholder="e.g. 5" required value={formData.available} onChange={(e) => setFormData({...formData, available: parseInt(e.target.value)})} className="w-full p-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 outline-none" />
-                    </div>
-                  </>
-                )}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Total Copies *</label>
+                  <input type="number" min="1" placeholder="e.g. 5" required value={formData.copies} onChange={(e) => setFormData({...formData, copies: e.target.value === '' ? '' : parseInt(e.target.value, 10)})} className="w-full p-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 outline-none" />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Available Copies</label>
+                  <input type="number" min="0" placeholder="e.g. 5" required={!editingBook} readOnly={Boolean(editingBook)} value={formData.available} onChange={(e) => setFormData({...formData, available: e.target.value === '' ? '' : parseInt(e.target.value, 10)})} className={`w-full p-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 outline-none ${editingBook ? 'bg-gray-100 text-gray-600' : ''}`} />
+                  {editingBook && <p className="mt-1 text-xs text-gray-500">Updated automatically as copies are borrowed and returned.</p>}
+                </div>
               </div>
 
               <div className="mt-8 flex justify-end gap-3 border-t border-gray-100 pt-5">

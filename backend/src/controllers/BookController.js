@@ -81,16 +81,36 @@ class BookController {
     let storedCover;
     try {
       const currentBook = await BookService.getBookById(req.params.id);
-      const bookData = { ...req.body };
+      const bookData = {
+        ...req.body,
+        category_id: Number.parseInt(req.body.category_id, 10),
+        publication_year: req.body.publication_year ? Number.parseInt(req.body.publication_year, 10) : null,
+      };
+      delete bookData.available;
+      if (req.body.copies !== undefined) {
+        bookData.total_copies = Number.parseInt(req.body.copies, 10);
+        delete bookData.copies;
+      }
       const coverFile = req.files?.cover?.[0];
+      const bookFile = req.files?.book_file?.[0];
       if (coverFile) {
         storedCover = await DigitalCollectionStorageService.storeBookCover(coverFile);
         bookData.cover_url = storedCover.url;
         bookData.cover_cloudinary_public_id = storedCover.publicId;
       }
+      if (bookFile) {
+        bookData.book_file_url = `/uploads/books/${path.basename(bookFile.filename)}`;
+      }
       await BookService.updateBook(req.params.id, bookData);
       if (coverFile && storedCover?.provider === 'cloudinary') {
         await fs.promises.rm(coverFile.path, { force: true });
+      }
+      if (bookFile && currentBook.book_file_url) {
+        const previousFileName = path.basename(currentBook.book_file_url);
+        const replacementFileName = path.basename(bookFile.filename);
+        if (previousFileName !== replacementFileName) {
+          await fs.promises.rm(path.join(getUploadDirectory('books'), previousFileName), { force: true });
+        }
       }
       if (coverFile && currentBook.cover_cloudinary_public_id) {
         await DigitalCollectionStorageService.deleteBookCover(currentBook.cover_cloudinary_public_id)
