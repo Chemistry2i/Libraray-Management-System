@@ -21,15 +21,33 @@ const gallery = [
 
 const contributors = [
   {
-    name: 'Mbawadde Doreen',
+    name: 'MBAWADDE DOREEN',
     initials: 'MD',
     email: 'doreen@example.invalid',
     description: 'Contributing to a welcoming digital library experience for the school community.',
   },
   {
-    name: 'Ssenyonga Lucy',
+    name: 'SSENYONGA LUCY ',
     initials: 'SL',
     email: 'lucy@example.invalid',
+    description: 'Helping make school reading resources easier for pupils and teachers to discover.',
+  },
+  {
+    name: 'AKELLO PATRICIA ',
+    initials: 'AP',
+    email: 'akello@example.invalid',
+    description: 'Helping make school reading resources easier for pupils and teachers to discover.',
+  },
+  {
+    name: 'KISAAKYE DEBORAH',
+    initials: 'KD',
+    email: 'kisakyey@example.invalid',
+    description: 'Helping make school reading resources easier for pupils and teachers to discover.',
+  },
+  {
+    name: 'KATAANO VIVIAN LYNNA',
+    initials: 'KVL',
+    email: 'vivian@example.invalid',
     description: 'Helping make school reading resources easier for pupils and teachers to discover.',
   },
 ]
