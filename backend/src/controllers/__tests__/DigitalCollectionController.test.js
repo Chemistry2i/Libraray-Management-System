@@ -114,6 +114,40 @@ describe('DigitalCollectionController', () => {
     fs.rmSync(directory, { recursive: true, force: true });
   });
 
+  test.each([
+    ['MP4 video', Buffer.from([0, 0, 0, 24, 0x66, 0x74, 0x79, 0x70, 0x69, 0x73, 0x6f, 0x6d]), 'video/mp4', 'clip.mp4'],
+    ['WebM video', Buffer.from([0x1a, 0x45, 0xdf, 0xa3, 0x93]), 'video/webm', 'clip.webm'],
+    ['MP3 audio', Buffer.from('ID3\u0004\u0000\u0000\u0000\u0000\u0000\u0000'), 'audio/mpeg', 'audio.mp3'],
+    ['DOCX document', Buffer.from([0x50, 0x4b, 0x03, 0x04, 0x14, 0x00]), 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'document.docx'],
+  ])('accepts a valid %s signature', async (label, signature, mimetype, originalname) => {
+    const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'lms-digital-object-'));
+    const filePath = path.join(directory, originalname);
+    fs.writeFileSync(filePath, signature);
+    DigitalCollectionModel.findCollectionById.mockResolvedValue({ collection_id: 3 });
+    DigitalCollectionModel.createObjects.mockResolvedValue();
+    const req = {
+      params: { collectionId: '3' },
+      user: { user_id: 12 },
+      body: {
+        rights_confirmed: 'true',
+        metadata: JSON.stringify([{
+          title: 'Archive video', material_type: 'Report', rights_status: 'Public Domain',
+          rights_assessment_notes: 'Reviewed', is_public: false,
+        }]),
+      },
+      files: [{ path: filePath, filename: originalname, originalname, mimetype, size: signature.length }],
+    };
+    const res = makeResponse();
+
+    await DigitalCollectionController.uploadObjects(req, res, jest.fn());
+
+    expect(res.statusCode).toBe(201);
+    expect(DigitalCollectionModel.createObjects).toHaveBeenCalledWith('3', [expect.objectContaining({
+      mime_type: mimetype, original_filename: originalname,
+    })], 12);
+    fs.rmSync(directory, { recursive: true, force: true });
+  });
+
   test('blocks public access updates for unassessed or restricted objects', async () => {
     DigitalCollectionModel.findObjectById.mockResolvedValue({
       object_id: 22, rights_assessed: false, rights_status: 'Sensitive - Restricted',

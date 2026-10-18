@@ -10,7 +10,18 @@ const { getUploadDirectory } = require('../utils/uploadDirectories');
 const router = express.Router();
 const uploadDirectory = getUploadDirectory('digital-objects');
 
-const mimeByExtension = { '.pdf': 'application/pdf', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg' };
+const mimeByExtension = {
+  '.pdf': ['application/pdf'], '.png': ['image/png'], '.jpg': ['image/jpeg'], '.jpeg': ['image/jpeg'],
+  '.mp4': ['video/mp4'], '.webm': ['video/webm'],
+  '.mp3': ['audio/mpeg'], '.m4a': ['audio/mp4'], '.wav': ['audio/wav', 'audio/x-wav'], '.ogg': ['audio/ogg'],
+  '.doc': ['application/msword'],
+  '.docx': ['application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+  '.xls': ['application/vnd.ms-excel'],
+  '.xlsx': ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
+  '.ppt': ['application/vnd.ms-powerpoint'],
+  '.pptx': ['application/vnd.openxmlformats-officedocument.presentationml.presentation'],
+  '.txt': ['text/plain'], '.csv': ['text/csv'], '.rtf': ['application/rtf', 'text/rtf'],
+};
 const storage = multer.diskStorage({
   destination: (req, file, callback) => callback(null, uploadDirectory),
   filename: (req, file, callback) => callback(null, `${crypto.randomUUID()}${path.extname(file.originalname).toLowerCase()}`),
@@ -20,8 +31,8 @@ const upload = multer({
   limits: { files: 15, fileSize: 25 * 1024 * 1024 },
   fileFilter: (req, file, callback) => {
     const extension = path.extname(file.originalname).toLowerCase();
-    if (!mimeByExtension[extension] || mimeByExtension[extension] !== file.mimetype) {
-      return callback(new Error('Only PDF, PNG, and JPEG files are accepted'));
+    if (!mimeByExtension[extension] || !mimeByExtension[extension].includes(file.mimetype)) {
+      return callback(new Error('This file extension and MIME type are not supported'));
     }
     callback(null, true);
   },
@@ -51,7 +62,7 @@ router.use((error, req, res, next) => {
   if (error instanceof multer.MulterError) {
     return res.status(400).json({ success: false, message: error.message });
   }
-  if (error.message === 'Only PDF, PNG, and JPEG files are accepted') {
+  if (error.message === 'This file extension and MIME type are not supported') {
     return res.status(400).json({ success: false, message: error.message });
   }
   next(error);
