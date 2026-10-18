@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Filter, Trash2, Star, Loader2, AlertCircle } from 'lucide-react';
+import { Search, Filter, Trash2, Star, Loader2, Edit } from 'lucide-react';
 import api from '../../../api/axios';
 import Swal from 'sweetalert2';
 
@@ -66,6 +66,44 @@ const AdminReviews = () => {
     }
   };
 
+  const handleEditReview = async (review) => {
+    const { value: comment, isConfirmed } = await Swal.fire({
+      title: 'Edit Review',
+      input: 'textarea',
+      inputValue: review.comment || '',
+      showCancelButton: true,
+      confirmButtonColor: '#4f46e5',
+      cancelButtonColor: '#d1d5db',
+      confirmButtonText: 'Save Changes',
+      customClass: { popup: 'rounded-[4px] z-[9999]' }
+    });
+
+    if (!isConfirmed) return;
+
+    try {
+      await api.put(`/books/0/reviews/admin/${review.review_id}`, {
+        rating: review.rating,
+        comment
+      });
+      await Swal.fire({
+        title: 'Updated!',
+        text: 'The review has been updated.',
+        icon: 'success',
+        timer: 2000,
+        showConfirmButton: false,
+        customClass: { popup: 'rounded-[4px] z-[9999]' }
+      });
+      fetchReviews();
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.response?.data?.message || 'Failed to update review',
+        customClass: { popup: 'rounded-[4px] z-[9999]' }
+      });
+    }
+  };
+
   const renderStars = (rating) => {
     return (
       <div className="flex items-center gap-0.5">
@@ -126,13 +164,13 @@ const AdminReviews = () => {
 
         {/* Table */}
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[900px] table-fixed border-collapse text-left">
+          <table className="w-full min-w-[1000px] table-fixed border-collapse text-left">
             <thead>
               <tr className="bg-gray-50 text-gray-600 text-sm border-b border-gray-200">
                 <th className="w-1/4 p-4 font-semibold">Book & Patron</th>
                 <th className="w-[12%] p-4 font-semibold">Rating</th>
                 <th className="w-[34%] p-4 font-semibold">Comment</th>
-                <th className="w-36 whitespace-nowrap p-4 text-right font-semibold">Actions</th>
+                <th className="w-48 whitespace-nowrap p-4 text-right font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y text-sm">
@@ -165,6 +203,14 @@ const AdminReviews = () => {
                     </td>
                     <td className="whitespace-nowrap p-4 text-right align-middle">
                       <div className="flex flex-nowrap items-center justify-end gap-1.5">
+                        <button
+                          onClick={() => handleEditReview(review)}
+                          className="inline-flex items-center gap-1 rounded border border-blue-200 px-2 py-1.5 text-xs font-semibold text-blue-700 transition-colors hover:bg-blue-50 hover:text-blue-600"
+                          title="Edit review"
+                        >
+                          <Edit size={16} />
+                          Edit
+                        </button>
                         <button 
                           onClick={() => handleDeleteReview(review.review_id)}
                           className="inline-flex items-center gap-1 rounded border border-red-200 px-2 py-1.5 text-xs font-semibold text-red-700 transition-colors hover:bg-red-50 hover:text-red-600" title="Delete Moderation">

@@ -29,6 +29,28 @@ class ReviewController {
     }
   }
 
+  // Admin: Update review comment
+  static async adminUpdateReview(req, res, next) {
+    try {
+      const { reviewId } = req.params;
+      const { rating, comment } = req.body;
+      const review = await ReviewModel.findById(reviewId);
+
+      if (!review) {
+        throw new NotFoundError('Review not found');
+      }
+
+      if (!Number.isInteger(Number(rating)) || Number(rating) < 1 || Number(rating) > 5) {
+        throw new ValidationError('Rating must be between 1 and 5');
+      }
+
+      await ReviewModel.update(reviewId, { rating: Number(rating), comment: comment ?? null });
+      sendSuccess(res, 'Review updated successfully');
+    } catch (error) {
+      next(error);
+    }
+  }
+
   // Admin: Delete review
   static async adminDeleteReview(req, res, next) {
     try {
