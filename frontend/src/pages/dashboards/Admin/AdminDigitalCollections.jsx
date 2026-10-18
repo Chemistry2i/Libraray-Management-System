@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { FileImage, FileText, FolderPlus, LockKeyhole, Plus, ShieldCheck, Trash2, Upload, X } from 'lucide-react'
+import { Download, Eye, FileImage, FileText, FolderPlus, History, LockKeyhole, Pencil, Plus, ShieldCheck, Trash2, Upload, Video, X } from 'lucide-react'
 import { toast } from 'react-toastify'
 import api from '../../../api/axios'
 
@@ -9,7 +9,7 @@ const materialTypes = [
 ]
 
 const rightsStatuses = ['Public Domain', 'Copyrighted - Permitted', 'Sensitive - Restricted']
-const allowedFileTypes = '.pdf,.png,.jpg,.jpeg'
+const allowedFileTypes = '.pdf,.png,.jpg,.jpeg,.mp4,.webm'
 
 const emptyCollection = { title: '', description: '', selection_criteria: '', collection_value: '' }
 
@@ -44,6 +44,7 @@ export default function AdminDigitalCollections() {
   const [previews, setPreviews] = useState(() => new Map())
   const [editingObject, setEditingObject] = useState(null)
   const [originalObject, setOriginalObject] = useState(null)
+  const [previewFile, setPreviewFile] = useState(null)
   const [rightsReviewConfirmed, setRightsReviewConfirmed] = useState(false)
   const [rightsHistory, setRightsHistory] = useState(null)
   const [rightsConfirmed, setRightsConfirmed] = useState(false)
@@ -54,6 +55,11 @@ export default function AdminDigitalCollections() {
   const [uploadFailed, setUploadFailed] = useState(false)
   const [savingObject, setSavingObject] = useState(false)
   const fileInput = useRef(null)
+
+  useEffect(() => {
+    if (!previewFile?.url) return undefined
+    return () => URL.revokeObjectURL(previewFile.url)
+  }, [previewFile])
 
   const selectedCollection = collections.find((collection) => String(collection.collection_id) === selectedId)
 
@@ -153,8 +159,8 @@ export default function AdminDigitalCollections() {
       toast.error('A batch can contain up to 15 files')
       return
     }
-    const validFiles = chosen.filter((file) => /\.(pdf|png|jpe?g)$/i.test(file.name))
-    if (validFiles.length !== chosen.length) toast.error('Only PDF, PNG, and JPEG files are supported')
+    const validFiles = chosen.filter((file) => /\.(pdf|png|jpe?g|mp4|webm)$/i.test(file.name))
+    if (validFiles.length !== chosen.length) toast.error('Only PDF, PNG, JPEG, MP4, and WebM files are supported')
     if (validFiles.some((file) => file.size > 25 * 1024 * 1024)) {
       toast.error('Each file must be 25 MB or smaller')
       return
@@ -291,14 +297,7 @@ export default function AdminDigitalCollections() {
   async function viewFile(object) {
     try {
       const { data } = await api.get(`/digital-collections/objects/${object.object_id}/file`, { responseType: 'blob' })
-      const fileUrl = URL.createObjectURL(data)
-      const preview = window.open(fileUrl, '_blank')
-      if (!preview) {
-        URL.revokeObjectURL(fileUrl)
-        toast.error('Allow pop-ups to preview this file')
-        return
-      }
-      window.setTimeout(() => URL.revokeObjectURL(fileUrl), 60000)
+      setPreviewFile({ object, url: URL.createObjectURL(data) })
     } catch (error) {
       toast.error(error.response?.data?.message || 'Could not open digital object')
     }
@@ -312,7 +311,7 @@ export default function AdminDigitalCollections() {
       link.href = url
       link.download = object.original_filename
       link.click()
-      URL.revokeObjectURL(url)
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000)
     } catch (error) {
       toast.error(error.response?.data?.message || 'Could not download digital object')
     }
@@ -352,7 +351,7 @@ export default function AdminDigitalCollections() {
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h2 className="text-lg font-bold text-gray-900">Collection contents</h2>
-              <p className="mt-1 text-sm text-gray-500">Select a collection, then add up to 15 PDF or image files at once.</p>
+              <p className="mt-1 text-sm text-gray-500">Select a collection, then add up to 15 PDF, image, or video files at once.</p>
             </div>
             <div className="flex flex-wrap items-center gap-2">
             <select aria-label="Choose collection" value={selectedId} onChange={(event) => { setEditingCollection(false); setSelectedId(event.target.value) }} disabled={!collections.length} className="min-w-52 rounded-md border border-gray-300 bg-white px-3 py-2.5 text-sm">
@@ -368,7 +367,7 @@ export default function AdminDigitalCollections() {
             <button type="button" disabled={!selectedId} onClick={() => fileInput.current?.click()} onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.preventDefault(); acceptFiles(event.dataTransfer.files) }} className="flex min-h-28 w-full flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed border-gray-300 bg-gray-50 px-5 text-sm text-gray-600 hover:border-emerald-700 hover:bg-emerald-50/40 disabled:opacity-50">
               <Upload size={22} className="text-emerald-800" />
               <span className="font-semibold">Drop files here or choose files</span>
-              <span className="text-xs">PDF, PNG, JPEG · Up to 15 per batch</span>
+              <span className="text-xs">PDF, PNG, JPEG, MP4, WebM · Up to 15 per batch</span>
             </button>
             <input ref={fileInput} type="file" accept={allowedFileTypes} multiple className="hidden" onChange={(event) => acceptFiles(event.target.files)} />
 
@@ -376,7 +375,7 @@ export default function AdminDigitalCollections() {
               <article key={`${file.name}-${index}`} className="space-y-3 border-b border-gray-200 py-4">
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex min-w-0 items-center gap-2">
-                    {previews.get(file) ? <img src={previews.get(file)} alt="" className="size-10 rounded border border-gray-200 object-cover" /> : file.type === 'application/pdf' ? <FileText size={18} className="shrink-0 text-rose-700" /> : <FileImage size={18} className="shrink-0 text-emerald-700" />}
+                    {previews.get(file) ? <img src={previews.get(file)} alt="" className="size-10 rounded border border-gray-200 object-cover" /> : file.type === 'application/pdf' ? <FileText size={18} className="shrink-0 text-rose-700" /> : file.type.startsWith('video/') ? <Video size={18} className="shrink-0 text-emerald-700" /> : <FileImage size={18} className="shrink-0 text-emerald-700" />}
                     <span className="truncate text-sm font-semibold text-gray-800">{file.name}</span>
                     <span className="shrink-0 text-xs text-gray-500">{(file.size / 1024 / 1024).toFixed(1)} MB</span>
                   </div>
@@ -473,12 +472,37 @@ export default function AdminDigitalCollections() {
                 <td className="px-4 py-3 text-gray-700">{object.material_type}</td>
                 <td className="px-4 py-3"><div className="text-gray-800">{object.rights_status}</div><div className="max-w-xs truncate text-xs text-gray-500" title={object.rights_assessment_notes}>{object.rights_assessment_notes}</div></td>
                 <td className="px-4 py-3"><span className={`inline-flex items-center gap-1.5 font-medium ${object.is_public ? 'text-emerald-800' : 'text-gray-600'}`}>{object.is_public ? <ShieldCheck size={15} /> : <LockKeyhole size={15} />}{object.is_public ? 'Public' : 'Private'}</span></td>
-                <td className="px-4 py-3 text-right"><div className="inline-flex items-center gap-3"><button type="button" onClick={() => viewFile(object)} className="font-semibold text-emerald-800 hover:underline">View</button><button type="button" onClick={() => downloadFile(object)} className="font-semibold text-gray-700 hover:text-emerald-800">Download</button><button type="button" onClick={() => startObjectEdit(object)} className="font-semibold text-gray-700 hover:text-emerald-800">Edit</button><button type="button" onClick={() => loadRightsHistory(object)} className="font-semibold text-gray-700 hover:text-emerald-800">History</button><button type="button" onClick={() => setPublicStatus(object, !object.is_public)} className="font-semibold text-gray-700 hover:text-emerald-800">Make {object.is_public ? 'private' : 'public'}</button><button type="button" title="Delete object" onClick={() => deleteObject(object)} className="rounded p-1.5 text-gray-500 hover:bg-red-50 hover:text-red-700"><Trash2 size={16} /></button></div></td>
+                <td className="px-4 py-3 text-right"><div className="inline-flex flex-wrap justify-end gap-1.5">
+                  <button type="button" onClick={() => viewFile(object)} className="inline-flex items-center gap-1.5 rounded-md bg-emerald-800 px-2.5 py-1.5 text-xs font-semibold text-white hover:bg-emerald-900"><Eye size={14} />View</button>
+                  <button type="button" onClick={() => downloadFile(object)} className="inline-flex items-center gap-1.5 rounded-md bg-emerald-800 px-2.5 py-1.5 text-xs font-semibold text-white hover:bg-emerald-900"><Download size={14} />Download</button>
+                  <button type="button" onClick={() => startObjectEdit(object)} className="inline-flex items-center gap-1.5 rounded-md border border-emerald-800 px-2.5 py-1.5 text-xs font-semibold text-emerald-900 hover:bg-emerald-50"><Pencil size={14} />Edit</button>
+                  <button type="button" onClick={() => loadRightsHistory(object)} className="inline-flex items-center gap-1.5 rounded-md border border-emerald-800 px-2.5 py-1.5 text-xs font-semibold text-emerald-900 hover:bg-emerald-50"><History size={14} />History</button>
+                  <button type="button" onClick={() => setPublicStatus(object, !object.is_public)} className="inline-flex items-center gap-1.5 rounded-md border border-emerald-800 px-2.5 py-1.5 text-xs font-semibold text-emerald-900 hover:bg-emerald-50">{object.is_public ? <LockKeyhole size={14} /> : <ShieldCheck size={14} />}{object.is_public ? 'Make private' : 'Make public'}</button>
+                  <button type="button" aria-label="Delete object" title="Delete object" onClick={() => deleteObject(object)} className="rounded-md border border-red-300 p-1.5 text-red-700 hover:bg-red-50"><Trash2 size={15} /></button>
+                </div></td>
               </tr>) : <tr><td colSpan="5" className="px-4 py-8 text-center text-gray-500">{selectedId ? 'No digital objects in this collection yet.' : 'Create a collection to get started.'}</td></tr>}
             </tbody>
           </table>
         </div>
       </section>
+
+      {previewFile && <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setPreviewFile(null) }}>
+        <section role="dialog" aria-modal="true" aria-labelledby="digital-object-preview-title" className="flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-lg bg-white shadow-xl">
+          <div className="flex items-center justify-between gap-4 border-b border-gray-200 px-4 py-3">
+            <h2 id="digital-object-preview-title" className="truncate font-semibold text-gray-900">{previewFile.object.title}</h2>
+            <button type="button" aria-label="Close preview" onClick={() => setPreviewFile(null)} className="rounded-md p-1.5 text-gray-600 hover:bg-gray-100"><X size={19} /></button>
+          </div>
+          <div className="flex min-h-0 flex-1 items-center justify-center overflow-auto bg-gray-100 p-3">
+            {previewFile.object.mime_type === 'application/pdf'
+              ? <iframe title={previewFile.object.title} src={previewFile.url} className="h-[75vh] w-full bg-white" />
+              : previewFile.object.mime_type?.startsWith('image/')
+                ? <img src={previewFile.url} alt={previewFile.object.title} className="max-h-[75vh] max-w-full object-contain" />
+                : previewFile.object.mime_type?.startsWith('video/')
+                  ? <video src={previewFile.url} controls playsInline className="max-h-[75vh] max-w-full" />
+                  : <p className="p-8 text-sm text-gray-600">Preview is not available for this file type.</p>}
+          </div>
+        </section>
+      </div>}
 
       {editingObject && <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/40 p-4" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setEditingObject(null) }}>
         <form role="dialog" aria-modal="true" aria-labelledby="edit-digital-object-title" onSubmit={saveObject} className="my-8 max-h-[90vh] w-full max-w-2xl space-y-4 overflow-y-auto rounded-lg bg-white p-6 shadow-xl">

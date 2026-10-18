@@ -10,7 +10,10 @@ const { getUploadDirectory } = require('../utils/uploadDirectories');
 const router = express.Router();
 const uploadDirectory = getUploadDirectory('digital-objects');
 
-const mimeByExtension = { '.pdf': 'application/pdf', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg' };
+const mimeByExtension = {
+  '.pdf': 'application/pdf', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
+  '.mp4': 'video/mp4', '.webm': 'video/webm',
+};
 const storage = multer.diskStorage({
   destination: (req, file, callback) => callback(null, uploadDirectory),
   filename: (req, file, callback) => callback(null, `${crypto.randomUUID()}${path.extname(file.originalname).toLowerCase()}`),
@@ -21,7 +24,7 @@ const upload = multer({
   fileFilter: (req, file, callback) => {
     const extension = path.extname(file.originalname).toLowerCase();
     if (!mimeByExtension[extension] || mimeByExtension[extension] !== file.mimetype) {
-      return callback(new Error('Only PDF, PNG, and JPEG files are accepted'));
+      return callback(new Error('Only PDF, PNG, JPEG, MP4, and WebM files are accepted'));
     }
     callback(null, true);
   },
@@ -51,7 +54,7 @@ router.use((error, req, res, next) => {
   if (error instanceof multer.MulterError) {
     return res.status(400).json({ success: false, message: error.message });
   }
-  if (error.message === 'Only PDF, PNG, and JPEG files are accepted') {
+  if (error.message === 'Only PDF, PNG, JPEG, MP4, and WebM files are accepted') {
     return res.status(400).json({ success: false, message: error.message });
   }
   next(error);

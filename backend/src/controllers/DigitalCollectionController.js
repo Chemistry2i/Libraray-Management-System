@@ -36,11 +36,13 @@ function validDate(value) {
 async function hasValidFileSignature(file) {
   const handle = await fs.promises.open(file.path, 'r');
   try {
-    const header = Buffer.alloc(8);
+    const header = Buffer.alloc(12);
     const { bytesRead } = await handle.read(header, 0, header.length, 0);
     if (file.mimetype === 'application/pdf') return header.subarray(0, 5).toString() === '%PDF-' && bytesRead >= 5;
     if (file.mimetype === 'image/png') return header.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]));
     if (file.mimetype === 'image/jpeg') return header[0] === 0xff && header[1] === 0xd8 && header[2] === 0xff;
+    if (file.mimetype === 'video/mp4') return bytesRead >= 12 && header.subarray(4, 8).toString() === 'ftyp';
+    if (file.mimetype === 'video/webm') return header.subarray(0, 4).equals(Buffer.from([0x1a, 0x45, 0xdf, 0xa3]));
     return false;
   } finally {
     await handle.close();
@@ -159,7 +161,7 @@ class DigitalCollectionController {
       for (const file of files) {
         if (!await hasValidFileSignature(file)) {
           files.forEach((item) => fs.rmSync(item.path, { force: true }));
-          return sendError(res, 'A file does not match its declared PDF, PNG, or JPEG type', 400);
+          return sendError(res, 'A file does not match its declared PDF, PNG, JPEG, MP4, or WebM type', 400);
         }
       }
 

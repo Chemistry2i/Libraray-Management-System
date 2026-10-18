@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { ArrowUpRight, FileImage, FileText, Search } from 'lucide-react'
+import { Download, Eye, FileImage, FileText, Search, Video } from 'lucide-react'
 import api from '../api/axios'
 import { SCHOOL_NAME } from '../constants/schoolBrand'
 
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'
 const materialTypes = [
   'Historical Photograph', 'Newsletter', 'Report', 'Newspaper Clipping',
   'Exam Paper', 'Poster', 'Local-History Document',
@@ -102,22 +101,23 @@ export default function DigitalArchivePage() {
             : objects.length ? <>
               <div className="grid gap-x-8 gap-y-0 md:grid-cols-2">
               {objects.map((object) => {
-                const fileUrl = `${apiBaseUrl}/digital-collections/public/objects/${object.object_id}/file`
-                const downloadUrl = `${apiBaseUrl}/digital-collections/public/objects/${object.object_id}/download`
+                const fileUrl = api.getUri({ url: `/digital-collections/public/objects/${object.object_id}/file` })
+                const downloadUrl = api.getUri({ url: `/digital-collections/public/objects/${object.object_id}/download` })
                 const isPdf = object.mime_type === 'application/pdf'
+                const isVideo = object.mime_type?.startsWith('video/')
                 return <article key={object.object_id} className="flex min-w-0 items-start gap-4 border-b border-gray-300 py-5">
                   <div className="flex size-12 shrink-0 items-center justify-center rounded-md bg-white text-emerald-800 ring-1 ring-gray-200">
-                    {isPdf ? <FileText size={22} /> : <FileImage size={22} />}
+                    {isPdf ? <FileText size={22} /> : isVideo ? <Video size={22} /> : <FileImage size={22} />}
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="text-xs font-bold uppercase tracking-wide text-emerald-800">{object.collection_title}</p>
                     <h3 className="mt-1 truncate text-lg font-bold text-gray-900">{object.title}</h3>
                     <p className="mt-1 text-sm text-gray-600">{object.creator || 'Creator unknown'} · {object.material_type}</p>
                     <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2">
-                      <a href={fileUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-sm font-semibold text-emerald-800 hover:underline">
-                        View {isPdf ? 'document' : 'image'} <ArrowUpRight size={15} />
+                      <a href={fileUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-md bg-emerald-800 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-900">
+                        <Eye size={15} /> View {isPdf ? 'document' : isVideo ? 'video' : 'image'}
                       </a>
-                      <a href={downloadUrl} className="text-sm font-semibold text-gray-700 hover:text-emerald-800 hover:underline" download>Download</a>
+                      <a href={downloadUrl} className="inline-flex items-center gap-1.5 rounded-md border border-emerald-800 px-3 py-2 text-sm font-semibold text-emerald-900 hover:bg-emerald-50" download><Download size={15} />Download</a>
                     </div>
                   </div>
                 </article>
