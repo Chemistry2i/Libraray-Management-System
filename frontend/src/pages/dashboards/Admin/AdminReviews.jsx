@@ -167,7 +167,7 @@ const AdminReviews = () => {
                       <div className="flex items-center justify-end gap-1.5">
                         <button 
                           onClick={() => handleDeleteReview(review.review_id)}
-                          className="inline-flex items-center gap-1 rounded px-2 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-red-50 hover:text-red-600" title="Delete Moderation">
+                          className="inline-flex items-center gap-1 rounded border border-red-200 px-2 py-1.5 text-xs font-semibold text-red-700 transition-colors hover:bg-red-50 hover:text-red-600" title="Delete Moderation">
                           <Trash2 size={18} />
                           Delete
                         </button>
