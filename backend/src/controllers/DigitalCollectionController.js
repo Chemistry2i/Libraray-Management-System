@@ -10,7 +10,7 @@ function sendObjectFile(res, object, download = false) {
   res.setHeader('Content-Disposition', `${disposition}; filename="${encodeURIComponent(object.original_filename)}"`);
   if (object.storage_provider === 'cloudinary') {
     res.setHeader('Cache-Control', 'private, no-store');
-    return DigitalCollectionStorageService.streamCloudinaryObject(res, object).catch((error) => {
+    return DigitalCollectionStorageService.streamCloudinaryObject(res, object, download).catch((error) => {
       console.error('Cloudinary digital file delivery failed:', error.message);
       if (res.headersSent) {
         res.destroy(error);
