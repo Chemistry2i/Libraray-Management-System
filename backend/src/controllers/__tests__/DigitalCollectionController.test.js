@@ -100,7 +100,7 @@ describe('DigitalCollectionController', () => {
     fs.rmSync(directory, { recursive: true, force: true });
   });
 
-  test('persists valid batch uploads with the authenticated reviewer identity', async () => {
+  test('accepts one valid file and persists it with the authenticated reviewer identity', async () => {
     const { directory, filePath } = tempFile(Buffer.from('%PDF-1.7\nvalid test payload'));
     DigitalCollectionModel.findCollectionById.mockResolvedValue({ collection_id: 3 });
     DigitalCollectionModel.createObjects.mockResolvedValue();
@@ -125,6 +125,32 @@ describe('DigitalCollectionController', () => {
       title: 'Annual report', rights_evidence_reference: 'PERM-12', file_path: 'upload.pdf',
     })], 12);
     expect(res.statusCode).toBe(201);
+    fs.rmSync(directory, { recursive: true, force: true });
+  });
+
+  test('explains that the rights assessment must be confirmed for a single-file upload', async () => {
+    const { directory, filePath } = tempFile(Buffer.from('%PDF-1.7\nvalid test payload'));
+    DigitalCollectionModel.findCollectionById.mockResolvedValue({ collection_id: 3 });
+    const req = {
+      params: { collectionId: '3' },
+      user: { user_id: 12 },
+      body: {
+        rights_confirmed: 'false',
+        metadata: JSON.stringify([{
+          title: 'Annual report', material_type: 'Report', rights_status: 'Public Domain',
+          rights_assessment_notes: 'Reviewed', is_public: false,
+        }]),
+      },
+      files: [{ path: filePath, filename: 'upload.pdf', originalname: 'annual.pdf', mimetype: 'application/pdf', size: 28 }],
+    };
+    const res = makeResponse();
+
+    await DigitalCollectionController.uploadObjects(req, res, jest.fn());
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body.message).toBe('Confirm the rights assessment before uploading');
+    expect(DigitalCollectionModel.createObjects).not.toHaveBeenCalled();
+    expect(fs.existsSync(filePath)).toBe(false);
     fs.rmSync(directory, { recursive: true, force: true });
   });
 

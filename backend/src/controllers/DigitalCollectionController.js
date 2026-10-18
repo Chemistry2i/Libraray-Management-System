@@ -193,10 +193,24 @@ class DigitalCollectionController {
             || (item.rights_expires_at && item.rights_expires_at < new Date().toISOString().slice(0, 10)))));
       const batchSize = files.reduce((total, file) => total + file.size, 0);
 
-      if (!files.length || files.length > 15 || batchSize > 150 * 1024 * 1024
-        || req.body.rights_confirmed !== 'true' || !validMetadata) {
+      let validationError;
+      if (!files.length) {
+        validationError = 'Choose at least one file to upload';
+      } else if (files.length > 15) {
+        validationError = 'Upload no more than 15 files at a time';
+      } else if (batchSize > 150 * 1024 * 1024) {
+        validationError = 'The combined upload size cannot exceed 150 MB';
+      } else if (!Array.isArray(metadata) || metadata.length !== files.length) {
+        validationError = 'Each selected file must have matching metadata';
+      } else if (req.body.rights_confirmed !== 'true') {
+        validationError = 'Confirm the rights assessment before uploading';
+      } else if (!validMetadata) {
+        validationError = 'Complete the title, material type, rights status, notes, and access settings for every file';
+      }
+
+      if (validationError) {
         files.forEach((file) => fs.rmSync(file.path, { force: true }));
-        return sendError(res, 'Upload requires 1–15 files totaling at most 150 MB, matching metadata, a completed rights assessment, and no public restricted items', 400);
+        return sendError(res, validationError, 400);
       }
 
       for (const file of files) {

@@ -370,7 +370,7 @@ export default function AdminDigitalCollections() {
             <button type="button" disabled={!selectedId} onClick={() => fileInput.current?.click()} onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.preventDefault(); acceptFiles(event.dataTransfer.files) }} className="flex min-h-28 w-full flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed border-gray-300 bg-gray-50 px-5 text-sm text-gray-600 hover:border-emerald-700 hover:bg-emerald-50/40 disabled:opacity-50">
               <Upload size={22} className="text-emerald-800" />
               <span className="font-semibold">Drop files here or choose files</span>
-              <span className="text-center text-xs">PDF, common image/audio/video formats, DOC/DOCX/XLS/XLSX/PPT/PPTX/ODT/ODS/ODP, TXT/Markdown/CSV/RTF · Up to 15 files</span>
+              <span className="text-center text-xs">One file can be uploaded by itself, or select up to 15 files. Each file: up to 25 MB; combined batch: up to 150 MB. Supported: PDF, common image/audio/video formats, DOC/DOCX/XLS/XLSX/PPT/PPTX/ODT/ODS/ODP, TXT/Markdown/CSV/RTF.</span>
             </button>
             <input ref={fileInput} type="file" accept={allowedFileTypes} multiple className="hidden" onChange={(event) => acceptFiles(event.target.files)} />
 
@@ -418,7 +418,7 @@ export default function AdminDigitalCollections() {
               <p className="text-xs text-gray-500">Batch size: {(files.reduce((total, file) => total + file.size, 0) / 1024 / 1024).toFixed(1)} / 150 MB</p>
               <label className="flex items-start gap-2 text-sm text-gray-700">
                 <input type="checkbox" checked={rightsConfirmed} onChange={(event) => setRightsConfirmed(event.target.checked)} className="mt-0.5 size-4 accent-emerald-800" />
-                <span>I confirm that I completed and documented a rights assessment for every file in this batch.</span>
+                <span>I confirm that I completed and documented a rights assessment for {files.length === 1 ? 'this file' : 'every file in this batch'}.</span>
               </label>
               <button disabled={uploading || !rightsConfirmed} className="inline-flex items-center gap-2 rounded-md bg-emerald-800 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-900 disabled:cursor-not-allowed disabled:opacity-50">
                 <Upload size={17} /> {uploading ? `Uploading ${uploadProgress}%…` : uploadFailed ? 'Retry upload' : `Upload ${files.length} ${files.length === 1 ? 'file' : 'files'}`}
