@@ -91,15 +91,13 @@ class DigitalCollectionStorageService {
   }
 
   static async streamCloudinaryObject(res, object) {
-    const resourceType = object.cloudinary_resource_type || 'raw';
-    const extension = path.extname(object.file_path);
-    const rawIdIncludesExtension = resourceType === 'raw'
-      && extension.slice(1).toLowerCase() === String(object.cloudinary_format || '').toLowerCase();
-    const publicId = rawIdIncludesExtension ? object.file_path.slice(0, -extension.length) : object.file_path;
-    const url = cloudinary.utils.private_download_url(publicId, object.cloudinary_format, {
-      resource_type: resourceType,
+    const url = cloudinary.url(object.file_path, {
+      secure: true,
+      sign_url: true,
+      resource_type: object.cloudinary_resource_type,
+      version: object.cloudinary_version,
+      format: object.cloudinary_format,
       type: 'authenticated',
-      expires_at: Math.floor(Date.now() / 1000) + 600,
     });
 
     return new Promise((resolve, reject) => {

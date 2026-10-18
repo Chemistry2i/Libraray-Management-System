@@ -25,11 +25,9 @@ export default function UserSidebar({ onClose }) {
   return (
     <aside className="w-64 bg-white border-r border-gray-200 h-screen sticky top-0 flex flex-col z-40">
       {/* Logo Area */}
-      <div className="h-20 flex items-center px-8 border-b border-gray-200">
-        <div className="flex min-w-0 items-center gap-3 text-primary">
-          <img src={SCHOOL_BADGE} alt="Kamuli CU school badge" className="size-10 shrink-0 rounded-full bg-white object-contain ring-1 ring-slate-200" />
-          <span className="text-sm font-bold leading-tight tracking-tight">{SCHOOL_NAME}</span>
-        </div>
+      <div className="flex flex-col items-center gap-2 border-b border-gray-200 px-4 py-4 text-center text-primary">
+        <img src={SCHOOL_BADGE} alt="Kamuli Church of Uganda Primary School badge" className="size-16 shrink-0 rounded-full bg-white object-contain ring-1 ring-slate-200" />
+        <span className="text-sm font-bold leading-tight tracking-tight">{SCHOOL_NAME}</span>
       </div>
 
       {/* Navigation */}
