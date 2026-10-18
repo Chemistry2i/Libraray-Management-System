@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Download, Eye, FileImage, FileText, FolderPlus, History, LockKeyhole, Pencil, Plus, ShieldCheck, Trash2, Upload, Video, X } from 'lucide-react'
+import { Download, Eye, FileImage, FileText, FolderPlus, History, LockKeyhole, Music2, Pencil, Plus, ShieldCheck, Trash2, Upload, Video, X } from 'lucide-react'
 import { toast } from 'react-toastify'
 import api from '../../../api/axios'
 
@@ -9,7 +9,8 @@ const materialTypes = [
 ]
 
 const rightsStatuses = ['Public Domain', 'Copyrighted - Permitted', 'Sensitive - Restricted']
-const allowedFileTypes = '.pdf,.png,.jpg,.jpeg,.mp4,.webm'
+const allowedFileTypes = '.pdf,.png,.jpg,.jpeg,.mp4,.webm,.mp3,.m4a,.wav,.ogg,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf'
+const acceptedFileName = /\.(pdf|png|jpe?g|mp4|webm|mp3|m4a|wav|ogg|docx?|xlsx?|pptx?|txt|csv|rtf)$/i
 
 const emptyCollection = { title: '', description: '', selection_criteria: '', collection_value: '' }
 
@@ -159,8 +160,8 @@ export default function AdminDigitalCollections() {
       toast.error('A batch can contain up to 15 files')
       return
     }
-    const validFiles = chosen.filter((file) => /\.(pdf|png|jpe?g|mp4|webm)$/i.test(file.name))
-    if (validFiles.length !== chosen.length) toast.error('Only PDF, PNG, JPEG, MP4, and WebM files are supported')
+    const validFiles = chosen.filter((file) => acceptedFileName.test(file.name))
+    if (validFiles.length !== chosen.length) toast.error('Unsupported file type. See the accepted formats below.')
     if (validFiles.some((file) => file.size > 25 * 1024 * 1024)) {
       toast.error('Each file must be 25 MB or smaller')
       return
@@ -351,7 +352,7 @@ export default function AdminDigitalCollections() {
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h2 className="text-lg font-bold text-gray-900">Collection contents</h2>
-              <p className="mt-1 text-sm text-gray-500">Select a collection, then add up to 15 PDF, image, or video files at once.</p>
+              <p className="mt-1 text-sm text-gray-500">Select a collection, then add up to 15 supported archive files at once.</p>
             </div>
             <div className="flex flex-wrap items-center gap-2">
             <select aria-label="Choose collection" value={selectedId} onChange={(event) => { setEditingCollection(false); setSelectedId(event.target.value) }} disabled={!collections.length} className="min-w-52 rounded-md border border-gray-300 bg-white px-3 py-2.5 text-sm">
@@ -367,7 +368,7 @@ export default function AdminDigitalCollections() {
             <button type="button" disabled={!selectedId} onClick={() => fileInput.current?.click()} onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.preventDefault(); acceptFiles(event.dataTransfer.files) }} className="flex min-h-28 w-full flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed border-gray-300 bg-gray-50 px-5 text-sm text-gray-600 hover:border-emerald-700 hover:bg-emerald-50/40 disabled:opacity-50">
               <Upload size={22} className="text-emerald-800" />
               <span className="font-semibold">Drop files here or choose files</span>
-              <span className="text-xs">PDF, PNG, JPEG, MP4, WebM · Up to 15 per batch</span>
+              <span className="text-center text-xs">PDF, images, MP4/WebM, MP3/M4A/WAV/OGG, DOC/DOCX, XLS/XLSX, PPT/PPTX, TXT/CSV/RTF · Up to 15 files</span>
             </button>
             <input ref={fileInput} type="file" accept={allowedFileTypes} multiple className="hidden" onChange={(event) => acceptFiles(event.target.files)} />
 
@@ -375,7 +376,7 @@ export default function AdminDigitalCollections() {
               <article key={`${file.name}-${index}`} className="space-y-3 border-b border-gray-200 py-4">
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex min-w-0 items-center gap-2">
-                    {previews.get(file) ? <img src={previews.get(file)} alt="" className="size-10 rounded border border-gray-200 object-cover" /> : file.type === 'application/pdf' ? <FileText size={18} className="shrink-0 text-rose-700" /> : file.type.startsWith('video/') ? <Video size={18} className="shrink-0 text-emerald-700" /> : <FileImage size={18} className="shrink-0 text-emerald-700" />}
+                    {previews.get(file) ? <img src={previews.get(file)} alt="" className="size-10 rounded border border-gray-200 object-cover" /> : file.type === 'application/pdf' || file.type.includes('word') || file.type.includes('sheet') || file.type.includes('presentation') || file.type.startsWith('text/') ? <FileText size={18} className="shrink-0 text-rose-700" /> : file.type.startsWith('video/') ? <Video size={18} className="shrink-0 text-emerald-700" /> : file.type.startsWith('audio/') ? <Music2 size={18} className="shrink-0 text-emerald-700" /> : <FileImage size={18} className="shrink-0 text-emerald-700" />}
                     <span className="truncate text-sm font-semibold text-gray-800">{file.name}</span>
                     <span className="shrink-0 text-xs text-gray-500">{(file.size / 1024 / 1024).toFixed(1)} MB</span>
                   </div>
@@ -499,7 +500,9 @@ export default function AdminDigitalCollections() {
                 ? <img src={previewFile.url} alt={previewFile.object.title} className="max-h-[75vh] max-w-full object-contain" />
                 : previewFile.object.mime_type?.startsWith('video/')
                   ? <video src={previewFile.url} controls playsInline className="max-h-[75vh] max-w-full" />
-                  : <p className="p-8 text-sm text-gray-600">Preview is not available for this file type.</p>}
+                  : previewFile.object.mime_type?.startsWith('audio/')
+                    ? <audio src={previewFile.url} controls className="w-full max-w-xl" />
+                    : <div className="space-y-3 p-8 text-center"><p className="text-sm text-gray-600">This document type can be downloaded but cannot be previewed in the browser.</p><button type="button" onClick={() => downloadFile(previewFile.object)} className="inline-flex items-center gap-1.5 rounded-md bg-emerald-800 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-900"><Download size={15} />Download document</button></div>}
           </div>
         </section>
       </div>}

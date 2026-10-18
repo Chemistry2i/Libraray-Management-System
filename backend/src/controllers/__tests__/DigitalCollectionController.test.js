@@ -115,9 +115,11 @@ describe('DigitalCollectionController', () => {
   });
 
   test.each([
-    ['MP4', Buffer.from([0, 0, 0, 24, 0x66, 0x74, 0x79, 0x70, 0x69, 0x73, 0x6f, 0x6d]), 'video/mp4', 'clip.mp4'],
-    ['WebM', Buffer.from([0x1a, 0x45, 0xdf, 0xa3, 0x93]), 'video/webm', 'clip.webm'],
-  ])('accepts a valid %s video signature', async (label, signature, mimetype, originalname) => {
+    ['MP4 video', Buffer.from([0, 0, 0, 24, 0x66, 0x74, 0x79, 0x70, 0x69, 0x73, 0x6f, 0x6d]), 'video/mp4', 'clip.mp4'],
+    ['WebM video', Buffer.from([0x1a, 0x45, 0xdf, 0xa3, 0x93]), 'video/webm', 'clip.webm'],
+    ['MP3 audio', Buffer.from('ID3\u0004\u0000\u0000\u0000\u0000\u0000\u0000'), 'audio/mpeg', 'audio.mp3'],
+    ['DOCX document', Buffer.from([0x50, 0x4b, 0x03, 0x04, 0x14, 0x00]), 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'document.docx'],
+  ])('accepts a valid %s signature', async (label, signature, mimetype, originalname) => {
     const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'lms-digital-object-'));
     const filePath = path.join(directory, originalname);
     fs.writeFileSync(filePath, signature);

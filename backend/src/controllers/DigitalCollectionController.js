@@ -43,6 +43,28 @@ async function hasValidFileSignature(file) {
     if (file.mimetype === 'image/jpeg') return header[0] === 0xff && header[1] === 0xd8 && header[2] === 0xff;
     if (file.mimetype === 'video/mp4') return bytesRead >= 12 && header.subarray(4, 8).toString() === 'ftyp';
     if (file.mimetype === 'video/webm') return header.subarray(0, 4).equals(Buffer.from([0x1a, 0x45, 0xdf, 0xa3]));
+    if (file.mimetype === 'audio/mpeg') return header.subarray(0, 3).toString() === 'ID3'
+      || (header[0] === 0xff && (header[1] & 0xe0) === 0xe0);
+    if (file.mimetype === 'audio/mp4') return bytesRead >= 12 && header.subarray(4, 8).toString() === 'ftyp';
+    if (file.mimetype === 'audio/wav' || file.mimetype === 'audio/x-wav') {
+      return header.subarray(0, 4).toString() === 'RIFF' && header.subarray(8, 12).toString() === 'WAVE';
+    }
+    if (file.mimetype === 'audio/ogg') return header.subarray(0, 4).toString() === 'OggS';
+    if (file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      || file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      || file.mimetype === 'application/vnd.openxmlformats-officedocument.presentationml.presentation') {
+      return header.subarray(0, 4).equals(Buffer.from([0x50, 0x4b, 0x03, 0x04]));
+    }
+    if (file.mimetype === 'application/msword' || file.mimetype === 'application/vnd.ms-excel'
+      || file.mimetype === 'application/vnd.ms-powerpoint') {
+      return header.subarray(0, 8).equals(Buffer.from([0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1]));
+    }
+    if (file.mimetype === 'application/rtf' || file.mimetype === 'text/rtf') {
+      return header.subarray(0, 5).toString() === '{\\rtf';
+    }
+    if (file.mimetype === 'text/plain' || file.mimetype === 'text/csv') {
+      return bytesRead > 0 && !header.subarray(0, bytesRead).includes(0);
+    }
     return false;
   } finally {
     await handle.close();
@@ -161,7 +183,7 @@ class DigitalCollectionController {
       for (const file of files) {
         if (!await hasValidFileSignature(file)) {
           files.forEach((item) => fs.rmSync(item.path, { force: true }));
-          return sendError(res, 'A file does not match its declared PDF, PNG, JPEG, MP4, or WebM type', 400);
+          return sendError(res, 'The file contents do not match its declared type', 400);
         }
       }
 

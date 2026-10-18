@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Download, Eye, FileImage, FileText, Search, Video } from 'lucide-react'
+import { Download, Eye, FileImage, FileText, Music2, Search, Video, X } from 'lucide-react'
 import api from '../api/axios'
 import { SCHOOL_NAME } from '../constants/schoolBrand'
 
@@ -20,6 +20,12 @@ export default function DigitalArchivePage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
+  const [previewFile, setPreviewFile] = useState(null)
+
+  useEffect(() => {
+    if (!previewFile?.url) return undefined
+    return () => URL.revokeObjectURL(previewFile.url)
+  }, [previewFile])
 
   useEffect(() => {
     api.get('/digital-collections/public/collections')
@@ -59,6 +65,16 @@ export default function DigitalArchivePage() {
   function resetPage(update) {
     setPage(1)
     update()
+  }
+
+  async function viewObject(object) {
+    setPreviewFile({ object, url: null, loading: true })
+    try {
+      const { data } = await api.get(`/digital-collections/public/objects/${object.object_id}/file`, { responseType: 'blob' })
+      setPreviewFile({ object, url: URL.createObjectURL(data), loading: false })
+    } catch {
+      setPreviewFile({ object, url: null, loading: false, error: 'This file could not be opened right now.' })
+    }
   }
 
   return (
@@ -101,21 +117,22 @@ export default function DigitalArchivePage() {
             : objects.length ? <>
               <div className="grid gap-x-8 gap-y-0 md:grid-cols-2">
               {objects.map((object) => {
-                const fileUrl = api.getUri({ url: `/digital-collections/public/objects/${object.object_id}/file` })
                 const downloadUrl = api.getUri({ url: `/digital-collections/public/objects/${object.object_id}/download` })
                 const isPdf = object.mime_type === 'application/pdf'
                 const isVideo = object.mime_type?.startsWith('video/')
-                return <article key={object.object_id} className="flex min-w-0 items-start gap-4 border-b border-gray-300 py-5">
-                  <div className="flex size-12 shrink-0 items-center justify-center rounded-md bg-white text-emerald-800 ring-1 ring-gray-200">
-                    {isPdf ? <FileText size={22} /> : isVideo ? <Video size={22} /> : <FileImage size={22} />}
+                const isAudio = object.mime_type?.startsWith('audio/')
+                const isDocument = object.mime_type?.includes('msword') || object.mime_type?.includes('excel') || object.mime_type?.includes('powerpoint') || object.mime_type?.includes('word') || object.mime_type?.includes('sheet') || object.mime_type?.includes('presentation') || object.mime_type?.startsWith('text/') || object.mime_type?.includes('rtf')
+                return <article key={object.object_id} className="flex min-w-0 items-start gap-5 border-b border-gray-300 py-6">
+                  <div className="flex size-20 shrink-0 items-center justify-center rounded-md bg-white text-emerald-800 ring-1 ring-gray-200">
+                    {isPdf || isDocument ? <FileText size={42} /> : isVideo ? <Video size={42} /> : isAudio ? <Music2 size={42} /> : <FileImage size={42} />}
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="text-xs font-bold uppercase tracking-wide text-emerald-800">{object.collection_title}</p>
                     <h3 className="mt-1 truncate text-lg font-bold text-gray-900">{object.title}</h3>
                     <p className="mt-1 text-sm text-gray-600">{object.creator || 'Creator unknown'} · {object.material_type}</p>
                     <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2">
-                      <a href={fileUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-md bg-emerald-800 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-900">
-                        <Eye size={15} /> View {isPdf ? 'document' : isVideo ? 'video' : 'image'}
+                      <button type="button" onClick={() => viewObject(object)} className="inline-flex items-center gap-1.5 rounded-md bg-emerald-800 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-900">
+                        <Eye size={15} /> View {isPdf || isDocument ? 'document' : isVideo ? 'video' : isAudio ? 'audio' : 'image'}
                       </a>
                       <a href={downloadUrl} className="inline-flex items-center gap-1.5 rounded-md border border-emerald-800 px-3 py-2 text-sm font-semibold text-emerald-900 hover:bg-emerald-50" download><Download size={15} />Download</a>
                     </div>
@@ -132,6 +149,23 @@ export default function DigitalArchivePage() {
               </div>}
             </> : <p className="py-12 text-center text-sm text-gray-600">{pagination.total ? 'No items match these filters.' : 'No public digital objects are available yet.'}</p>}
       </main>
+      {previewFile && <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setPreviewFile(null) }}>
+        <section role="dialog" aria-modal="true" aria-labelledby="archive-preview-title" className="flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-lg bg-white shadow-xl">
+          <div className="flex items-center justify-between gap-4 border-b border-gray-200 px-4 py-3">
+            <h2 id="archive-preview-title" className="truncate font-semibold text-gray-900">{previewFile.object.title}</h2>
+            <button type="button" aria-label="Close preview" onClick={() => setPreviewFile(null)} className="rounded-md p-1.5 text-gray-600 hover:bg-gray-100"><X size={19} /></button>
+          </div>
+          <div className="flex min-h-[50vh] flex-1 items-center justify-center overflow-auto bg-gray-100 p-4">
+            {previewFile.loading ? <p className="text-sm text-gray-600">Loading preview…</p>
+              : previewFile.error ? <p role="alert" className="text-sm text-rose-700">{previewFile.error}</p>
+                : previewFile.object.mime_type === 'application/pdf' ? <iframe title={previewFile.object.title} src={previewFile.url} className="h-[75vh] w-full bg-white" />
+                  : previewFile.object.mime_type?.startsWith('image/') ? <img src={previewFile.url} alt={previewFile.object.title} className="max-h-[75vh] max-w-full object-contain" />
+                    : previewFile.object.mime_type?.startsWith('video/') ? <video src={previewFile.url} controls playsInline className="max-h-[75vh] max-w-full" />
+                      : previewFile.object.mime_type?.startsWith('audio/') ? <audio src={previewFile.url} controls className="w-full max-w-xl" />
+                        : <div className="space-y-3 p-8 text-center"><p className="text-sm text-gray-700">This document format cannot be previewed in the browser.</p><a href={api.getUri({ url: `/digital-collections/public/objects/${previewFile.object.object_id}/download` })} className="inline-flex items-center gap-1.5 rounded-md bg-emerald-800 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-900"><Download size={15} />Download document</a></div>}
+          </div>
+        </section>
+      </div>}
     </div>
   )
 }

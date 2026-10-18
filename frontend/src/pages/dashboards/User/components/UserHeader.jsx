@@ -57,7 +57,7 @@ export default function UserHeader({ onMenuToggle }) {
       confirmButtonColor: '#ef4444',
       cancelButtonColor: '#d1d5db',
       confirmButtonText: 'Yes, log out',
-      customClass: { popup: 'rounded-[4px] z-[9999]' }
+      customClass: { container: '!z-[10000]', popup: 'rounded-[4px]' }
     });
 
     if (result.isConfirmed) {
