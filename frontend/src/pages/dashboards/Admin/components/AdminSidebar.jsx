@@ -10,7 +10,6 @@ const navItems = [
   { name: 'Overview', path: '/admin', icon: LayoutDashboard },
   { name: 'Digital Collections', path: '/admin/digital-collections', icon: Images },
   { name: 'Digital Analytics', path: '/admin/digital-analytics', icon: BarChart3 },
-  { name: 'Audit Logs', path: '/admin/audit-logs', icon: ClipboardList },
   { name: 'Books & Inventory', path: '/admin/books', icon: BookOpen },
   { name: 'Categories & Genres', path: '/admin/categories', icon: Tags },
   { name: 'Borrowing Management', path: '/admin/borrowing', icon: ArrowLeftRight },
@@ -20,6 +19,7 @@ const navItems = [
   { name: 'Fines & Billing', path: '/admin/fines', icon: Banknote },
   { name: 'Reports & Analytics', path: '/admin/reports', icon: ChartLine },
   { name: 'System Settings', path: '/admin/settings', icon: Settings },
+  { name: 'Audit Logs', path: '/admin/audit-logs', icon: ClipboardList },
 ]
 
 export default function AdminSidebar() {
@@ -66,7 +66,7 @@ export default function AdminSidebar() {
             to={path}
             end={path === '/admin'}
             className={({ isActive }) =>
-              `flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] transition-colors duration-200 ${
+              `flex items-center gap-3 rounded-lg px-3 py-2.5 text-base transition-colors duration-200 ${
                 isActive
                   ? 'bg-primary text-white font-semibold shadow-sm'
                   : 'text-gray-500 hover:bg-primary/5 hover:text-primary font-medium'

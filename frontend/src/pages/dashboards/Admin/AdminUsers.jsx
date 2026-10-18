@@ -282,15 +282,15 @@ const AdminUsers = () => {
                     </td>
                     <td className="p-4 text-right align-middle">
                       <div className="flex flex-wrap items-center justify-end gap-1.5">
-                        <button onClick={() => setViewUser(user)} className="inline-flex items-center gap-1 rounded px-2 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-blue-50 hover:text-blue-600" title="View Profile" aria-label={`View ${user.first_name} ${user.last_name}`}>
+                        <button onClick={() => setViewUser(user)} className="inline-flex items-center gap-1 rounded border border-blue-200 px-2 py-1.5 text-xs font-semibold text-blue-700 transition-colors hover:bg-blue-50 hover:text-blue-600" title="View Profile" aria-label={`View ${user.first_name} ${user.last_name}`}>
                           <Eye size={18} />
                           View
                         </button>
-                        <button onClick={() => handleEditClick(user)} className="inline-flex items-center gap-1 rounded px-2 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-primary/10 hover:text-primary" title="Edit User">
+                        <button onClick={() => handleEditClick(user)} className="inline-flex items-center gap-1 rounded border border-primary/30 px-2 py-1.5 text-xs font-semibold text-primary transition-colors hover:bg-primary/10 hover:text-primary" title="Edit User">
                           <Edit size={18} />
                           Edit
                         </button>
-                        <button onClick={() => handleDeleteClick(user.user_id)} className="inline-flex items-center gap-1 rounded px-2 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-red-50 hover:text-red-600" title="Delete User">
+                        <button onClick={() => handleDeleteClick(user.user_id)} className="inline-flex items-center gap-1 rounded border border-red-200 px-2 py-1.5 text-xs font-semibold text-red-700 transition-colors hover:bg-red-50 hover:text-red-600" title="Delete User">
                           <Trash2 size={18} />
                           Delete
                         </button>

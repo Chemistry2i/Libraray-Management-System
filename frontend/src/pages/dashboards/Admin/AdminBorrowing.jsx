@@ -521,7 +521,7 @@ const AdminBorrowing = () => {
                     </td>
                     <td className="p-4 text-right align-middle">
                       <div className="flex flex-wrap items-center justify-end gap-1.5">
-                        <button className="inline-flex items-center gap-1 rounded px-2 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-blue-50 hover:text-blue-600" title="View Details">
+                        <button className="inline-flex items-center gap-1 rounded border border-blue-200 px-2 py-1.5 text-xs font-semibold text-blue-700 transition-colors hover:bg-blue-50 hover:text-blue-600" title="View Details">
                           <Eye size={18} />
                           View
                         </button>
@@ -531,7 +531,7 @@ const AdminBorrowing = () => {
                           <>
                             <button 
                               onClick={() => handleApproveBorrow(borrowing)}
-                              className="inline-flex items-center gap-1 rounded px-2 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-green-50 hover:text-green-700"
+                              className="inline-flex items-center gap-1 rounded border border-green-200 px-2 py-1.5 text-xs font-semibold text-green-700 transition-colors hover:bg-green-50 hover:text-green-700"
                               title="Approve Request"
                             >
                               <ThumbsUp size={18} />
@@ -539,7 +539,7 @@ const AdminBorrowing = () => {
                             </button>
                             <button 
                               onClick={() => handleRejectBorrow(borrowing)}
-                              className="inline-flex items-center gap-1 rounded px-2 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-red-50 hover:text-red-600"
+                              className="inline-flex items-center gap-1 rounded border border-red-200 px-2 py-1.5 text-xs font-semibold text-red-700 transition-colors hover:bg-red-50 hover:text-red-600"
                               title="Reject Request"
                             >
                               <AlertCircle size={18} />
@@ -552,7 +552,7 @@ const AdminBorrowing = () => {
                         {borrowing.status?.toLowerCase() === 'active' && (
                           <button 
                             onClick={() => handleReturnBook(borrowing)} 
-                            className="inline-flex items-center gap-1 rounded px-2 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-green-50 hover:text-green-700"
+                            className="inline-flex items-center gap-1 rounded border border-green-200 px-2 py-1.5 text-xs font-semibold text-green-700 transition-colors hover:bg-green-50 hover:text-green-700"
                             title="Mark as Returned"
                           >
                             <CheckCircle size={18} />
