@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Search, Plus, Edit, Trash2, Eye, X } from 'lucide-react';
 import Swal from 'sweetalert2';
 import api from '../../../api/axios';
@@ -203,7 +204,7 @@ const AdminCategories = () => {
         </div>
       </div>
 
-      {isModalOpen && (
+      {isModalOpen && createPortal(
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4">
           <div className="bg-white rounded-[4px] shadow-xl w-full max-w-lg max-h-[90vh] flex flex-col">
             <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-white sticky top-0 z-10">
@@ -263,10 +264,10 @@ const AdminCategories = () => {
             </div>
           </div>
         </div>
-      )}
+      , document.body)}
     
       {/* View Category Modal */}
-      {viewItem && (
+      {viewItem && createPortal(
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
           <div className="bg-white rounded-[4px] shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between p-8 border-b border-gray-100 sticky top-0 bg-gradient-to-r from-primary/5 to-transparent">
@@ -314,7 +315,7 @@ const AdminCategories = () => {
             </div>
           </div>
         </div>
-      )}
+      , document.body)}
     </div>
   );
 };
