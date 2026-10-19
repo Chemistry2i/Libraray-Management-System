@@ -39,6 +39,12 @@ const contributors = [
     description: 'Helping make school reading resources easier for pupils and teachers to discover.',
   },
   {
+    name: 'MUSINGUZI DERRICK ',
+    initials: 'MD',
+    email: 'derrick@example.invalid',
+    description: 'Helping make school reading resources easier for pupils and teachers to discover.',
+  },
+  {
     name: 'KISAAKYE DEBORAH',
     initials: 'KD',
     email: 'kisakyey@example.invalid',
