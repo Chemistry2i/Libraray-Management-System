@@ -7,6 +7,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SCHOOL_BADGE, SCHOOL_NAME, SCHOOL_OFFICIAL_NAME } from '../constants/schoolBrand'
 import heroImage from '../img/hero.jpeg'
+import doreenImage from '../img/doreen.jpg'
 import classImageOne from '../img/class1.jpg'
 import classImageTwo from '../img/class2.jpg'
 import classImageThree from '../img/class3.jpg'
@@ -23,36 +24,42 @@ const contributors = [
   {
     name: 'MBAWADDE DOREEN',
     initials: 'MD',
+    image: doreenImage,
     email: 'doreen@example.invalid',
     description: 'Contributing to a welcoming digital library experience for the school community.',
   },
   {
     name: 'SSENYONGA LUCY ',
     initials: 'SL',
+    image: '/images/team/ssenyonga-lucy.jpg',
     email: 'lucy@example.invalid',
     description: 'Helping make school reading resources easier for pupils and teachers to discover.',
   },
   {
     name: 'AKELLO PATRICIA ',
     initials: 'AP',
+    image: '/images/team/akello-patricia.jpg',
     email: 'akello@example.invalid',
     description: 'Helping make school reading resources easier for pupils and teachers to discover.',
   },
   {
     name: 'MUSINGUZI DERRICK ',
     initials: 'MD',
+    image: '/images/team/musinguzi-derrick.jpg',
     email: 'derrick@example.invalid',
     description: 'Helping make school reading resources easier for pupils and teachers to discover.',
   },
   {
     name: 'KISAAKYE DEBORAH',
     initials: 'KD',
+    image: '/images/team/kisaakye-deborah.jpg',
     email: 'kisakyey@example.invalid',
     description: 'Helping make school reading resources easier for pupils and teachers to discover.',
   },
   {
     name: 'KATAANO VIVIAN LYNNA',
     initials: 'KVL',
+    image: '/images/team/kataano-vivian-lynna.jpg',
     email: 'vivian@example.invalid',
     description: 'Helping make school reading resources easier for pupils and teachers to discover.',
   },
@@ -235,10 +242,15 @@ export default function KamuliHomePage() {
           <div className="contributor-marquee-track flex w-max">
             {[0, 1].map((copy) => <div key={copy} aria-hidden={copy === 1} className="flex shrink-0 items-center justify-center gap-5 px-4" style={{ minWidth: 'max(100vw, 36rem)' }}>
               {contributors.map((contributor) => <article key={`${copy}-${contributor.initials}`} tabIndex={copy === 0 ? 0 : -1} aria-label={`${contributor.name}, system contributor`} className="w-64 shrink-0 overflow-hidden border border-slate-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-inset focus:ring-amber-400 sm:w-72">
-                <div aria-hidden="true" className="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-[#173b64] text-white">
-                  <UserRound size={104} strokeWidth={1.1} className="absolute text-white/20" />
-                  <span className="relative text-5xl font-bold text-white/90">{contributor.initials}</span>
-                  <span className="absolute bottom-3 left-3 border border-white/35 bg-[#102d4f]/80 px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-white">Portrait placeholder</span>
+                <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-slate-100 text-[#173b64]">
+                  <span aria-hidden="true" className="text-5xl font-bold">{contributor.initials}</span>
+                  <img
+                    src={contributor.image}
+                    alt={contributor.name.trim()}
+                    loading="lazy"
+                    onError={(event) => { event.currentTarget.hidden = true }}
+                    className="absolute inset-0 size-full object-cover"
+                  />
                 </div>
                 <div className="p-4">
                   <h3 className="truncate font-bold text-[#102d4f]">{contributor.name}</h3>
