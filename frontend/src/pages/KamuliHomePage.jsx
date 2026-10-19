@@ -242,14 +242,14 @@ export default function KamuliHomePage() {
           <div className="contributor-marquee-track flex w-max">
             {[0, 1].map((copy) => <div key={copy} aria-hidden={copy === 1} className="flex shrink-0 items-center justify-center gap-5 px-4" style={{ minWidth: 'max(100vw, 36rem)' }}>
               {contributors.map((contributor) => <article key={`${copy}-${contributor.initials}`} tabIndex={copy === 0 ? 0 : -1} aria-label={`${contributor.name}, system contributor`} className="w-64 shrink-0 overflow-hidden border border-slate-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-inset focus:ring-amber-400 sm:w-72">
-                <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-slate-100 text-[#173b64]">
+                <div className="relative flex aspect-[4/5] items-center justify-center overflow-hidden bg-slate-100 text-[#173b64]">
                   <span aria-hidden="true" className="text-5xl font-bold">{contributor.initials}</span>
                   <img
                     src={contributor.image}
                     alt={contributor.name.trim()}
                     loading="lazy"
                     onError={(event) => { event.currentTarget.hidden = true }}
-                    className="absolute inset-0 size-full object-contain"
+                    className="absolute inset-0 size-full object-cover object-center"
                   />
                 </div>
                 <div className="p-4">
