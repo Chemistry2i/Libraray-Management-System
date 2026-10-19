@@ -249,7 +249,7 @@ export default function KamuliHomePage() {
                     alt={contributor.name.trim()}
                     loading="lazy"
                     onError={(event) => { event.currentTarget.hidden = true }}
-                    className="absolute inset-0 size-full object-cover object-top"
+                    className="absolute inset-0 size-full object-contain"
                   />
                 </div>
                 <div className="p-4">
