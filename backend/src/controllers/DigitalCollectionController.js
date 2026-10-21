@@ -94,7 +94,24 @@ const materialTypes = [
   'Historical Photograph', 'Newsletter', 'Report', 'Newspaper Clipping',
   'Exam Paper', 'Poster', 'Local-History Document',
 ];
+const dcTypes = ['Collection', 'Dataset', 'Event', 'Image', 'InteractiveResource', 'MovingImage', 'PhysicalObject', 'Service', 'Software', 'Sound', 'StillImage', 'Text'];
 const rightsStatuses = ['Public Domain', 'Copyrighted - Permitted', 'Sensitive - Restricted'];
+
+function defaultDcType(mimeType) {
+  if (mimeType.startsWith('image/')) return 'StillImage';
+  if (mimeType.startsWith('video/')) return 'MovingImage';
+  if (mimeType.startsWith('audio/')) return 'Sound';
+  return 'Text';
+}
+
+function fitsMetadataField(value, field) {
+  if (value === undefined || value === null) return true;
+  const limit = { dc_date: 100, dc_subject: 60000, dc_description: 60000, dc_language: 100 }[field];
+  return typeof value === 'string'
+    && (field === 'dc_subject' || field === 'dc_description'
+      ? Buffer.byteLength(value, 'utf8') <= limit
+      : value.length <= limit);
+}
 
 function csvCell(value) {
   let text = value == null ? '' : String(value);
@@ -185,6 +202,8 @@ class DigitalCollectionController {
         && metadata.every((item) => item
           && typeof item.title === 'string' && item.title.trim()
           && materialTypes.includes(item.material_type)
+          && (item.dc_type === undefined || dcTypes.includes(item.dc_type))
+          && ['dc_date', 'dc_subject', 'dc_description', 'dc_language'].every((field) => fitsMetadataField(item[field], field))
           && rightsStatuses.includes(item.rights_status)
           && typeof item.rights_assessment_notes === 'string' && item.rights_assessment_notes.trim()
           && typeof item.is_public === 'boolean'
@@ -205,7 +224,7 @@ class DigitalCollectionController {
       } else if (req.body.rights_confirmed !== 'true') {
         validationError = 'Confirm the rights assessment before uploading';
       } else if (!validMetadata) {
-        validationError = 'Complete the title, material type, rights status, notes, and access settings for every file';
+        validationError = 'Complete each file title, valid Dublin Core metadata, material type, rights status, notes, and access settings';
       }
 
       if (validationError) {
@@ -228,6 +247,11 @@ class DigitalCollectionController {
             ...metadata[index],
             title: metadata[index].title.trim(),
             creator: typeof metadata[index].creator === 'string' ? metadata[index].creator.trim() : '',
+            dc_date: metadata[index].dc_date?.trim() || null,
+            dc_subject: metadata[index].dc_subject?.trim() || null,
+            dc_description: metadata[index].dc_description?.trim() || null,
+            dc_type: metadata[index].dc_type || defaultDcType(file.mimetype),
+            dc_language: metadata[index].dc_language?.trim() || null,
             rights_assessment_notes: metadata[index].rights_assessment_notes.trim(),
             rights_evidence_reference: metadata[index].rights_evidence_reference || null,
             rights_expires_at: metadata[index].rights_expires_at || null,
@@ -336,7 +360,8 @@ class DigitalCollectionController {
       const object = await DigitalCollectionModel.findObjectById(req.params.objectId);
       if (!object) return sendError(res, 'Digital object not found', 404);
       const allowed = [
-        'title', 'creator', 'material_type', 'rights_status', 'rights_assessment_notes',
+        'title', 'creator', 'material_type', 'dc_date', 'dc_subject', 'dc_description',
+        'dc_type', 'dc_language', 'rights_status', 'rights_assessment_notes',
         'rights_evidence_reference', 'rights_expires_at', 'is_public', 'rights_review_confirmed',
       ];
       if (!Object.keys(req.body).length || Object.keys(req.body).some((key) => !allowed.includes(key))) {
@@ -357,6 +382,23 @@ class DigitalCollectionController {
       }
       if (changes.creator !== undefined && changes.creator !== null && typeof changes.creator !== 'string') {
         return sendError(res, 'Creator must be text', 400);
+      }
+      const dcTextFields = ['dc_date', 'dc_subject', 'dc_description', 'dc_type', 'dc_language'];
+      for (const field of dcTextFields) {
+        const limit = field === 'dc_subject' || field === 'dc_description' ? 60000 : 100;
+        const valid = field === 'dc_type'
+          ? changes[field] === undefined || changes[field] === null
+            || (typeof changes[field] === 'string' && changes[field].length <= limit)
+          : fitsMetadataField(changes[field], field);
+        if (!valid) {
+          const storageLimit = field === 'dc_subject' || field === 'dc_description'
+            ? '60,000 UTF-8 bytes'
+            : '100 characters';
+          return sendError(res, `${field.replace('dc_', 'Dublin Core ')} must be text within its ${storageLimit} storage limit`, 400);
+        }
+      }
+      if (changes.dc_type !== undefined && changes.dc_type !== null && !dcTypes.includes(changes.dc_type)) {
+        return sendError(res, 'Invalid Dublin Core type', 400);
       }
       if (changes.rights_evidence_reference !== undefined && changes.rights_evidence_reference !== null
         && (typeof changes.rights_evidence_reference !== 'string' || changes.rights_evidence_reference.length > 500)) {
@@ -389,6 +431,9 @@ class DigitalCollectionController {
       }
       if (changes.title !== undefined) changes.title = changes.title.trim();
       if (changes.creator !== undefined) changes.creator = changes.creator?.trim() || null;
+      for (const field of dcTextFields) {
+        if (changes[field] !== undefined) changes[field] = changes[field]?.trim() || null;
+      }
       if (changes.rights_assessment_notes !== undefined) changes.rights_assessment_notes = changes.rights_assessment_notes.trim();
       await DigitalCollectionModel.updateObject(req.params.objectId, changes, req.user.user_id, rightsChanged);
       sendSuccess(res, 'Digital object updated');
@@ -457,7 +502,10 @@ class DigitalCollectionController {
       const fields = [
         ['collection_title', 'Collection'], ['selection_criteria', 'Selection criteria'],
         ['collection_value', 'Collection value'], ['object_id', 'Object ID'], ['title', 'Title'],
-        ['creator', 'Creator'], ['material_type', 'Material type'], ['original_filename', 'File'],
+        ['dc_identifier', 'Dublin Core Identifier'], ['creator', 'Creator'], ['dc_date', 'Date'],
+        ['dc_subject', 'Subject'], ['dc_description', 'Description'], ['dc_type', 'Dublin Core Type'],
+        ['dc_format', 'Format'], ['dc_language', 'Language'],
+        ['material_type', 'Material type'], ['original_filename', 'File'],
         ['rights_status', 'Rights status'], ['rights_assessment_notes', 'Rights notes'],
         ['rights_evidence_reference', 'Rights evidence'], ['rights_expires_at', 'Rights expiry'],
         ['is_public', 'Public'], ['rights_reviewed_at', 'Rights reviewed at'],

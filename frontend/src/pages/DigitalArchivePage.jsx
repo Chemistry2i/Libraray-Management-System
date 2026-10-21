@@ -131,6 +131,7 @@ export default function DigitalArchivePage() {
                     <p className="text-xs font-bold uppercase tracking-wide text-emerald-800">{object.collection_title}</p>
                     <h3 className="mt-1 truncate text-lg font-bold text-gray-900">{object.title}</h3>
                     <p className="mt-1 text-sm text-gray-600">{object.creator || 'Creator unknown'} · {object.material_type}</p>
+                    {object.dc_description && <p className="mt-2 line-clamp-2 text-sm text-gray-600">{object.dc_description}</p>}
                     <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2">
                       <button type="button" onClick={() => viewObject(object)} className="inline-flex items-center gap-1.5 rounded-md bg-emerald-800 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-900">
                         <Eye size={15} /> View {isPdf || isDocument ? 'document' : isVideo ? 'video' : isAudio ? 'audio' : 'image'}
@@ -165,6 +166,23 @@ export default function DigitalArchivePage() {
               downloadUrl={api.getUri({ url: `/digital-collections/public/objects/${previewFile.object.object_id}/download` })}
             />
           </div>
+          <dl className="grid gap-x-6 gap-y-3 overflow-y-auto border-t border-gray-200 px-5 py-4 text-sm sm:grid-cols-2">
+            {[
+              ['Identifier', previewFile.object.dc_identifier],
+              ['Creator', previewFile.object.creator],
+              ['Date', previewFile.object.dc_date],
+              ['Subject', previewFile.object.dc_subject],
+              ['Description', previewFile.object.dc_description],
+              ['Type', previewFile.object.dc_type],
+              ['Format', previewFile.object.dc_format || previewFile.object.mime_type],
+              ['Language', previewFile.object.dc_language],
+            ].filter(([, value]) => value).map(([label, value]) => (
+              <div key={label} className={label === 'Description' || label === 'Subject' ? 'sm:col-span-2' : ''}>
+                <dt className="font-semibold text-gray-700">{label}</dt>
+                <dd className="mt-0.5 whitespace-pre-wrap break-words text-gray-600">{value}</dd>
+              </div>
+            ))}
+          </dl>
         </section>
       </div>}
     </div>

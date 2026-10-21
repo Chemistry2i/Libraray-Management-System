@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { ArrowRight, BookOpen, MapPin, Phone, Mail, ChevronDown, Send, UserRound, Tag, MessageSquare } from 'lucide-react'
+import { ArrowRight, BookOpen, MapPin, Phone, Mail, ChevronDown, Send, UserRound, Tag, MessageSquare, Archive, Search, ShieldCheck, Upload } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import { useGSAP } from '@gsap/react'
@@ -7,6 +7,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SCHOOL_BADGE, SCHOOL_NAME, SCHOOL_OFFICIAL_NAME } from '../constants/schoolBrand'
 import heroImage from '../img/hero.jpeg'
+import doreenImage from '../img/doreen.jpg'
 import classImageOne from '../img/class1.jpg'
 import classImageTwo from '../img/class2.jpg'
 import classImageThree from '../img/class3.jpg'
@@ -23,30 +24,42 @@ const contributors = [
   {
     name: 'MBAWADDE DOREEN',
     initials: 'MD',
+    image: doreenImage,
     email: 'doreen@example.invalid',
     description: 'Contributing to a welcoming digital library experience for the school community.',
   },
   {
     name: 'SSENYONGA LUCY ',
     initials: 'SL',
+    image: '/images/team/ssenyonga-lucy.jpg',
     email: 'lucy@example.invalid',
     description: 'Helping make school reading resources easier for pupils and teachers to discover.',
   },
   {
     name: 'AKELLO PATRICIA ',
     initials: 'AP',
+    image: '/images/team/akello-patricia.jpg',
     email: 'akello@example.invalid',
+    description: 'Helping make school reading resources easier for pupils and teachers to discover.',
+  },
+  {
+    name: 'MUSINGUZI DERRICK ',
+    initials: 'MD',
+    image: '/images/team/musinguzi-derrick.jpg',
+    email: 'derrick@example.invalid',
     description: 'Helping make school reading resources easier for pupils and teachers to discover.',
   },
   {
     name: 'KISAAKYE DEBORAH',
     initials: 'KD',
+    image: '/images/team/kisaakye-deborah.jpg',
     email: 'kisakyey@example.invalid',
     description: 'Helping make school reading resources easier for pupils and teachers to discover.',
   },
   {
     name: 'KATAANO VIVIAN LYNNA',
     initials: 'KVL',
+    image: '/images/team/kataano-vivian-lynna.jpg',
     email: 'vivian@example.invalid',
     description: 'Helping make school reading resources easier for pupils and teachers to discover.',
   },
@@ -143,7 +156,7 @@ export default function KamuliHomePage() {
               <span className="block overflow-hidden"><span className="hero-title-line block">A school library</span></span>
               <span className="block overflow-hidden"><span className="hero-title-line block">for curious minds.</span></span>
             </h1>
-            <p className="hero-copy mt-5 max-w-2xl text-base leading-7 text-white/90 sm:text-lg">Find storybooks, textbooks and learning resources to support every pupil at {SCHOOL_OFFICIAL_NAME}.</p>
+            <p className="hero-copy mt-5 max-w-2xl text-base leading-7 text-white/90 sm:text-lg">Find storybooks, textbooks and learning resources, then explore approved digital collections from {SCHOOL_OFFICIAL_NAME}.</p>
             <div className="hero-actions mt-8 flex flex-wrap gap-3">
               <Link to="/books" className="hero-action inline-flex items-center gap-2 rounded-md bg-white px-5 py-3 text-sm font-bold text-[#12365d] transition-colors hover:bg-amber-100">Explore the library <ArrowRight size={17} /></Link>
               <Link to="/digital-collections" className="hero-action inline-flex items-center gap-2 rounded-md border border-white/70 bg-[#102d4f]/30 px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-white/10">Digital collection</Link>
@@ -202,6 +215,41 @@ export default function KamuliHomePage() {
         </div>
       </motion.section>
 
+      <motion.section {...scrollReveal} aria-labelledby="digital-library-heading" className="border-y border-slate-200 bg-white">
+        <div className="mx-auto w-full max-w-7xl px-5 py-14 sm:px-8 md:py-20">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#a77914]">Our digital library</p>
+            <h2 id="digital-library-heading" className="mt-3 text-3xl font-bold leading-tight text-[#102d4f] sm:text-4xl">School resources and digital collections, together.</h2>
+            <p className="mt-4 text-base leading-7 text-slate-600">Kamuli CU Library brings the book catalogue and a Digital Archive into one library experience. Visitors can discover approved digital items, while authorized staff organize and describe collection files.</p>
+          </div>
+
+          <div className="mt-10 grid gap-6 md:grid-cols-2">
+            <article className="flex flex-col border border-slate-200 bg-[#f4f7fa] p-6 sm:p-8">
+              <div className="flex size-12 items-center justify-center bg-[#173b64] text-white" aria-hidden="true"><Search size={22} /></div>
+              <h3 className="mt-5 text-xl font-bold text-[#102d4f]">For pupils, teachers, and visitors</h3>
+              <p className="mt-3 flex-1 text-sm leading-6 text-slate-600">Search public digital collections, read item descriptions, and preview or download items that have been approved for access.</p>
+              <Link to="/digital-collections" className="mt-6 inline-flex w-fit items-center gap-2 rounded-md bg-[#173b64] px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-[#102d4f]">Explore the Digital Archive <ArrowRight size={16} /></Link>
+            </article>
+
+            <article className="flex flex-col border border-[#d1a93f]/60 bg-[#fffaf0] p-6 sm:p-8">
+              <div className="flex size-12 items-center justify-center bg-[#a77914] text-white" aria-hidden="true"><Archive size={22} /></div>
+              <h3 className="mt-5 text-xl font-bold text-[#102d4f]">For library staff: how a collection is added</h3>
+              <ol className="mt-4 flex-1 space-y-3 text-sm leading-6 text-slate-700">
+                <li className="flex gap-3"><span className="font-bold text-[#a77914]">1.</span><span>Prepare the source material and assess rights and privacy.</span></li>
+                <li className="flex gap-3"><span className="font-bold text-[#a77914]">2.</span><span>Scan or photograph the material with an appropriate tool outside the LMS.</span></li>
+                <li className="flex gap-3"><span className="font-bold text-[#a77914]">3.</span><span>Sign in, create a collection, and upload the resulting digital files.</span></li>
+                <li className="flex gap-3"><span className="font-bold text-[#a77914]">4.</span><span>Enter Dublin Core details, record the rights decision, and set access appropriately.</span></li>
+              </ol>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Link to="/login" className="inline-flex items-center gap-2 rounded-md bg-[#102d4f] px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-[#173b64]"><Upload size={16} /> Staff sign in <ArrowRight size={15} /></Link>
+                <Link to="/digital-collections" className="inline-flex items-center gap-2 px-1 py-3 text-sm font-bold text-[#173b64] transition-colors hover:text-[#a77914]"><ShieldCheck size={16} /> View public collections</Link>
+              </div>
+              <p className="mt-4 border-t border-[#d1a93f]/30 pt-3 text-xs leading-5 text-slate-600">The LMS organizes uploaded files and metadata; it does not perform scanning, OCR, image correction, or preservation backup checks.</p>
+            </article>
+          </div>
+        </div>
+      </motion.section>
+
       <motion.section ref={galleryRef} {...scrollReveal} className="flex items-center bg-white">
         <div className="mx-auto w-full max-w-7xl px-5 py-12 sm:px-8 md:py-16">
         <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
@@ -229,10 +277,15 @@ export default function KamuliHomePage() {
           <div className="contributor-marquee-track flex w-max">
             {[0, 1].map((copy) => <div key={copy} aria-hidden={copy === 1} className="flex shrink-0 items-center justify-center gap-5 px-4" style={{ minWidth: 'max(100vw, 36rem)' }}>
               {contributors.map((contributor) => <article key={`${copy}-${contributor.initials}`} tabIndex={copy === 0 ? 0 : -1} aria-label={`${contributor.name}, system contributor`} className="w-64 shrink-0 overflow-hidden border border-slate-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-inset focus:ring-amber-400 sm:w-72">
-                <div aria-hidden="true" className="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-[#173b64] text-white">
-                  <UserRound size={104} strokeWidth={1.1} className="absolute text-white/20" />
-                  <span className="relative text-5xl font-bold text-white/90">{contributor.initials}</span>
-                  <span className="absolute bottom-3 left-3 border border-white/35 bg-[#102d4f]/80 px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-white">Portrait placeholder</span>
+                <div className="relative flex aspect-[4/5] items-center justify-center overflow-hidden bg-slate-100 text-[#173b64]">
+                  <span aria-hidden="true" className="text-5xl font-bold">{contributor.initials}</span>
+                  <img
+                    src={contributor.image}
+                    alt={contributor.name.trim()}
+                    loading="lazy"
+                    onError={(event) => { event.currentTarget.hidden = true }}
+                    className="absolute inset-0 size-full object-cover object-center"
+                  />
                 </div>
                 <div className="p-4">
                   <h3 className="truncate font-bold text-[#102d4f]">{contributor.name}</h3>

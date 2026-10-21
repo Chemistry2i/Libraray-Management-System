@@ -61,10 +61,11 @@ Apply the storage metadata migration once after the previous digital collection 
 mysql -u root -p lms_db < database/schema_update_digital_collection_cloudinary.sql
 ```
 
-For existing digital collection installations, apply the Cloudinary storage metadata migration once:
+For an existing digital collections installation, add per-object Dublin Core fields after the Cloudinary migration:
 ```bash
-mysql -u root -p lms_db < database/schema_update_digital_collection_cloudinary.sql
+mysql -u root -p lms_db < database/schema_update_digital_collection_dublin_core.sql
 ```
+This adds Date, Subject, Description, Type, Language, and an automatically assigned Identifier. Title and Creator use the existing object fields; Format uses the uploaded file's MIME type. Existing objects receive an identifier and a default Type derived from their MIME type. Apply this migration once; it is not an upgrade script to rerun.
 
 ### Step 4: Configure .env
 ```bash
