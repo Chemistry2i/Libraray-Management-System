@@ -1,194 +1,69 @@
-# 🚀 Blis Library - React Frontend
+# Kamuli CU Library Management System
 
-A modern, responsive frontend for the Library Management System built with React, Vite, and Tailwind CSS.
+Kamuli CU Library is the library service for **Kamuli Church of Uganda Primary School**. This educational project explores how the school library can bring its services and learning resources into one digital place. It combines a familiar book catalogue with a **Digital Archive** where people can discover digitized photographs, documents, reports, and other publications.
 
-## 🎨 Design Features
-- **Airbnb-inspired** modern design aesthetic
-- **Poppins font** throughout the application
-- **Tailwind CSS** for styling
-- **Font Awesome icons** for UI elements
-- **SweetAlert2** for beautiful alerts
-- **React Toastify** for notifications
-- **Dark/Light theme support** (can be added)
+This project is an exercise and demonstration, not a finished product for every library. Its main idea is simple: make library information easier to organize, find, and access, while giving staff a way to manage both books and digital materials.
 
-## 📦 Tech Stack
-- **React 18** - UI library
-- **Vite** - Build tool & dev server
-- **Tailwind CSS** - Utility-first CSS framework
-- **React Router DOM** - Client-side routing
-- **Axios** - HTTP client
-- **React Toastify** - Toast notifications
-- **SweetAlert2** - Alert dialogs
-- **Font Awesome** - Icon library
-- **Date-fns** - Date utilities
-- **Zustand** - State management (optional)
+## The digital idea
 
-## 🚀 Quick Start
+The Digital Archive is a central part of the project. Library staff can group files into collections, enter per-object Dublin Core metadata (including title, creator, date, subject, description, type, format, identifier, and language), review rights information, and choose whether an item is available to the public. Visitors can search and filter public items, view their descriptive metadata, preview supported files, and download them.
 
-### Prerequisites
-- Node.js v16+
-- npm or yarn
+The archive organizes materials that have already been digitized; it does not scan paper records or turn physical books into digital files. Supported uploads include common document, image, audio, and video formats.
 
-### Installation
+## What people can do
 
-```bash
-cd frontend
-npm install
-```
+- **Readers and visitors:** browse and search the book catalogue, explore public archive collections, and view or download available digital items.
+- **Library members:** create an account, manage their profile, borrow and reserve books, and keep track of library activity.
+- **Library staff:** manage books, categories, members, borrowing, reservations, and digital collections.
+- **Administrators:** use dashboards and reports to oversee library activity and archive access.
 
-### Development
+Features available to members and staff depend on their account and permissions.
 
-```bash
-npm run dev
-```
+## A simple example
 
-Server runs at: **http://localhost:5173**
+1. Staff create a collection, such as “School Newsletters.”
+2. Staff add a digitized file and describe it, including its title and creator.
+3. Staff record a rights assessment and decide whether the item can be public.
+4. A visitor searches the Digital Archive, opens an available item, and views or downloads it.
 
-The dev server has a proxy configured for API calls at **http://localhost:5000/api**
+This illustrates the project’s digital-creation focus: turning existing digital materials into an organized, discoverable resource.
 
-### Build
+## Technology overview
 
-```bash
-npm run build
-```
+The application has a web interface and a server that stores and manages information:
 
-### Preview
+- **Frontend:** React, Vite, and Tailwind CSS
+- **Backend:** Node.js and Express
+- **Database:** MySQL
+- **Optional file storage:** Cloudinary, with private local storage available for development
 
-```bash
-npm run preview
-```
+## Run locally
 
-## 📁 Project Structure
+You will need Node.js, npm, and a MySQL database. The backend also needs environment settings for the database and authentication.
 
-```
-frontend/
-├── src/
-│   ├── api/
-│   │   ├── axios.js         # Axios instance with interceptors
-│   │   └── endpoints.js     # API endpoint definitions
-│   ├── components/
-│   │   ├── layouts/
-│   │   │   ├── MainLayout.jsx       # Main app layout
-│   │   │   └── AuthLayout.jsx       # Auth page layout
-│   │   ├── Navigation.jsx   # Top navigation bar
-│   │   └── Footer.jsx       # Footer component
-│   ├── context/
-│   │   └── AuthContext.jsx  # Authentication context
-│   ├── pages/
-│   │   ├── auth/
-│   │   │   ├── LoginPage.jsx
-│   │   │   ├── RegisterPage.jsx
-│   │   │   └── ForgotPasswordPage.jsx
-│   │   ├── HomePage.jsx
-│   │   ├── BooksPage.jsx
-│   │   ├── BookDetailsPage.jsx
-│   │   ├── MyBooksPage.jsx
-│   │   ├── ReservationsPage.jsx
-│   │   ├── ProfilePage.jsx
-│   │   ├── DashboardPage.jsx
-│   │   └── NotFoundPage.jsx
-│   ├── utils/              # Utility functions
-│   ├── App.jsx             # Main app component
-│   ├── main.jsx            # Entry point
-│   └── index.css           # Global styles
-├── index.html              # HTML entry point
-├── package.json            # Dependencies
-├── vite.config.js          # Vite configuration
-├── tailwind.config.js      # Tailwind configuration
-└── .env.example            # Environment variables template
-```
+1. Create a MySQL database and load the schema. For a new, empty database, see the instructions for the consolidated schema in [`backend/tables/README.md`](backend/tables/README.md). Do not use the fresh-install schema on an existing database.
+2. Copy `backend/.env.example` to `backend/.env` and set the database connection values for your local MySQL database, `NODE_ENV=development`, and a private `JWT_SECRET`. Then install dependencies and start the backend:
 
-## 🎯 Key Pages
+   ```bash
+   cd backend
+   npm install
+   npm run dev
+   ```
 
-- **Login/Register** - User authentication
-- **Home** - Landing page with features overview
-- **Books** - Browse and search books
-- **Book Details** - Individual book information and reviews
-- **My Books** - Borrowed books and borrowing history
-- **Reservations** - Book reservations
-- **Profile** - User profile and settings
-- **Dashboard** - User statistics and analytics
+3. In another terminal, copy `frontend/.env.example` to `frontend/.env` and set `VITE_API_BASE_URL=http://localhost:5000/api` for local development. Then install dependencies and start the frontend:
 
-## 🔐 Authentication
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
 
-- JWT token-based authentication
-- Automatic token refresh on 401 response
-- Protected routes with Auth context
+4. Open the local address printed by Vite (typically `http://localhost:5173`). The frontend needs the backend API to be running and correctly configured.
 
-## 🎨 Customization
+For more detailed setup and deployment guidance, see [`backend/README.md`](backend/README.md) and [`frontend/README.md`](frontend/README.md).
 
-### Colors
-Edit `tailwind.config.js`:
-```javascript
-colors: {
-  primary: '#FF6B6B',     // Main brand color
-  secondary: '#4ECDC4',   // Secondary color
-  accent: '#FFE66D',      // Accent color
-  // ... more colors
-}
-```
+## Presenting the project
 
-### Fonts
-Change font in `index.html`:
-```html
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-```
+The presentation documents are organized around the Group 2 **Mini Digital Collection** and **Digitization Workflow** assignment. [`PRESENTATION_GUIDE.md`](PRESENTATION_GUIDE.md) outlines the talk, [`SLIDE_CONTENT_GUIDE.md`](SLIDE_CONTENT_GUIDE.md) provides the 25 slide contents and speaker notes, and [`POWERPOINT_BUILD_GUIDE.md`](POWERPOINT_BUILD_GUIDE.md) gives the slide order, layouts, diagrams, and preparation work.
 
-## 🚀 Deployment
-
-### Build for production
-```bash
-npm run build
-```
-
-### Deploy to Vercel (recommended)
-```bash
-npm install -g vercel
-vercel
-```
-
-### Deploy to Netlify
-```bash
-npm install -g netlify-cli
-netlify deploy --prod --dir=dist
-```
-
-## 🔗 Environment Variables
-
-Create `.env` file:
-```
-VITE_API_BASE_URL=http://localhost:5000/api
-VITE_APP_NAME=Blis Library
-```
-
-## 📝 Available Scripts
-
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
-
-## 🐛 Debugging
-
-- Open DevTools (F12)
-- Check Network tab for API calls
-- Check Console for errors
-- Check Application > Local Storage for stored tokens
-
-## 📚 Additional Resources
-
-- [React Documentation](https://react.dev)
-- [Vite Documentation](https://vitejs.dev)
-- [Tailwind CSS](https://tailwindcss.com)
-- [React Router](https://reactrouter.com)
-- [Axios Documentation](https://axios-http.com)
-
-## 👥 Contributing
-
-1. Create a feature branch
-2. Make your changes
-3. Submit a pull request
-
-## 📄 License
-
-MIT License - See LICENSE file for details
+The Digital Collections staff workflow supports per-object Dublin Core metadata entry and CSV export. Existing installations need the one-time migration described in [`backend/README.md`](backend/README.md).

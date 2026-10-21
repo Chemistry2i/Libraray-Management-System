@@ -1,4 +1,5 @@
 const pool = require('../config/database');
+const crypto = require('crypto');
 
 const publicAccessClause = `o.is_public = TRUE AND o.rights_assessed = TRUE
   AND o.rights_status <> 'Sensitive - Restricted'
@@ -68,9 +69,9 @@ class DigitalCollectionModel {
     const where = [publicAccessClause];
     const params = [];
     if (filters.search) {
-      where.push('(o.title LIKE ? OR o.creator LIKE ? OR c.title LIKE ?)');
+      where.push('(o.title LIKE ? OR o.creator LIKE ? OR o.dc_subject LIKE ? OR o.dc_description LIKE ? OR c.title LIKE ?)');
       const searchTerm = `%${filters.search}%`;
-      params.push(searchTerm, searchTerm, searchTerm);
+      params.push(searchTerm, searchTerm, searchTerm, searchTerm, searchTerm);
     }
     if (filters.collectionId) {
       where.push('o.collection_id = ?');
@@ -103,7 +104,9 @@ class DigitalCollectionModel {
     );
     const [objects] = await pool.query(
       `SELECT o.object_id, o.collection_id, c.title AS collection_title,
-              o.title, o.creator, o.material_type, o.mime_type, o.file_size,
+              o.title, o.creator, o.dc_identifier, o.dc_date, o.dc_subject,
+              o.dc_description, o.dc_type, o.mime_type AS dc_format, o.dc_language,
+              o.material_type, o.mime_type, o.file_size,
               o.rights_status, o.created_at,
               COALESCE(event_usage.view_count, 0) AS view_count,
               COALESCE(event_usage.download_count, 0) AS download_count
@@ -122,13 +125,17 @@ class DigitalCollectionModel {
       for (const object of objects) {
         const [result] = await connection.query(
           `INSERT INTO digital_objects
-           (collection_id, title, creator, material_type, file_path, original_filename,
+           (collection_id, dc_identifier, title, creator, dc_date, dc_subject, dc_description, dc_type, dc_language,
+            material_type, file_path, original_filename,
             storage_provider, cloudinary_resource_type, cloudinary_version, cloudinary_format,
             mime_type, file_size, rights_status, rights_assessment_notes, rights_assessed,
             is_public, rights_evidence_reference, rights_expires_at, rights_reviewed_by, rights_reviewed_at)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, TRUE, ?, ?, ?, ?, CURRENT_TIMESTAMP)`,
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, TRUE, ?, ?, ?, ?, CURRENT_TIMESTAMP)`,
           [
-            collectionId, object.title, object.creator || null, object.material_type,
+            collectionId, `KCU-DC-${crypto.randomBytes(16).toString('hex')}`,
+            object.title, object.creator || null, object.dc_date || null,
+            object.dc_subject || null, object.dc_description || null, object.dc_type,
+            object.dc_language || null, object.material_type,
             object.file_path, object.original_filename, object.storage_provider || 'local',
             object.cloudinary_resource_type || null, object.cloudinary_version || null,
             object.cloudinary_format || null,
@@ -175,7 +182,8 @@ class DigitalCollectionModel {
 
   static async updateObject(objectId, changes, reviewerId, rightsChanged) {
     const allowedColumns = [
-      'title', 'creator', 'material_type', 'rights_status', 'rights_assessment_notes',
+      'title', 'creator', 'material_type', 'dc_date', 'dc_subject', 'dc_description',
+      'dc_type', 'dc_language', 'rights_status', 'rights_assessment_notes',
       'rights_evidence_reference', 'rights_expires_at', 'is_public',
     ];
     const updates = Object.entries(changes).filter(([key]) => allowedColumns.includes(key));
@@ -317,7 +325,9 @@ class DigitalCollectionModel {
     const [rows] = await pool.query(
             `SELECT c.title AS collection_title, c.selection_criteria,
               c.collection_value, o.object_id, o.title, o.creator,
-              o.material_type, o.original_filename, o.rights_status,
+                    o.dc_identifier, o.dc_date, o.dc_subject, o.dc_description, o.dc_type,
+                    o.mime_type AS dc_format, o.dc_language,
+                    o.material_type, o.original_filename, o.rights_status,
               o.rights_assessment_notes, o.rights_evidence_reference,
               o.rights_expires_at, o.is_public, o.rights_reviewed_at,
               u.email AS reviewer_email, o.created_at

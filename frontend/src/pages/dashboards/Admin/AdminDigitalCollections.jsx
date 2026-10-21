@@ -9,6 +9,7 @@ const materialTypes = [
   'Historical Photograph', 'Newsletter', 'Report', 'Newspaper Clipping',
   'Exam Paper', 'Poster', 'Local-History Document',
 ]
+const dcTypes = ['Collection', 'Dataset', 'Event', 'Image', 'InteractiveResource', 'MovingImage', 'PhysicalObject', 'Service', 'Software', 'Sound', 'StillImage', 'Text']
 
 const rightsStatuses = ['Public Domain', 'Copyrighted - Permitted', 'Sensitive - Restricted']
 const allowedFileTypes = '.pdf,.png,.jpg,.jpeg,.gif,.webp,.bmp,.tif,.tiff,.mp4,.webm,.mov,.m4v,.mp3,.m4a,.wav,.ogg,.aac,.flac,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.odt,.ods,.odp,.txt,.md,.csv,.rtf'
@@ -17,9 +18,21 @@ const acceptedFileName = /\.(pdf|png|jpe?g|gif|webp|bmp|tiff?|mp4|webm|mov|m4v|m
 const emptyCollection = { title: '', description: '', selection_criteria: '', collection_value: '' }
 
 function metadataFor(file) {
+  const dcType = file.type.startsWith('image/')
+    ? 'StillImage'
+    : file.type.startsWith('video/')
+      ? 'MovingImage'
+      : file.type.startsWith('audio/')
+        ? 'Sound'
+        : 'Text'
   return {
     title: file.name.replace(/\.[^.]+$/, ''),
     creator: '',
+    dc_date: '',
+    dc_subject: '',
+    dc_description: '',
+    dc_type: dcType,
+    dc_language: '',
     material_type: materialTypes[0],
     rights_status: rightsStatuses[0],
     rights_assessment_notes: '',
@@ -252,6 +265,11 @@ export default function AdminDigitalCollections() {
     const changes = {
       title: editingObject.title,
       creator: editingObject.creator,
+      dc_date: editingObject.dc_date || null,
+      dc_subject: editingObject.dc_subject || null,
+      dc_description: editingObject.dc_description || null,
+      dc_type: editingObject.dc_type,
+      dc_language: editingObject.dc_language || null,
       material_type: editingObject.material_type,
       is_public: editingObject.is_public,
     }
@@ -391,6 +409,27 @@ export default function AdminDigitalCollections() {
                   <label className="text-xs font-semibold text-gray-600">Creator
                     <input value={metadata[index].creator} onChange={(event) => updateMetadata(index, 'creator', event.target.value)} className="mt-1 w-full rounded border border-gray-300 px-2.5 py-2 text-sm font-normal" />
                   </label>
+                  <label className="text-xs font-semibold text-gray-600">Date <span className="font-normal">(Dublin Core)</span>
+                    <input maxLength={100} value={metadata[index].dc_date} onChange={(event) => updateMetadata(index, 'dc_date', event.target.value)} placeholder="YYYY-MM-DD, circa 1980, or unknown" className="mt-1 w-full rounded border border-gray-300 px-2.5 py-2 text-sm font-normal" />
+                  </label>
+                  <label className="text-xs font-semibold text-gray-600">Dublin Core type
+                    <select value={metadata[index].dc_type} onChange={(event) => updateMetadata(index, 'dc_type', event.target.value)} className="mt-1 w-full rounded border border-gray-300 bg-white px-2.5 py-2 text-sm font-normal">{dcTypes.map((type) => <option key={type} value={type}>{type.replace(/([a-z])([A-Z])/g, '$1 $2')}</option>)}</select>
+                  </label>
+                  <label className="text-xs font-semibold text-gray-600 sm:col-span-2">Subject keywords <span className="font-normal">(separate terms with semicolons)</span>
+                    <input maxLength={4000} value={metadata[index].dc_subject} onChange={(event) => updateMetadata(index, 'dc_subject', event.target.value)} placeholder="e.g. school history; education; Kamuli" className="mt-1 w-full rounded border border-gray-300 px-2.5 py-2 text-sm font-normal" />
+                  </label>
+                  <label className="text-xs font-semibold text-gray-600 sm:col-span-2">Description <span className="font-normal">(factual summary)</span>
+                    <textarea maxLength={60000} rows={2} value={metadata[index].dc_description} onChange={(event) => updateMetadata(index, 'dc_description', event.target.value)} className="mt-1 w-full rounded border border-gray-300 px-2.5 py-2 text-sm font-normal" />
+                  </label>
+                  <label className="text-xs font-semibold text-gray-600">Language <span className="font-normal">(name or code)</span>
+                    <input maxLength={100} value={metadata[index].dc_language} onChange={(event) => updateMetadata(index, 'dc_language', event.target.value)} placeholder="e.g. English or en" className="mt-1 w-full rounded border border-gray-300 px-2.5 py-2 text-sm font-normal" />
+                  </label>
+                  <div className="text-xs font-semibold text-gray-600">Format <span className="font-normal">(detected)</span>
+                    <p className="mt-1 rounded border border-gray-200 bg-gray-50 px-2.5 py-2 font-normal text-gray-700">{file.type || 'Unknown format'}</p>
+                  </div>
+                  <div className="text-xs font-semibold text-gray-600 sm:col-span-2">Identifier
+                    <p className="mt-1 rounded border border-gray-200 bg-gray-50 px-2.5 py-2 font-normal text-gray-500">Assigned automatically after upload</p>
+                  </div>
                   <label className="text-xs font-semibold text-gray-600">Material type
                     <select value={metadata[index].material_type} onChange={(event) => updateMetadata(index, 'material_type', event.target.value)} className="mt-1 w-full rounded border border-gray-300 bg-white px-2.5 py-2 text-sm font-normal">{materialTypes.map((type) => <option key={type}>{type}</option>)}</select>
                   </label>
@@ -507,6 +546,13 @@ export default function AdminDigitalCollections() {
           <div className="grid gap-3 sm:grid-cols-2">
             <label className="text-sm font-semibold text-gray-700">Title<input required maxLength={255} value={editingObject.title} onChange={(event) => setEditingObject({ ...editingObject, title: event.target.value })} className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 font-normal" /></label>
             <label className="text-sm font-semibold text-gray-700">Creator<input maxLength={255} value={editingObject.creator || ''} onChange={(event) => setEditingObject({ ...editingObject, creator: event.target.value })} className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 font-normal" /></label>
+            <label className="text-sm font-semibold text-gray-700">Date<input maxLength={100} value={editingObject.dc_date || ''} onChange={(event) => setEditingObject({ ...editingObject, dc_date: event.target.value })} placeholder="YYYY-MM-DD, circa 1980, or unknown" className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 font-normal" /></label>
+            <label className="text-sm font-semibold text-gray-700">Dublin Core type<select value={editingObject.dc_type || 'Text'} onChange={(event) => setEditingObject({ ...editingObject, dc_type: event.target.value })} className="mt-1 block w-full rounded border border-gray-300 bg-white px-3 py-2 font-normal">{dcTypes.map((type) => <option key={type} value={type}>{type.replace(/([a-z])([A-Z])/g, '$1 $2')}</option>)}</select></label>
+            <label className="text-sm font-semibold text-gray-700 sm:col-span-2">Subject keywords <span className="font-normal">(separate terms with semicolons)</span><input maxLength={4000} value={editingObject.dc_subject || ''} onChange={(event) => setEditingObject({ ...editingObject, dc_subject: event.target.value })} className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 font-normal" /></label>
+            <label className="text-sm font-semibold text-gray-700 sm:col-span-2">Description<textarea maxLength={60000} rows={3} value={editingObject.dc_description || ''} onChange={(event) => setEditingObject({ ...editingObject, dc_description: event.target.value })} className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 font-normal" /></label>
+            <label className="text-sm font-semibold text-gray-700">Language<input maxLength={100} value={editingObject.dc_language || ''} onChange={(event) => setEditingObject({ ...editingObject, dc_language: event.target.value })} placeholder="Language name or code" className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 font-normal" /></label>
+            <div className="text-sm font-semibold text-gray-700">Format<p className="mt-1 rounded border border-gray-200 bg-gray-50 px-3 py-2 font-normal text-gray-600">{editingObject.mime_type}</p></div>
+            <div className="text-sm font-semibold text-gray-700">Identifier<p className="mt-1 rounded border border-gray-200 bg-gray-50 px-3 py-2 font-normal text-gray-600">{editingObject.dc_identifier}</p></div>
             <label className="text-sm font-semibold text-gray-700">Material type<select value={editingObject.material_type} onChange={(event) => setEditingObject({ ...editingObject, material_type: event.target.value })} className="mt-1 block w-full rounded border border-gray-300 bg-white px-3 py-2 font-normal">{materialTypes.map((type) => <option key={type}>{type}</option>)}</select></label>
             <label className="text-sm font-semibold text-gray-700">Rights status<select value={editingObject.rights_status} onChange={(event) => setEditingObject({ ...editingObject, rights_status: event.target.value, ...(event.target.value === 'Sensitive - Restricted' ? { is_public: false } : {}) })} className="mt-1 block w-full rounded border border-gray-300 bg-white px-3 py-2 font-normal">{rightsStatuses.map((status) => <option key={status}>{status}</option>)}</select></label>
             <label className="text-sm font-semibold text-gray-700 sm:col-span-2">Rights assessment notes<textarea required value={editingObject.rights_assessment_notes || ''} onChange={(event) => setEditingObject({ ...editingObject, rights_assessment_notes: event.target.value })} rows={3} className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 font-normal" /></label>

@@ -11,9 +11,15 @@ CREATE TABLE IF NOT EXISTS digital_collections (
 
 CREATE TABLE IF NOT EXISTS digital_objects (
   object_id INT AUTO_INCREMENT PRIMARY KEY,
+  dc_identifier VARCHAR(64) DEFAULT NULL UNIQUE,
   collection_id INT NOT NULL,
   title VARCHAR(255) NOT NULL,
   creator VARCHAR(255),
+  dc_date VARCHAR(100) DEFAULT NULL,
+  dc_subject TEXT,
+  dc_description TEXT,
+  dc_type VARCHAR(100) NOT NULL,
+  dc_language VARCHAR(100) DEFAULT NULL,
   material_type ENUM(
     'Historical Photograph', 'Newsletter', 'Report', 'Newspaper Clipping',
     'Exam Paper', 'Poster', 'Local-History Document'

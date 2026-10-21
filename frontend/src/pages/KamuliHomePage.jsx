@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { ArrowRight, BookOpen, MapPin, Phone, Mail, ChevronDown, Send, UserRound, Tag, MessageSquare } from 'lucide-react'
+import { ArrowRight, BookOpen, MapPin, Phone, Mail, ChevronDown, Send, UserRound, Tag, MessageSquare, Archive, Search, ShieldCheck, Upload } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import { useGSAP } from '@gsap/react'
@@ -156,7 +156,7 @@ export default function KamuliHomePage() {
               <span className="block overflow-hidden"><span className="hero-title-line block">A school library</span></span>
               <span className="block overflow-hidden"><span className="hero-title-line block">for curious minds.</span></span>
             </h1>
-            <p className="hero-copy mt-5 max-w-2xl text-base leading-7 text-white/90 sm:text-lg">Find storybooks, textbooks and learning resources to support every pupil at {SCHOOL_OFFICIAL_NAME}.</p>
+            <p className="hero-copy mt-5 max-w-2xl text-base leading-7 text-white/90 sm:text-lg">Find storybooks, textbooks and learning resources, then explore approved digital collections from {SCHOOL_OFFICIAL_NAME}.</p>
             <div className="hero-actions mt-8 flex flex-wrap gap-3">
               <Link to="/books" className="hero-action inline-flex items-center gap-2 rounded-md bg-white px-5 py-3 text-sm font-bold text-[#12365d] transition-colors hover:bg-amber-100">Explore the library <ArrowRight size={17} /></Link>
               <Link to="/digital-collections" className="hero-action inline-flex items-center gap-2 rounded-md border border-white/70 bg-[#102d4f]/30 px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-white/10">Digital collection</Link>
@@ -211,6 +211,41 @@ export default function KamuliHomePage() {
               <img src={image.src} alt={image.alt} loading="lazy" className="absolute inset-0 size-full object-cover" />
               <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#081a30]/90 to-transparent px-3 pb-3 pt-12 text-sm font-bold text-white">{image.label}</figcaption>
             </figure>)}
+          </div>
+        </div>
+      </motion.section>
+
+      <motion.section {...scrollReveal} aria-labelledby="digital-library-heading" className="border-y border-slate-200 bg-white">
+        <div className="mx-auto w-full max-w-7xl px-5 py-14 sm:px-8 md:py-20">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#a77914]">Our digital library</p>
+            <h2 id="digital-library-heading" className="mt-3 text-3xl font-bold leading-tight text-[#102d4f] sm:text-4xl">School resources and digital collections, together.</h2>
+            <p className="mt-4 text-base leading-7 text-slate-600">Kamuli CU Library brings the book catalogue and a Digital Archive into one library experience. Visitors can discover approved digital items, while authorized staff organize and describe collection files.</p>
+          </div>
+
+          <div className="mt-10 grid gap-6 md:grid-cols-2">
+            <article className="flex flex-col border border-slate-200 bg-[#f4f7fa] p-6 sm:p-8">
+              <div className="flex size-12 items-center justify-center bg-[#173b64] text-white" aria-hidden="true"><Search size={22} /></div>
+              <h3 className="mt-5 text-xl font-bold text-[#102d4f]">For pupils, teachers, and visitors</h3>
+              <p className="mt-3 flex-1 text-sm leading-6 text-slate-600">Search public digital collections, read item descriptions, and preview or download items that have been approved for access.</p>
+              <Link to="/digital-collections" className="mt-6 inline-flex w-fit items-center gap-2 rounded-md bg-[#173b64] px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-[#102d4f]">Explore the Digital Archive <ArrowRight size={16} /></Link>
+            </article>
+
+            <article className="flex flex-col border border-[#d1a93f]/60 bg-[#fffaf0] p-6 sm:p-8">
+              <div className="flex size-12 items-center justify-center bg-[#a77914] text-white" aria-hidden="true"><Archive size={22} /></div>
+              <h3 className="mt-5 text-xl font-bold text-[#102d4f]">For library staff: how a collection is added</h3>
+              <ol className="mt-4 flex-1 space-y-3 text-sm leading-6 text-slate-700">
+                <li className="flex gap-3"><span className="font-bold text-[#a77914]">1.</span><span>Prepare the source material and assess rights and privacy.</span></li>
+                <li className="flex gap-3"><span className="font-bold text-[#a77914]">2.</span><span>Scan or photograph the material with an appropriate tool outside the LMS.</span></li>
+                <li className="flex gap-3"><span className="font-bold text-[#a77914]">3.</span><span>Sign in, create a collection, and upload the resulting digital files.</span></li>
+                <li className="flex gap-3"><span className="font-bold text-[#a77914]">4.</span><span>Enter Dublin Core details, record the rights decision, and set access appropriately.</span></li>
+              </ol>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Link to="/login" className="inline-flex items-center gap-2 rounded-md bg-[#102d4f] px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-[#173b64]"><Upload size={16} /> Staff sign in <ArrowRight size={15} /></Link>
+                <Link to="/digital-collections" className="inline-flex items-center gap-2 px-1 py-3 text-sm font-bold text-[#173b64] transition-colors hover:text-[#a77914]"><ShieldCheck size={16} /> View public collections</Link>
+              </div>
+              <p className="mt-4 border-t border-[#d1a93f]/30 pt-3 text-xs leading-5 text-slate-600">The LMS organizes uploaded files and metadata; it does not perform scanning, OCR, image correction, or preservation backup checks.</p>
+            </article>
           </div>
         </div>
       </motion.section>
