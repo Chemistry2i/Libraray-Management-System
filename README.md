@@ -64,6 +64,6 @@ For more detailed setup and deployment guidance, see [`backend/README.md`](backe
 
 ## Presenting the project
 
-The presentation documents are organized around the Group 2 **Mini Digital Collection** and **Digitization Workflow** assignment. [`PRESENTATION_GUIDE.md`](PRESENTATION_GUIDE.md) outlines the talk, while [`SLIDE_CONTENT_GUIDE.md`](SLIDE_CONTENT_GUIDE.md) provides slide-ready text, tables, evidence prompts, and a checklist.
+The presentation documents are organized around the Group 2 **Mini Digital Collection** and **Digitization Workflow** assignment. [`PRESENTATION_GUIDE.md`](PRESENTATION_GUIDE.md) outlines the talk, [`SLIDE_CONTENT_GUIDE.md`](SLIDE_CONTENT_GUIDE.md) provides the 25 slide contents and speaker notes, and [`POWERPOINT_BUILD_GUIDE.md`](POWERPOINT_BUILD_GUIDE.md) gives the slide order, layouts, diagrams, and preparation work.
 
 The Digital Collections staff workflow supports per-object Dublin Core metadata entry and CSV export. Existing installations need the one-time migration described in [`backend/README.md`](backend/README.md).

@@ -1,6 +1,6 @@
 # Group 2 Presentation Guide
 
-This guide helps your group turn the assignment into a clear PowerPoint and deliver it confidently. Use [SLIDE_CONTENT_GUIDE.md](./SLIDE_CONTENT_GUIDE.md) for copy-ready slide text, visual suggestions, sample tables, and speaker notes.
+This guide helps your group turn the assignment into a clear PowerPoint and deliver it confidently. Use [SLIDE_CONTENT_GUIDE.md](./SLIDE_CONTENT_GUIDE.md) for copy-ready slide text and speaker notes, and [POWERPOINT_BUILD_GUIDE.md](./POWERPOINT_BUILD_GUIDE.md) for the exact slide order, layouts, diagrams, visuals, and preparation work.
 
 ## Your presentation in one sentence
 
@@ -35,28 +35,26 @@ The LMS does **not** perform or verify the group's physical visit, scanning/phot
 
 The slide guide now contains **exactly 25 main slides**. It follows the example's broad sequence: school/course title, group members, assignment question, project title, introduction, importance, topic sections, system capabilities and limitations, and conclusion. The content is adapted to your digital collection assignment rather than copied from the example.
 
-There are 12 presenters. Presenter 1 has three short opening slides; Presenters 2–12 each have two related slides. Allow about 15–20 minutes for the full deck, or shorten each speaker's explanation to meet the instructor's limit.
+There are **10 presenters and 25 slides**. Keep all 25 slides. Presenters 1–5 each cover three related slides; Presenters 6–10 each cover two related slides. Allow about 15–20 minutes for the full deck, or shorten explanations to meet the instructor's limit.
 
 | Presenter | Slides | Speaking role |
 |---|---:|---|
 | 1 | 1–3 | School/course title, group list, assignment prompt |
-| 2 | 4–5 | Project title and introduction |
-| 3 | 6–7 | Collection importance and Digital Archive link |
-| 4 | 8–9 | Assignment objectives and collection scope |
-| 5 | 10–11 | Selection criteria and collection value |
-| 6 | 12–13 | Rights assessment and workflow overview |
-| 7 | 14–15 | Source preparation and capture |
-| 8 | 16–17 | Image/OCR work, QC, and filenames |
-| 9 | 18–19 | Metadata approach and Dublin Core elements |
-| 10 | 20–21 | Sample record and LMS metadata workflow |
-| 11 | 22–23 | Masters, access copies, storage, and backup |
-| 12 | 24–25 | LMS capabilities, limitations, and conclusion |
+| 2 | 4–6 | Project title, introduction, importance |
+| 3 | 7–9 | LMS access, objectives, collection scope |
+| 4 | 10–12 | Selection, collection value, rights |
+| 5 | 13–15 | Workflow, preparation, capture |
+| 6 | 16–17 | Image work, OCR, quality control, naming |
+| 7 | 18–19 | Metadata approach and Dublin Core elements |
+| 8 | 20–21 | Example record and LMS metadata workflow |
+| 9 | 22–23 | Masters, storage, backup, and access |
+| 10 | 24–25 | LMS capabilities, limitations, and conclusion |
 
 Give each slide one clear message. Use tables where they help compare rights decisions, metadata, storage arrangements, or system support. Use a contact sheet for objects and arrows for workflows rather than dense paragraphs.
 
 ## Making the PowerPoint
 
-1. Follow the 25-slide sequence in the slide-content guide. It is structured for 12 presenters and follows the reference's academic presentation flow.
+1. Follow the 25-slide sequence in the slide-content guide. It follows the reference's academic presentation flow and keeps the full slide count for your 10-member group.
 2. Replace every bracketed prompt with verified group information. If something is unknown, say so instead of guessing.
 3. Use short phrases on the slides. Put explanations and examples in the speaker notes; each speaker should explain one key point and one concrete example, not read a paragraph aloud.
 4. Use large, readable text and a consistent font, colour palette, and layout. Avoid paragraphs, tiny tables, and crowded screenshots.
@@ -74,9 +72,9 @@ Give each slide one clear message. Use tables where they help compare rights dec
 
 ## Rehearsal and delivery
 
-- Assign slide ranges as shown in the guide. Practise the handover between each presenter.
+- Assign slide ranges to all 10 presenters as shown above. Practise the handover between each presenter.
 - Rehearse the whole deck with a timer; target 15–20 minutes or the instructor's limit.
-- Presenter 1 should keep the opening slides brief. Other presenters should use their two slides to explain a topic and give one real example.
+- Presenters 1–5 should use their three slides to introduce or explain one connected topic. Presenters 6–10 should use their two slides to explain their topic and one real example.
 - If the limit is shorter, reduce repeated wording and keep each presenter's turn; do not remove assignment requirements.
 - Practise the LMS demonstration on the device and network you expect to use.
 - Prepare screenshots as a backup and check that every shown object is approved for presentation.
@@ -93,6 +91,6 @@ Give each slide one clear message. Use tables where they help compare rights dec
 - [ ] File naming, master/access copies, storage, backup, and preservation are addressed.
 - [ ] Planned work is labelled planned; unverified backup is not described as verified.
 - [ ] The LMS feature claims match the implemented system.
-- [ ] There are exactly 25 main slides and the 12 presenter slide ranges are assigned.
+- [ ] There are exactly 25 main slides and all 10 presenter slide ranges are assigned.
 - [ ] The slides are readable, visual, credited, and within the time limit.
 - [ ] The presentation and backup screenshots contain no sensitive or unapproved material.

@@ -6,26 +6,24 @@ This guide follows the structure of the provided presentation example: instituti
 
 **Institution:** Kamuli CU Library, Kamuli Church of Uganda Primary School
 **Suggested duration:** 15–20 minutes; rehearse to match the instructor's limit.
-**Presenters:** 12; suggested slide distribution is listed below.
+**Presenters:** 10; all 25 slides remain in the deck. The slide distribution below gives five presenters three slides and five presenters two slides.
 
 ## Suggested presenter allocation
 
 | Presenter | Slides | Topic |
 |---|---:|---|
 | 1 | 1–3 | Institutional title, group members, assignment question |
-| 2 | 4–5 | Project title and introduction |
-| 3 | 6–7 | Importance of the collection and LMS link |
-| 4 | 8–9 | Assignment objectives and collection scope |
-| 5 | 10–11 | Selection criteria and collection value |
-| 6 | 12–13 | Rights assessment and workflow overview |
-| 7 | 14–15 | Source preparation and capture |
-| 8 | 16–17 | Image work, OCR, quality control, and naming |
-| 9 | 18–19 | Metadata approach and required elements |
-| 10 | 20–21 | Example record and metadata in the LMS |
-| 11 | 22–23 | Masters, access copies, storage, and backup |
-| 12 | 24–25 | LMS capabilities, limitations, and conclusion |
+| 2 | 4–6 | Project title, introduction, importance |
+| 3 | 7–9 | LMS access, objectives, collection scope |
+| 4 | 10–12 | Selection, collection value, rights |
+| 5 | 13–15 | Workflow, source preparation, capture |
+| 6 | 16–17 | Image work, OCR, quality control, naming |
+| 7 | 18–19 | Metadata approach and Dublin Core elements |
+| 8 | 20–21 | Example record and metadata in the LMS |
+| 9 | 22–23 | Masters, access copies, storage, and backup |
+| 10 | 24–25 | LMS capabilities, limitations, and conclusion |
 
-Presenter 1 has three brief opening slides; the other presenters have two topic slides each. Allow about 45–60 seconds per person and keep the opening slides concise.
+Presenters 1–5 have three related slides each; Presenters 6–10 have two related slides each. Allow about 60–90 seconds for a three-slide section and 45–60 seconds for a two-slide section. Keep slide text concise and explain one concrete example.
 
 ## Before building the deck
 
@@ -68,10 +66,8 @@ Presenter 1 has three brief opening slides; the other presenters have two topic 
 > 8. [Presenter name]
 > 9. [Presenter name]
 > 10. [Presenter name]
-> 11. [Presenter name]
-> 12. [Presenter name]
 
-**Visual:** Names in two columns. Add student numbers only if the instructor requires them; do not display unnecessary personal information.
+**Visual:** List the ten members in two columns. Add student numbers only if the instructor requires them; do not display unnecessary personal information.
 
 **Presenter 1 notes:** “These are the members of Group 2. Each member will present a section of the project.”
 
@@ -146,7 +142,7 @@ Use only benefits that make sense for your chosen collection.
 
 **Visual:** Four icons or one approved object with short benefit labels.
 
-**Presenter 3 notes:** “Our collection matters because [specific reason]. It may help [learners/community/researchers] to [specific use]. We are describing potential value, not claiming measured impact unless we have evidence.”
+**Presenter 2 notes:** “Our collection matters because [specific reason]. It may help [learners/community/researchers] to [specific use]. We are describing potential value, not claiming measured impact unless we have evidence.”
 
 **Table:** No.
 
@@ -180,7 +176,7 @@ Use only benefits that make sense for your chosen collection.
 
 **Visual:** Numbered objectives or a simple checklist.
 
-**Presenter 4 notes:** “These objectives translate the assignment into work we can carry out and show evidence for. We will state our actual progress against them; a system feature does not replace a required group activity.”
+**Presenter 3 notes:** “These objectives translate the assignment into work we can carry out and show evidence for. We will state our actual progress against them; a system feature does not replace a required group activity.”
 
 **Table:** No.
 
@@ -196,7 +192,7 @@ Use only benefits that make sense for your chosen collection.
 
 **Visual:** Scope diagram or approved contact sheet. Do not show restricted or pending items.
 
-**Presenter 4 notes:** “Our collection covers [scope]. The materials come from [source, if verified]. We currently have [number] objects. If our count is outside the target or some items remain pending, we will explain that honestly.”
+**Presenter 3 notes:** “Our collection covers [scope]. The materials come from [source, if verified]. We currently have [number] objects. If our count is outside the target or some items remain pending, we will explain that honestly.”
 
 **Table:** No.
 
@@ -214,7 +210,7 @@ Use only benefits that make sense for your chosen collection.
 
 **Visual:** Selection funnel: **candidate materials → criteria → selected objects**.
 
-**Presenter 5 notes:** “We used these criteria to make the collection focused and responsible. For example, we selected [verified example] because [reason]. We set aside [category] because [rights, privacy, condition, or relevance].”
+**Presenter 4 notes:** “We used these criteria to make the collection focused and responsible. For example, we selected [verified example] because [reason]. We set aside [category] because [rights, privacy, condition, or relevance].”
 
 **Table:** No. A funnel or short list is easier to read.
 
@@ -229,7 +225,7 @@ Use only benefits that make sense for your chosen collection.
 
 **Visual:** Contact sheet of cleared examples, labelled with brief object identifiers.
 
-**Presenter 5 notes:** “These material types fit our collection because [reason]. They may be useful to [audience] for [specific purpose]. We avoid claiming an audience or impact that we have not confirmed.”
+**Presenter 4 notes:** “These material types fit our collection because [reason]. They may be useful to [audience] for [specific purpose]. We avoid claiming an audience or impact that we have not confirmed.”
 
 **Table:** Optional. A simple materials-to-use diagram is usually clearer.
 
@@ -247,7 +243,7 @@ Add: **Record source, reviewer, evidence, and access decision for each object.**
 
 **Visual:** Check, lock, and question-mark icons. Do not show private evidence or identifiable sensitive records.
 
-**Presenter 6 notes:** “We checked source, creator, copyright, and privacy before deciding how each object could be used. Possession or online availability is not automatically permission. Items with unclear rights or sensitive personal information remain restricted while we seek guidance.”
+**Presenter 4 notes:** “We checked source, creator, copyright, and privacy before deciding how each object could be used. Possession or online availability is not automatically permission. Items with unclear rights or sensitive personal information remain restricted while we seek guidance.”
 
 **Table:** Yes. Keep it compact.
 
@@ -261,7 +257,7 @@ Add a small label: **Work completed:** [steps] · **Still planned:** [steps]
 
 **Visual:** Horizontal workflow with a clear status marker for completed and pending steps.
 
-**Presenter 6 notes:** “This is the workflow from source material to access. The group is responsible for documenting each step. We will distinguish the software's metadata and access features from capture, image processing, OCR, quality control, and preservation work done separately.”
+**Presenter 5 notes:** “This is the workflow from source material to access. The group is responsible for documenting each step. We will distinguish the software's metadata and access features from capture, image processing, OCR, quality control, and preservation work done separately.”
 
 **Table:** No. Use arrows.
 
@@ -280,7 +276,7 @@ Add: **Our preparation method:** [What your group actually did]
 
 **Visual:** Approved preparation photo or a simple checklist. Do not show restricted originals.
 
-**Presenter 7 notes:** “We prepared the objects by [actual steps]. We recorded [source/identifier/condition] and arranged the materials so files could be matched back to their originals. Any handling requirements or steps not completed are [details].”
+**Presenter 5 notes:** “We prepared the objects by [actual steps]. We recorded [source/identifier/condition] and arranged the materials so files could be matched back to their originals. Any handling requirements or steps not completed are [details].”
 
 **Table:** No.
 
@@ -295,7 +291,7 @@ Add: **Our preparation method:** [What your group actually did]
 
 **Visual:** Permission-cleared equipment/setup photo or diagram.
 
-**Presenter 7 notes:** “We captured [objects] using [equipment and method]. We used [settings, if recorded] and took care to [alignment, lighting, handling]. We keep the capture files linked to their source objects. The LMS does not scan or photograph physical materials.”
+**Presenter 5 notes:** “We captured [objects] using [equipment and method]. We used [settings, if recorded] and took care to [alignment, lighting, handling]. We keep the capture files linked to their source objects. The LMS does not scan or photograph physical materials.”
 
 **Table:** No.
 
@@ -309,7 +305,7 @@ Add: **Our preparation method:** [What your group actually did]
 
 **Visual:** Approved before/after example or a small OCR excerpt with private information removed.
 
-**Presenter 8 notes:** “We applied [specific correction] to [file/copy]. For suitable text, we used [OCR tool/language] and checked the output. We did not alter the master if that is what your group did. If a step was not completed, explain why rather than implying it happened.”
+**Presenter 6 notes:** “We applied [specific correction] to [file/copy]. For suitable text, we used [OCR tool/language] and checked the output. We did not alter the master if that is what your group did. If a step was not completed, explain why rather than implying it happened.”
 
 **Table:** No. A before/after visual works better.
 
@@ -325,7 +321,7 @@ Add one actual filename if available: `[verified filename]`.
 
 **Visual:** QC checklist beside one filename with each part highlighted.
 
-**Presenter 8 notes:** “We checked [criteria] and recorded [pass/fix/pending]. Where OCR was used, we checked [method]. Our filename pattern links the file to its identifier and role. The LMS retains uploaded filenames but does not enforce this convention.”
+**Presenter 6 notes:** “We checked [criteria] and recorded [pass/fix/pending]. Where OCR was used, we checked [method]. Our filename pattern links the file to its identifier and role. The LMS retains uploaded filenames but does not enforce this convention.”
 
 **Table:** No.
 
@@ -344,7 +340,7 @@ Add: **One complete Dublin Core record is needed for every object.**
 
 **Visual:** A digital object linked to a metadata card.
 
-**Presenter 9 notes:** “Metadata makes a digital object easier to identify, understand, search for, and manage. We create a separate record for every object. We use Dublin Core elements requested in the assignment and mark unknown facts honestly.”
+**Presenter 7 notes:** “Metadata makes a digital object easier to identify, understand, search for, and manage. We create a separate record for every object. We use Dublin Core elements requested in the assignment and mark unknown facts honestly.”
 
 **Table:** No.
 
@@ -366,7 +362,7 @@ Add: **One complete Dublin Core record is needed for every object.**
 
 **Visual:** Use a simple metadata card or small table. Keep text large enough to read.
 
-**Presenter 9 notes:** “These are the metadata fields named in our assignment. Title and Creator use existing object fields in the LMS. Staff enter the other descriptive values; the LMS assigns an identifier and uses the uploaded file's MIME type for Format.”
+**Presenter 7 notes:** “These are the metadata fields named in our assignment. Title and Creator use existing object fields in the LMS. Staff enter the other descriptive values; the LMS assigns an identifier and uses the uploaded file's MIME type for Format.”
 
 **Table:** Yes. This slide is a field reference.
 
@@ -388,7 +384,7 @@ Use one actual, permission-cleared object. The example below is a template, not 
 
 **Visual:** Recreated metadata card or a safe screenshot. Hide private details.
 
-**Presenter 10 notes:** “This is one record from our collection. We checked the values against [source/evidence]. Where a fact is unknown, we state that rather than guessing. Every other object has its own record.”
+**Presenter 8 notes:** “This is one record from our collection. We checked the values against [source/evidence]. Where a fact is unknown, we state that rather than guessing. Every other object has its own record.”
 
 **Table:** Yes. Show one record only.
 
@@ -402,7 +398,7 @@ Use one actual, permission-cleared object. The example below is a template, not 
 
 **Visual:** Screenshot sequence: staff form → saved record → CSV export. Use only test or approved material and hide account details.
 
-**Presenter 10 notes:** “The Digital Collections workflow stores per-object metadata. Staff enter Date, Subject, Description, Type, and Language; Title and Creator use existing fields. Identifier is assigned by the system, Format comes from the uploaded file's MIME type, and staff can export records to CSV.”
+**Presenter 8 notes:** “The Digital Collections workflow stores per-object metadata. Staff enter Date, Subject, Description, Type, and Language; Title and Creator use existing fields. Identifier is assigned by the system, Format comes from the uploaded file's MIME type, and staff can export records to CSV.”
 
 **Table:** No. Use screenshots or a simple workflow.
 
@@ -417,7 +413,7 @@ Use one actual, permission-cleared object. The example below is a template, not 
 
 **Visual:** One object identifier connecting a master file to an access copy.
 
-**Presenter 11 notes:** “A master is retained as the preservation version, while an access copy is prepared for convenient use. Our actual arrangements are [details]. The LMS stores files for delivery but does not automatically create, label, or preserve master and derivative versions.”
+**Presenter 9 notes:** “A master is retained as the preservation version, while an access copy is prepared for convenient use. Our actual arrangements are [details]. The LMS stores files for delivery but does not automatically create, label, or preserve master and derivative versions.”
 
 **Table:** Yes. Use actual arrangements or clearly label them planned.
 
@@ -435,7 +431,7 @@ Use one actual, permission-cleared object. The example below is a template, not 
 
 **Visual:** **Master → separate backup** and **Access copy → public/controlled access**.
 
-**Presenter 11 notes:** “Our files are stored at [location]. The backup is [completed/planned/not yet verified]. We verified restoration by [method/date], or have not verified it. Hosting an object on the LMS is not, by itself, proof of a preservation plan or verified backup.”
+**Presenter 9 notes:** “Our files are stored at [location]. The backup is [completed/planned/not yet verified]. We verified restoration by [method/date], or have not verified it. Hosting an object on the LMS is not, by itself, proof of a preservation plan or verified backup.”
 
 **Table:** Yes. Be precise about what is implemented versus planned.
 
@@ -454,7 +450,7 @@ Footer: **QR-code generation/scanning is not implemented and is not required by 
 
 **Visual:** Two-column comparison. Keep the distinction easy to see.
 
-**Presenter 12 notes:** “The LMS supports organization, rights information, metadata, and access to approved objects. The group still performs and documents the visit, capture, processing, OCR, quality control, naming, and preservation activities. We do not claim the website provides features that are not implemented.”
+**Presenter 10 notes:** “The LMS supports organization, rights information, metadata, and access to approved objects. The group still performs and documents the visit, capture, processing, OCR, quality control, naming, and preservation activities. We do not claim the website provides features that are not implemented.”
 
 **Table:** Yes. It directly compares system support with assignment work.
 
@@ -476,16 +472,16 @@ Small references/credits:
 
 **Visual:** Approved collection image, simple contact sheet, or collection-to-access diagram.
 
-**Presenter 12 notes:** “To conclude, our group [briefly state what was actually completed]. The collection is valuable because [specific value]. Our most important lesson is [lesson], and our next step is [action]. Thank you for listening. We are ready for questions.”
+**Presenter 10 notes:** “To conclude, our group [briefly state what was actually completed]. The collection is valuable because [specific value]. Our most important lesson is [lesson], and our next step is [action]. Thank you for listening. We are ready for questions.”
 
 **Table:** No.
 
 ## Final slide check
 
 - [ ] There are exactly 25 main slides.
-- [ ] Slide 1 identifies the school/course/project; Slide 2 lists all 12 group members; Slide 3 summarizes the assignment prompt.
+- [ ] Slide 1 identifies the school/course/project; Slide 2 lists all 10 group members; Slide 3 summarizes the assignment prompt.
 - [ ] Visit, permissions, object count, workflow, and preservation claims are true and evidenced.
 - [ ] Every object has its Dublin Core record; unknown details are not guessed.
 - [ ] Tables are used for rights, metadata, master/access comparison, storage, and system status only where useful.
 - [ ] Public screenshots and images contain no sensitive or unapproved material.
-- [ ] Group members know their slide ranges and handovers; the full deck has been timed.
+- [ ] All 10 members know their slide ranges and handovers; the full deck has been timed.
