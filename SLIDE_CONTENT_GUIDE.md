@@ -1,358 +1,491 @@
-# PowerPoint Slide Content Guide
+# Group 2 — Mini Digital Collection: 25-Slide PowerPoint Guide
 
-This document is a ready-to-build companion to the [presentation guide](PRESENTATION_GUIDE.md). It gives you copy-ready slide text, visual ideas, links, and advice about when to use tables.
+This guide follows the structure of the provided presentation example: institutional cover, group members, assignment question, project title, introduction, importance, focused topic slides, system discussion, limitations, and conclusion. It adapts that structure to the Group 2 mini digital collection assignment.
 
-## Before building the slides
+**Exactly 25 main slides are listed below.** Do not add a separate cover slide unless your instructor permits a 26th slide. Replace every `[bracketed prompt]` with information your group has verified. Do not claim work that has not happened.
 
-- Replace **[Your name]**, **[Course/class]**, and **[Date]** with your details.
-- Use screenshots of the project itself wherever possible. The repository does not include presentation screenshots, so capture them from the running website.
-- Check that the live website works before putting its link in your slides: [https://kamuli-cu.vercel.app](https://kamuli-cu.vercel.app). If it is unavailable, use screenshots or run the project locally instead.
-- Use only public, approved sample archive items in screenshots or a live demonstration. Do not show real passwords, private member information, or restricted files.
-- This is an educational exercise. Avoid inventing results, user feedback, or statistics.
-- Some services require a signed-in account. Test each screen before the presentation; public pages and member-dashboard pages are not the same.
+**Institution:** Kamuli CU Library, Kamuli Church of Uganda Primary School
+**Suggested duration:** 15–20 minutes; rehearse to match the instructor's limit.
+**Presenters:** 12; suggested slide distribution is listed below.
 
-## Suggested presentation structure
+## Suggested presenter allocation
 
-Eight slides should fit a presentation of about 5–8 minutes. Keep slide text brief; use the speaker notes to explain the detail.
+| Presenter | Slides | Topic |
+|---|---:|---|
+| 1 | 1–3 | Institutional title, group members, assignment question |
+| 2 | 4–5 | Project title and introduction |
+| 3 | 6–7 | Importance of the collection and LMS link |
+| 4 | 8–9 | Assignment objectives and collection scope |
+| 5 | 10–11 | Selection criteria and collection value |
+| 6 | 12–13 | Rights assessment and workflow overview |
+| 7 | 14–15 | Source preparation and capture |
+| 8 | 16–17 | Image work, OCR, quality control, and naming |
+| 9 | 18–19 | Metadata approach and required elements |
+| 10 | 20–21 | Example record and metadata in the LMS |
+| 11 | 22–23 | Masters, access copies, storage, and backup |
+| 12 | 24–25 | LMS capabilities, limitations, and conclusion |
 
----
+Presenter 1 has three brief opening slides; the other presenters have two topic slides each. Allow about 45–60 seconds per person and keep the opening slides concise.
 
-## Slide 1 — Title
+## Before building the deck
 
-**Title**
-
-> Kamuli CU Library Management System
-
-**Subtitle**
-
-> Kamuli Church of Uganda Primary School  
-> Exploring library services and digital collections
-
-**Footer**
-
-> Presented by [Your name] · [Course/class] · [Date]
-
-**Image**
-
-Use one strong image: preferably a screenshot of the home page, or a library/books image with a small digital-books or archive motif. Avoid a collage of unrelated pictures.
-
-**Speaker notes**
-
-> “This is my Kamuli CU Library system exercise for Kamuli Church of Uganda Primary School. I explored how a website can bring everyday library services together with a digital archive for materials that are already digitized.”
-
-**Table?** No. Keep the title slide uncluttered.
+- Confirm the actual collection title, visit details, source, object count, contributors, and permission conditions.
+- Complete a rights/privacy check before digitizing or sharing materials.
+- Use only images and records cleared for presentation. Do not show restricted content or private rights evidence.
+- Label incomplete work as **planned**, **in progress**, or **not completed**.
+- The LMS supports collection management, upload, rights information, public/private controls, public search, preview/download, and per-object Dublin Core fields. It does not scan, edit images, perform OCR or quality checks, manage preservation masters, verify backups, or generate/scan QR codes.
 
 ---
 
-## Slide 2 — Why does this matter?
+## Slide 1 — Institutional title
 
-**Title**
+**Put on the slide**
 
-> Why make library resources easier to find?
+> **KAMULI CHURCH OF UGANDA PRIMARY SCHOOL**
+> **Kamuli CU Library**
+> Library Automation and Digitization
+> Group 2 — Mini Digital Collection
+> [Course / class] · [Presentation date]
 
-**Text to put on the slide**
+**Visual:** School/library badge or one permission-cleared collection image. Keep the title large and simple.
 
-> People need a clear way to discover books and learning materials.  
-> Staff need a manageable way to organize library resources.  
-> Digitized local materials can be easier to discover when they are described and grouped.
+**Presenter 1 notes:** “Good [morning/afternoon]. We are Group 2 from Kamuli CU Library at Kamuli Church of Uganda Primary School. We are presenting our mini digital collection for the Library Automation and Digitization assignment.”
 
-**Image**
+**Table:** No.
 
-Use a simple “searching for a resource” illustration, or a two-part visual: a paper/file icon on one side and a searchable digital collection on the other. Keep the image illustrative; do not suggest that the app scans physical documents.
+## Slide 2 — Group members
 
-**Speaker notes**
+**Put on the slide**
 
-> “The importance of the project is the problem it explores: finding and organizing resources. A digital catalogue and archive can provide another way to discover materials. This presentation describes the purpose of the exercise, not measured results from a real library deployment.”
+> **GROUP 2**
+> 1. [Presenter name]
+> 2. [Presenter name]
+> 3. [Presenter name]
+> 4. [Presenter name]
+> 5. [Presenter name]
+> 6. [Presenter name]
+> 7. [Presenter name]
+> 8. [Presenter name]
+> 9. [Presenter name]
+> 10. [Presenter name]
+> 11. [Presenter name]
+> 12. [Presenter name]
 
-**Table?** No. Three short statements with small icons are easier to read.
+**Visual:** Names in two columns. Add student numbers only if the instructor requires them; do not display unnecessary personal information.
 
----
+**Presenter 1 notes:** “These are the members of Group 2. Each member will present a section of the project.”
 
-## Slide 3 — What did I set out to explore?
+**Table:** No. Use two columns of names.
 
-**Title**
+## Slide 3 — Assignment question
 
-> One library system, with tools for different needs
+**Put on the slide**
 
-**Text to put on the slide**
-
-> **Find books** — search the catalogue and check book details and availability
+> **Group 2 — Build a Mini Digital Collection**
 >
-> **Manage borrowing** — send a borrow request, reserve a book, and track activity
+> - Select approximately 10–15 digital objects.
+> - Assess rights before digitization and sharing.
+> - Explain selection criteria and collection value.
+> - Complete and describe the digitization workflow.
+> - Create Dublin Core metadata for each object.
+> - Explain storage, preservation, backup, and access.
+
+Add a small footer: **Based on the Group 2 assignment brief.**
+
+**Visual:** Six simple icons representing objects, rights, workflow, metadata, preservation, and access.
+
+**Presenter 1 notes:** “This is the assignment question in summary. Our presentation follows these requirements. We will report what our group actually completed and clearly identify any remaining work.”
+
+**Table:** No.
+
+## Slide 4 — Project title
+
+**Put on the slide**
+
+> **BUILDING A MINI DIGITAL COLLECTION**
+> **[Your collection title]**
+> A Group 2 digitization exercise using Kamuli CU Library's Digital Archive
+
+**Visual:** One approved object or a small contact sheet. If you do not yet have an approved item, use a neutral illustration.
+
+**Presenter 2 notes:** “Our project is titled [title]. It focuses on [topic/material type]. The collection is an exercise in selecting, digitizing, describing, and providing appropriate access to a small group of materials.”
+
+**Table:** No.
+
+## Slide 5 — Introduction
+
+**Put on the slide**
+
+> A mini digital collection brings selected digital objects together around a clear topic.
+> Each object should be:
 >
-> **Discover digital materials** — search, preview, and download public archive items
+> - Selected for a reason
+> - Rights-checked
+> - Digitized and quality-checked
+> - Described with metadata
+> - Stored and shared appropriately
 
-**Image / diagram**
+**Visual:** Simple flow: **Source materials → digital objects → organized collection → discovery**.
 
-Use three simple feature cards with a screenshot crop or icon for each: book search, borrowing/reservations, and the Digital Archive. Keep this slide as an overview; the archive gets its own detail slide next.
+**Presenter 2 notes:** “A digital collection is more than a folder of scanned files. It combines carefully selected objects with rights information, consistent descriptions, quality checks, and an access plan. Our system can help organize and describe objects, while the group completes the capture and preservation tasks.”
 
-Optional small footer:
+**Table:** No.
 
-> Staff tools also support book and category management, borrowing workflows, and digital collections.
+## Slide 6 — Importance of a mini digital collection
 
-**Speaker notes**
+**Put on the slide**
 
-> “The system includes a searchable book catalogue, member borrowing and reservation tools, and a public Digital Archive. Staff also have pages to manage books, categories, borrowing, and collections. Some actions require a member or staff account.”
+> A well-planned collection can:
+>
+> - Preserve and document local or institutional history.
+> - Make approved materials easier to discover.
+> - Support teaching, learning, and research.
+> - Connect digital objects to useful descriptions.
 
-**Table?** No. Use three feature cards; this is an overview, not a comparison.
+Use only benefits that make sense for your chosen collection.
 
----
+**Visual:** Four icons or one approved object with short benefit labels.
 
-## Slide 4 — The Digital Archive
+**Presenter 3 notes:** “Our collection matters because [specific reason]. It may help [learners/community/researchers] to [specific use]. We are describing potential value, not claiming measured impact unless we have evidence.”
 
-**Title**
+**Table:** No.
 
-> The digital highlight: a searchable archive
+## Slide 7 — Importance continued: access through the LMS
 
-**Text to put on the slide**
+**Put on the slide**
 
-> Staff organize digitized files into collections.  
-> They add details such as title, creator, and material type.  
-> They review rights and decide whether an item can be public.  
-> Visitors can search, filter, preview, and download public items.
+> **Kamuli CU Library:** [https://kamuli-cu.vercel.app](https://kamuli-cu.vercel.app)
+> **Digital Archive:** [https://kamuli-cu.vercel.app/digital-collections](https://kamuli-cu.vercel.app/digital-collections)
+>
+> Approved public objects can be searched, previewed, and downloaded through the Digital Archive.
 
-**Image**
+**Visual:** Screenshot of the public archive showing only approved material. Check the link before presenting.
 
-Use a screenshot of the public Digital Archive page. If possible, crop it to show:
+**Presenter 3 notes:** “The Digital Archive provides an online route to approved public objects. Access depends on the item's rights and privacy status. The website does not create the digitized objects or prove that the collection has a preservation backup.”
 
-- the archive heading;
-- search and collection filters; and
-- one or two sample item cards.
+**Table:** No.
 
-Add short callout labels such as “Search,” “Choose a collection,” and “Preview an item.” Do not cover important page content with labels.
+## Slide 8 — Assignment objectives
 
-**Speaker notes**
+**Put on the slide**
 
-> “The archive is a key part of the digital focus. It organizes files that already exist in digital form. It does not scan physical books or paper records. Staff review access before making an item public.”
+> **Our objectives**
+>
+> 1. Visit and learn from a library or records centre with digitization services.
+> 2. Build a mini collection of approximately 10–15 suitable objects.
+> 3. Assess rights and explain selection decisions.
+> 4. Complete and quality-check the digitization workflow.
+> 5. Create a Dublin Core record for every object.
+> 6. Explain storage, backup, preservation, and access.
 
-**Table?** No. A large, readable screenshot is more persuasive.
+**Visual:** Numbered objectives or a simple checklist.
 
----
+**Presenter 4 notes:** “These objectives translate the assignment into work we can carry out and show evidence for. We will state our actual progress against them; a system feature does not replace a required group activity.”
 
-## Slide 5 — From digitized file to discovery
+**Table:** No.
 
-**Title**
+## Slide 9 — Collection scope and overview
 
-> How an archive item becomes discoverable
+**Put on the slide**
 
-**Text to put on the slide**
+> **Collection:** [Title]
+> **Topic:** [Subject]
+> **Date range:** [Verified dates or unknown]
+> **Source:** [Institution/person/collection, if approved to name]
+> **Current object count:** [Actual count; target is approximately 10–15]
 
-Show these four steps in order:
+**Visual:** Scope diagram or approved contact sheet. Do not show restricted or pending items.
 
-> **1. Create a collection** → **2. Add a digitized file and details** → **3. Review rights and access** → **4. Visitor finds a public item**
+**Presenter 4 notes:** “Our collection covers [scope]. The materials come from [source, if verified]. We currently have [number] objects. If our count is outside the target or some items remain pending, we will explain that honestly.”
 
-Optional small subtitle:
+**Table:** No.
 
-> Only files approved for public access appear in the public archive.
+## Slide 10 — Selection criteria
 
-**Image / diagram**
+**Put on the slide**
 
-Use four simple icons or PowerPoint shapes: folder, file with label, shield/check, magnifying glass. A horizontal process arrow works well.
+> **We selected objects that:**
+>
+> - Relate directly to [collection topic/date range].
+> - Have a known source or provenance.
+> - Can be digitized with appropriate permission.
+> - Can be described accurately.
+> - Are suitable for the intended access level.
 
-**Speaker notes**
+**Visual:** Selection funnel: **candidate materials → criteria → selected objects**.
 
-> “This is the basic journey through the archive. Staff organize the collection, describe each file, and document a rights review. Then visitors can find items that staff have made public.”
+**Presenter 5 notes:** “We used these criteria to make the collection focused and responsible. For example, we selected [verified example] because [reason]. We set aside [category] because [rights, privacy, condition, or relevance].”
 
-**Table?** No. A numbered process is easier to follow than a table.
+**Table:** No. A funnel or short list is easier to read.
 
----
+## Slide 11 — Collection value and materials
 
-## Slide 6 — Who is it for, and what is its importance?
+**Put on the slide**
 
-**Title**
+> **Materials included:** [Photographs / newsletters / reports / posters / other]
+> **Why these materials:** [Reason]
+> **Who may use the collection:** [Audience]
+> **Potential use:** [Learning / research / local history / other]
 
-> Designed around library users and staff
+**Visual:** Contact sheet of cleared examples, labelled with brief object identifiers.
 
-**Recommended table**
+**Presenter 5 notes:** “These material types fit our collection because [reason]. They may be useful to [audience] for [specific purpose]. We avoid claiming an audience or impact that we have not confirmed.”
 
-| Person | What they can do | Why it is useful |
+**Table:** Optional. A simple materials-to-use diagram is usually clearer.
+
+## Slide 12 — Copyright, rights, and privacy assessment
+
+**Put on the slide**
+
+| Assessment | Decision |
+|---|---|
+| Permission or public-domain basis verified | Use within the documented terms |
+| Restricted or sensitive | Do not provide public access |
+| Unclear or pending | Hold back and seek advice |
+
+Add: **Record source, reviewer, evidence, and access decision for each object.**
+
+**Visual:** Check, lock, and question-mark icons. Do not show private evidence or identifiable sensitive records.
+
+**Presenter 6 notes:** “We checked source, creator, copyright, and privacy before deciding how each object could be used. Possession or online availability is not automatically permission. Items with unclear rights or sensitive personal information remain restricted while we seek guidance.”
+
+**Table:** Yes. Keep it compact.
+
+## Slide 13 — Complete workflow at a glance
+
+**Put on the slide**
+
+> Prepare and organize → Scan or photograph → Correct appropriate copies → OCR suitable text → Quality-check → Name files → Create metadata → Store and provide controlled access
+
+Add a small label: **Work completed:** [steps] · **Still planned:** [steps]
+
+**Visual:** Horizontal workflow with a clear status marker for completed and pending steps.
+
+**Presenter 6 notes:** “This is the workflow from source material to access. The group is responsible for documenting each step. We will distinguish the software's metadata and access features from capture, image processing, OCR, quality control, and preservation work done separately.”
+
+**Table:** No. Use arrows.
+
+## Slide 14 — Prepare and organize source materials
+
+**Put on the slide**
+
+> Before capture:
+>
+> - Confirm permission and access restrictions.
+> - Identify each object and record its source.
+> - Check condition and handling needs.
+> - Arrange objects in a consistent capture order.
+
+Add: **Our preparation method:** [What your group actually did]
+
+**Visual:** Approved preparation photo or a simple checklist. Do not show restricted originals.
+
+**Presenter 7 notes:** “We prepared the objects by [actual steps]. We recorded [source/identifier/condition] and arranged the materials so files could be matched back to their originals. Any handling requirements or steps not completed are [details].”
+
+**Table:** No.
+
+## Slide 15 — Scan or photograph
+
+**Put on the slide**
+
+> **Capture method:** [Scanner/camera]
+> **Settings:** [Resolution/format/lighting, if known]
+> **Objects captured:** [Actual count]
+> **Capture date:** [Date]
+
+**Visual:** Permission-cleared equipment/setup photo or diagram.
+
+**Presenter 7 notes:** “We captured [objects] using [equipment and method]. We used [settings, if recorded] and took care to [alignment, lighting, handling]. We keep the capture files linked to their source objects. The LMS does not scan or photograph physical materials.”
+
+**Table:** No.
+
+## Slide 16 — Image correction and OCR
+
+**Put on the slide**
+
+> **Image correction:** [Crop/rotate/adjustment actually performed, or not completed]
+> **OCR:** [Tool and language, or not suitable/not completed]
+> **Text materials processed:** [Actual count]
+
+**Visual:** Approved before/after example or a small OCR excerpt with private information removed.
+
+**Presenter 8 notes:** “We applied [specific correction] to [file/copy]. For suitable text, we used [OCR tool/language] and checked the output. We did not alter the master if that is what your group did. If a step was not completed, explain why rather than implying it happened.”
+
+**Table:** No. A before/after visual works better.
+
+## Slide 17 — Quality control and file naming
+
+**Put on the slide**
+
+> **Image checks:** orientation · focus · completeness · readability
+> **OCR checks:** [sampled/checked/corrected, or not completed]
+> **Naming pattern:** `[collection]_[identifier]_[type]_[version]_[role].[extension]`
+
+Add one actual filename if available: `[verified filename]`.
+
+**Visual:** QC checklist beside one filename with each part highlighted.
+
+**Presenter 8 notes:** “We checked [criteria] and recorded [pass/fix/pending]. Where OCR was used, we checked [method]. Our filename pattern links the file to its identifier and role. The LMS retains uploaded filenames but does not enforce this convention.”
+
+**Table:** No.
+
+## Slide 18 — Metadata approach
+
+**Put on the slide**
+
+> **Metadata answers:**
+> What is this object?
+> Who created it?
+> When was it made?
+> What is it about?
+> How can it be identified and accessed?
+
+Add: **One complete Dublin Core record is needed for every object.**
+
+**Visual:** A digital object linked to a metadata card.
+
+**Presenter 9 notes:** “Metadata makes a digital object easier to identify, understand, search for, and manage. We create a separate record for every object. We use Dublin Core elements requested in the assignment and mark unknown facts honestly.”
+
+**Table:** No.
+
+## Slide 19 — Dublin Core elements required
+
+**Put on the slide**
+
+| Element | What to record |
+|---|---|
+| Title | Name of the object |
+| Creator | Person or organization responsible |
+| Date | Creation or documented date |
+| Subject | Topics or keywords |
+| Description | Short factual summary |
+| Type | DCMI type term, such as Text or StillImage |
+| Format | File format; LMS stores uploaded MIME type |
+| Identifier | Unique object identifier |
+| Language | Language of the object, where applicable |
+
+**Visual:** Use a simple metadata card or small table. Keep text large enough to read.
+
+**Presenter 9 notes:** “These are the metadata fields named in our assignment. Title and Creator use existing object fields in the LMS. Staff enter the other descriptive values; the LMS assigns an identifier and uses the uploaded file's MIME type for Format.”
+
+**Table:** Yes. This slide is a field reference.
+
+## Slide 20 — Example Dublin Core record
+
+Use one actual, permission-cleared object. The example below is a template, not a claim about an existing item.
+
+| Element | Verified example |
+|---|---|
+| Title | [Verified title] |
+| Creator | [Verified creator or Unknown] |
+| Date | [Verified date or documented estimate] |
+| Subject | [Keywords] |
+| Description | [Factual summary] |
+| Type | [Valid DCMI term] |
+| Format | [Actual MIME type] |
+| Identifier | [Assigned KCU-DC identifier] |
+| Language | [Language/Unknown/not applicable] |
+
+**Visual:** Recreated metadata card or a safe screenshot. Hide private details.
+
+**Presenter 10 notes:** “This is one record from our collection. We checked the values against [source/evidence]. Where a fact is unknown, we state that rather than guessing. Every other object has its own record.”
+
+**Table:** Yes. Show one record only.
+
+## Slide 21 — Dublin Core in the LMS
+
+**Put on the slide**
+
+> **Staff workflow:** Upload or edit object → enter metadata → save → review record → export CSV
+>
+> **Public view:** Approved metadata can appear with the public object.
+
+**Visual:** Screenshot sequence: staff form → saved record → CSV export. Use only test or approved material and hide account details.
+
+**Presenter 10 notes:** “The Digital Collections workflow stores per-object metadata. Staff enter Date, Subject, Description, Type, and Language; Title and Creator use existing fields. Identifier is assigned by the system, Format comes from the uploaded file's MIME type, and staff can export records to CSV.”
+
+**Table:** No. Use screenshots or a simple workflow.
+
+## Slide 22 — Preservation masters and access copies
+
+**Put on the slide**
+
+| File role | Purpose | Our example/location |
 |---|---|---|
-| Visitor | Search the catalogue; browse public archive items | Discover available resources |
-| Signed-in member | Submit borrow requests, reserve books, and view borrowing activity | Follow requests and keep track of loans |
-| Staff / administrator | Manage books, categories, borrowing, reservations, and digital collections | Coordinate library work and archive access |
+| Preservation master | Retained high-quality source; avoid altering it | [Actual format/location or planned] |
+| Access copy | Convenient version for viewing or delivery | [Actual format/location or planned] |
 
-Keep the table to these three rows. Use large text and avoid long sentences. If the slide looks crowded, replace the table with three side-by-side cards.
+**Visual:** One object identifier connecting a master file to an access copy.
 
-**Image**
+**Presenter 11 notes:** “A master is retained as the preservation version, while an access copy is prepared for convenient use. Our actual arrangements are [details]. The LMS stores files for delivery but does not automatically create, label, or preserve master and derivative versions.”
 
-Use small, consistent icons beside each role (for example, person, book, librarian). Avoid unrelated stock photos.
+**Table:** Yes. Use actual arrangements or clearly label them planned.
 
-**Speaker notes**
+## Slide 23 — Storage, backup, preservation, and access
 
-> “For example, a visitor can search books and public archive materials. A signed-in member can submit a borrow request, make a reservation, and check borrowing activity. Staff can manage the catalogue and collections. These are features of the exercise; I have not measured improvements in speed or outcomes.”
+**Put on the slide**
 
-**Table?** Yes, this is the best slide for a table because it compares roles using the same three categories.
+| Need | Our arrangement and status |
+|---|---|
+| Working files | [Location/responsible person] |
+| Masters | [Stable restricted location] |
+| Backup | [Separate location and restore-check status/date] |
+| Access copies | [Public website or controlled delivery] |
+| Review | [How often files, permissions, and backups are checked] |
 
----
+**Visual:** **Master → separate backup** and **Access copy → public/controlled access**.
 
-## Slide 7 — A short demonstration
+**Presenter 11 notes:** “Our files are stored at [location]. The backup is [completed/planned/not yet verified]. We verified restoration by [method/date], or have not verified it. Hosting an object on the LMS is not, by itself, proof of a preservation plan or verified backup.”
 
-**Title**
+**Table:** Yes. Be precise about what is implemented versus planned.
 
-> See the Digital Archive in action
+## Slide 24 — System features and limitations
 
-**Text to put on the slide**
+**Put on the slide**
 
-> Search → Open a public item → Preview or download
+| Supported in the LMS | Group work / not implemented in the LMS |
+|---|---|
+| Collections and file uploads | Physical visit and source preparation |
+| Rights notes and public/private controls | Scanning and image correction |
+| Per-object Dublin Core metadata and CSV export | OCR and scan/OCR quality checks |
+| Public search, preview, and download | Preservation-master workflow and verified backups |
 
-Add a small note:
+Footer: **QR-code generation/scanning is not implemented and is not required by the supplied assignment.**
 
-> Demonstration uses a public sample item.
+**Visual:** Two-column comparison. Keep the distinction easy to see.
 
-**Image or live demonstration**
+**Presenter 12 notes:** “The LMS supports organization, rights information, metadata, and access to approved objects. The group still performs and documents the visit, capture, processing, OCR, quality control, naming, and preservation activities. We do not claim the website provides features that are not implemented.”
 
-Best choice: demonstrate the public archive for about one minute:
+**Table:** Yes. It directly compares system support with assignment work.
 
-1. Open [the project website](https://kamuli-cu.vercel.app) and select **Digital Archive**, or open [the Digital Archive page](https://kamuli-cu.vercel.app/digital-collections) directly.
-2. Search for a sample item or choose a collection.
-3. Open the item preview.
-4. Point out the download option.
+## Slide 25 — Conclusion and references
 
-If the website is unavailable, replace the live demo with two or three screenshots: archive search, item listing, and preview. Capture these from the running application; screenshots are not currently included in the repository.
+**Put on the slide**
 
-**Other feature options**
+> **Our collection:** [Title] · [actual number] objects
+> **Key learning:** [Main result or lesson]
+> **Next step:** [One realistic action]
+> **Thank you — Questions?**
 
-Choose just one alternative if it better suits your presentation or if the archive has no public sample items:
+Small references/credits:
 
-- **Book catalogue (public):** open [Browse Books](https://kamuli-cu.vercel.app/books), search by title or author, filter by category, and open a book to show its details and availability. Do not submit a real borrow request during the presentation.
-- **Member borrowing (sign-in required):** use a prepared demo member account to show the member dashboard's current borrowings and past history, or reservations. The member dashboard paths are `/user/my-books` and `/user/reservations`. Do not show the simpler `/my-books` or `/reservations` pages as those currently display “Coming soon.”
-- **Staff workflow (staff sign-in required):** use a prepared demo staff account to show the books/inventory or Digital Collections management page. Keep private member details and restricted files off-screen.
+- Group 2 assignment brief, “Build a Mini Digital Collection” and “Complete the Digitization Workflow.”
+- [Dublin Core Metadata Terms](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/)
+- [Kamuli CU Library Digital Archive](https://kamuli-cu.vercel.app/digital-collections)
+- [Image credits: add sources and licenses used]
 
-Have screenshots ready as a backup. Do not display, write into the slides, or share real passwords. Use a demo account only if you are authorized to do so.
+**Visual:** Approved collection image, simple contact sheet, or collection-to-access diagram.
 
-**Speaker notes**
+**Presenter 12 notes:** “To conclude, our group [briefly state what was actually completed]. The collection is valuable because [specific value]. Our most important lesson is [lesson], and our next step is [action]. Thank you for listening. We are ready for questions.”
 
-> “Here I am showing how a visitor can search the public archive, open an available item, and view or download it. I am using a sample item that is approved for public access.”
+**Table:** No.
 
-**Table?** No. Show the working experience instead.
+## Final slide check
 
-## Optional feature slide — Book services
-
-Add this slide if you want to show that the exercise includes more than the Digital Archive. Keep the archive as the main highlight and use this as a short supporting example.
-
-**Title**
-
-> Book services for readers and members
-
-**Text to put on the slide**
-
-> Search books by title, author, or ISBN.
->
-> Browse by category and check availability.
->
-> Signed-in members can submit borrow requests and reserve books.
->
-> Members can check current borrowing activity and past history.
-
-**Image**
-
-Use one screenshot of the public book catalogue with the search and category controls visible. Optionally place a smaller crop of a book details page beside it. Do not include personal member data.
-
-**Speaker notes**
-
-> “Alongside the Digital Archive, the system has book discovery and circulation features. A member's borrow request may need librarian approval, and a signed-in member can review borrowing activity. I am showing the screens as features of the exercise, not claiming that every account or live service is available during this presentation.”
-
-**Table?** No. Use a catalogue screenshot and a few short callouts.
-
----
-
-## Slide 8 — What I learned and what comes next
-
-**Title**
-
-> Learning from the exercise
-
-**Text to put on the slide**
-
-> **What the exercise demonstrates**
-> - Library services and a digital archive can share one website.
-> - Clear descriptions help people discover digital materials.
-> - Rights review and access decisions matter.
->
-> **Possible next steps**
-> - Test the experience with library users and staff.
-> - Improve accessibility based on feedback.
-> - Add carefully selected and rights-reviewed sample materials.
-
-**Image**
-
-Use a closing screenshot of the home page or archive, with a small “Thank you” message. Keep the next steps as text rather than adding another complex chart.
-
-**Speaker notes**
-
-> “This exercise helped me think about digital organization, discovery, and responsible access. Before using a system like this in a real library, it would need feedback and testing with the people who would use it.”
-
-**Table?** No. Use two short lists or two columns labelled “Demonstrates” and “Next steps.”
-
----
-
-## Optional Slide 9 — Project contributors
-
-Use this slide if you are presenting as a group or your teacher expects contributor credits. The Kamuli home page lists these system contributors:
-
-> **MBAWADDE DOREEN**  
-> **SSENYONGA LUCY**  
-> **AKELLO PATRICIA**  
-> **MUSINGUZI DERRICK**  
-> **KISAAKYE DEBORAH**  
-> **KATAANO VIVIAN LYNNA**
-
-Check the spelling and preferred name format with your team before presenting. Add roles only if your team confirms them; the website describes them as contributors but does not assign individual roles.
-
-**Layout**
-
-Show the names in two columns or as a clean list. If all members are presenting, identify the speaker(s) separately. Do not use the email addresses displayed in the site source; they are placeholders.
-
-**Speaker notes**
-
-> “These are the project contributors listed on the Kamuli CU Library home page.”
-
-**Table?** Optional. A list or two-column name layout is preferable; do not add a table unless you also have agreed contributor roles to compare.
-
----
-
-## Where to get images and screenshots
-
-1. **Best option — project screenshots:** run the frontend and capture the home page and Digital Archive with your computer’s screenshot tool. Use public sample data only.
-2. **Optional title-slide photo:** search for a suitable library image on [Unsplash](https://unsplash.com/s/photos/library) or [Openverse](https://openverse.org/search/image?q=library). Check the chosen image’s license and attribution requirements before using it.
-3. **Icons and diagrams:** use PowerPoint’s built-in icons and shapes so the style stays consistent and you do not need extra images.
-
-Do not use an image merely because it appears in search results. Check its permitted use, keep any required credit, and place the credit in small text on the slide or in the presentation notes.
-
-## Useful project links
-
-- [Project website](https://kamuli-cu.vercel.app) — confirm it is online before presenting.
-- [Kamuli Church of Uganda Primary School home page](https://kamuli-cu.vercel.app) — the school/library name and system contributors are shown on this page.
-- [Public Digital Archive](https://kamuli-cu.vercel.app/digital-collections) — use for the visitor-facing demonstration.
-- [Book catalogue](https://kamuli-cu.vercel.app/books) — public book search and category browsing.
-- [Book details example](https://kamuli-cu.vercel.app/books) — open a book from the catalogue to show details and availability.
-- [Project README](README.md) — short explanation of the project and local setup.
-- [Presentation guide](PRESENTATION_GUIDE.md) — presentation purpose, speaker guidance, and demo checklist.
-- [Digital Archive page source](frontend/src/pages/DigitalArchivePage.jsx) — reference for what the public archive supports.
-- [Staff Digital Collections page source](frontend/src/pages/dashboards/Admin/AdminDigitalCollections.jsx) — reference for collection management and rights review.
-
-## Table and layout checklist
-
-| Slide | Table? | Recommended layout |
-|---|---|---|
-| 1. Title | No | Title and one image |
-| 2. Importance | No | Three short statements with icons |
-| 3. Exercise overview | No | Simple system diagram |
-| 4. Digital Archive | No | Large screenshot with callouts |
-| 5. Archive process | No | Four-step process arrow |
-| 6. People and value | **Yes, recommended** | Three-row comparison table or role cards |
-| 7. Demonstration | No | Live demo or screenshots |
-| 8. Learning and next steps | No | Two short columns or lists |
-| 9. Project contributors (optional) | No | Name list or two columns |
-| Optional book-services feature | No | Catalogue screenshot with callouts |
-
-## Final checks
-
-- Make sure each slide is readable from the back of the room.
-- Use the same colors and font styles throughout.
-- Keep paragraphs in your speaker notes, not on the slide.
-- Test website links and the live demo before presenting.
-- For member or staff features, sign in with a prepared demo account and check that the specific screen works before presenting.
-- Focus on two or three real features rather than trying to describe every page in the system.
-- Do not claim the system scans physical documents, is fully deployed, or has proven impact.
-- Do not show restricted archive items or personal account information.
+- [ ] There are exactly 25 main slides.
+- [ ] Slide 1 identifies the school/course/project; Slide 2 lists all 12 group members; Slide 3 summarizes the assignment prompt.
+- [ ] Visit, permissions, object count, workflow, and preservation claims are true and evidenced.
+- [ ] Every object has its Dublin Core record; unknown details are not guessed.
+- [ ] Tables are used for rights, metadata, master/access comparison, storage, and system status only where useful.
+- [ ] Public screenshots and images contain no sensitive or unapproved material.
+- [ ] Group members know their slide ranges and handovers; the full deck has been timed.

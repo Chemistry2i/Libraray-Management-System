@@ -5,6 +5,7 @@ const path = require('path');
 jest.mock('../../models/DigitalCollectionModel', () => ({
   findPublicObjects: jest.fn(),
   findPublicCollections: jest.fn(),
+  findObjectsForExport: jest.fn(),
   findAuditEvents: jest.fn(),
   findObjectById: jest.fn(),
   findCollectionById: jest.fn(),
@@ -25,7 +26,7 @@ function makeResponse() {
     type() { return this; },
     setHeader() {},
     sendFile() { return this; },
-    send() { return this; },
+    send(body) { this.body = body; return this; },
   };
 }
 
@@ -111,6 +112,8 @@ describe('DigitalCollectionController', () => {
         rights_confirmed: 'true',
         metadata: JSON.stringify([{
           title: 'Annual report', material_type: 'Report', rights_status: 'Copyrighted - Permitted',
+          dc_date: '1986', dc_subject: 'school; history', dc_description: 'Annual school report',
+          dc_type: 'Text', dc_language: 'English',
           rights_assessment_notes: 'Written permission on file', rights_evidence_reference: 'PERM-12',
           rights_expires_at: '', is_public: true,
         }]),
@@ -122,7 +125,9 @@ describe('DigitalCollectionController', () => {
     await DigitalCollectionController.uploadObjects(req, res, jest.fn());
 
     expect(DigitalCollectionModel.createObjects).toHaveBeenCalledWith('3', [expect.objectContaining({
-      title: 'Annual report', rights_evidence_reference: 'PERM-12', file_path: 'upload.pdf',
+      title: 'Annual report', dc_date: '1986', dc_subject: 'school; history',
+      dc_description: 'Annual school report', dc_type: 'Text', dc_language: 'English',
+      rights_evidence_reference: 'PERM-12', file_path: 'upload.pdf',
     })], 12);
     expect(res.statusCode).toBe(201);
     fs.rmSync(directory, { recursive: true, force: true });
@@ -199,5 +204,70 @@ describe('DigitalCollectionController', () => {
 
     expect(res.statusCode).toBe(400);
     expect(DigitalCollectionModel.updateObject).not.toHaveBeenCalled();
+  });
+
+  test('updates and trims Dublin Core metadata for a digital object', async () => {
+    DigitalCollectionModel.findObjectById.mockResolvedValue({
+      object_id: 22, rights_assessed: true, rights_status: 'Public Domain',
+      rights_assessment_notes: 'Reviewed', is_public: false,
+    });
+    const req = {
+      params: { objectId: '22' },
+      body: {
+        dc_date: ' 1986 ', dc_subject: ' school; history ',
+        dc_description: ' Annual school report ', dc_type: 'Text', dc_language: ' English ',
+      },
+      user: { user_id: 12 },
+    };
+    const res = makeResponse();
+
+    await DigitalCollectionController.updateObject(req, res, jest.fn());
+
+    expect(DigitalCollectionModel.updateObject).toHaveBeenCalledWith('22', {
+      dc_date: '1986', dc_subject: 'school; history', dc_description: 'Annual school report',
+      dc_type: 'Text', dc_language: 'English',
+    }, 12, false);
+    expect(res.body.success).toBe(true);
+  });
+
+  test('rejects an invalid Dublin Core type', async () => {
+    DigitalCollectionModel.findObjectById.mockResolvedValue({
+      object_id: 22, rights_assessed: true, rights_status: 'Public Domain', is_public: false,
+    });
+    const req = { params: { objectId: '22' }, body: { dc_type: 'Not a type' }, user: { user_id: 12 } };
+    const res = makeResponse();
+
+    await DigitalCollectionController.updateObject(req, res, jest.fn());
+
+    expect(res.statusCode).toBe(400);
+    expect(DigitalCollectionModel.updateObject).not.toHaveBeenCalled();
+  });
+
+  test('exports Dublin Core fields in the staff collection CSV', async () => {
+    DigitalCollectionModel.findObjectsForExport.mockResolvedValue([{
+      collection_title: 'School History',
+      dc_identifier: 'KCU-DC-123',
+      title: 'School newsletter',
+      creator: 'School',
+      dc_date: '1986',
+      dc_subject: 'School; history',
+      dc_description: 'A school newsletter.',
+      dc_type: 'Text',
+      dc_format: 'application/pdf',
+      dc_language: 'English',
+    }]);
+    const res = makeResponse();
+
+    await DigitalCollectionController.exportObjects({}, res, jest.fn());
+
+    expect(res.body).toContain('"Dublin Core Identifier"');
+    expect(res.body).toContain('"Date"');
+    expect(res.body).toContain('"Subject"');
+    expect(res.body).toContain('"Description"');
+    expect(res.body).toContain('"Dublin Core Type"');
+    expect(res.body).toContain('"Format"');
+    expect(res.body).toContain('"Language"');
+    expect(res.body).toContain('"KCU-DC-123"');
+    expect(res.body).toContain('"application/pdf"');
   });
 });

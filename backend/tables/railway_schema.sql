@@ -298,9 +298,15 @@ CREATE TABLE IF NOT EXISTS digital_collections (
 
 CREATE TABLE IF NOT EXISTS digital_objects (
   object_id INT AUTO_INCREMENT PRIMARY KEY,
+  dc_identifier VARCHAR(64) DEFAULT NULL,
   collection_id INT NOT NULL,
   title VARCHAR(255) NOT NULL,
   creator VARCHAR(255),
+  dc_date VARCHAR(100) DEFAULT NULL,
+  dc_subject TEXT,
+  dc_description TEXT,
+  dc_type VARCHAR(100) NOT NULL,
+  dc_language VARCHAR(100) DEFAULT NULL,
   material_type ENUM(
     'Historical Photograph', 'Newsletter', 'Report', 'Newspaper Clipping',
     'Exam Paper', 'Poster', 'Local-History Document'
@@ -330,7 +336,8 @@ CREATE TABLE IF NOT EXISTS digital_objects (
   INDEX idx_digital_objects_collection (collection_id),
   INDEX idx_digital_objects_public (is_public),
   INDEX idx_digital_objects_rights (rights_status, rights_expires_at),
-  INDEX idx_digital_objects_reviewer (rights_reviewed_by)
+  INDEX idx_digital_objects_reviewer (rights_reviewed_by),
+  UNIQUE KEY uq_digital_objects_dc_identifier (dc_identifier)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS digital_object_rights_history (

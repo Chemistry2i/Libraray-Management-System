@@ -6,7 +6,7 @@ This project is an exercise and demonstration, not a finished product for every 
 
 ## The digital idea
 
-The Digital Archive is a central part of the project. Library staff can group files into collections, add details such as title and creator, review rights information, and choose whether an item is available to the public. Visitors can search and filter public items, preview supported files, and download them.
+The Digital Archive is a central part of the project. Library staff can group files into collections, enter per-object Dublin Core metadata (including title, creator, date, subject, description, type, format, identifier, and language), review rights information, and choose whether an item is available to the public. Visitors can search and filter public items, view their descriptive metadata, preview supported files, and download them.
 
 The archive organizes materials that have already been digitized; it does not scan paper records or turn physical books into digital files. Supported uploads include common document, image, audio, and video formats.
 
@@ -64,5 +64,6 @@ For more detailed setup and deployment guidance, see [`backend/README.md`](backe
 
 ## Presenting the project
 
-For a non-technical, slide-by-slide outline with speaker notes and a short demo plan, see [`PRESENTATION_GUIDE.md`](PRESENTATION_GUIDE.md).
-For copy-ready slide text, image and link suggestions, and guidance on where to use a table, see [`SLIDE_CONTENT_GUIDE.md`](SLIDE_CONTENT_GUIDE.md).
+The presentation documents are organized around the Group 2 **Mini Digital Collection** and **Digitization Workflow** assignment. [`PRESENTATION_GUIDE.md`](PRESENTATION_GUIDE.md) outlines the talk, while [`SLIDE_CONTENT_GUIDE.md`](SLIDE_CONTENT_GUIDE.md) provides slide-ready text, tables, evidence prompts, and a checklist.
+
+The Digital Collections staff workflow supports per-object Dublin Core metadata entry and CSV export. Existing installations need the one-time migration described in [`backend/README.md`](backend/README.md).

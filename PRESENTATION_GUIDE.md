@@ -1,136 +1,98 @@
-# PowerPoint Presentation Guide
+# Group 2 Presentation Guide
 
-## Presentation purpose
+This guide helps your group turn the assignment into a clear PowerPoint and deliver it confidently. Use [SLIDE_CONTENT_GUIDE.md](./SLIDE_CONTENT_GUIDE.md) for copy-ready slide text, visual suggestions, sample tables, and speaker notes.
 
-Present Kamuli CU Library, serving Kamuli Church of Uganda Primary School, as an educational exercise about making library services and local learning materials easier to find through a digital system. Keep the focus on the people who use the library and on the Digital Archive—not on programming terms.
+## Your presentation in one sentence
 
-**Suggested length:** 5–7 minutes  
-**Suggested size:** 7 slides, followed by a short demonstration if the system is available
+> We selected a meaningful mini digital collection, assessed rights and privacy, documented the digitization work, created Dublin Core metadata for each object, and planned appropriate preservation and access.
 
-## Main message
+Only use that statement as a summary of completed work if it is true for your group. Be open about anything still planned or incomplete.
 
-> A digital library can bring book services and digitized local materials together, helping people discover resources while giving staff better ways to organize them.
+## What the assignment asks you to demonstrate
 
-## Slide-by-slide outline
+Your presentation should cover:
 
-### 1. Title — Kamuli CU Library
+1. A visit to a library or records centre with digitization services.
+2. A mini digital collection of approximately 10–15 objects.
+3. Your selection criteria and the collection's value.
+4. A basic copyright and rights assessment.
+5. The digitization workflow: preparation, capture, image work, OCR where suitable, quality control, and file naming.
+6. Dublin Core metadata for each object.
+7. Preservation masters and access copies.
+8. Storage, backup, preservation, and access arrangements.
 
-**Put on the slide**
-- Kamuli CU Library Management System
-- Kamuli Church of Uganda Primary School
-- Your name, course, and presentation date
-- One clear image: a library, a book, or a digital archive screen
+Use real evidence: a visit note, permission-cleared photographs, an object inventory, metadata examples, workflow screenshots, and verified storage/backup details. Never invent a visit, item, permission, scan, OCR result, or backup.
 
-**Say**
+## Keep the software claims accurate
 
-“This project is an exercise in exploring how Kamuli CU Library, serving Kamuli Church of Uganda Primary School, can use a digital system to organize its services and make learning materials easier to discover.”
+Kamuli CU Library is the library service for **Kamuli Church of Uganda Primary School**. The LMS Digital Archive supports collection management, file uploads, collection-level selection criteria/value, rights-review information, public/private access, public search, item previews/downloads, and per-object Dublin Core metadata.
 
-### 2. The need — Finding and organizing resources
+For Dublin Core, staff enter Date, Subject, Description, Type, and Language; Title and Creator use existing object fields. The system assigns an Identifier and uses the uploaded file's MIME type for Format. Metadata can appear on public item records and is available in the staff CSV export.
 
-**Put on the slide**
-- Library information and resources need to be easy to find.
-- Staff need a clear way to organize books and digital materials.
-- Some local records and learning resources can be difficult to discover.
+The LMS does **not** perform or verify the group's physical visit, scanning/photography, cropping or image correction, OCR, scan/OCR quality control, preservation-master management, backup restoration, or long-term digital preservation. It does not enforce a total collection size of 10–15 objects. QR-code generation/scanning is not implemented and is not part of the assignment brief. Present these as group activities or separate tools only when you actually used them.
 
-Use a simple before-and-after illustration rather than a paragraph of text.
+## Follow the 25-slide reference structure
 
-**Say**
+The slide guide now contains **exactly 25 main slides**. It follows the example's broad sequence: school/course title, group members, assignment question, project title, introduction, importance, topic sections, system capabilities and limitations, and conclusion. The content is adapted to your digital collection assignment rather than copied from the example.
 
-“The idea behind the project is to make common library tasks more organized and give people another way to discover useful materials.”
+There are 12 presenters. Presenter 1 has three short opening slides; Presenters 2–12 each have two related slides. Allow about 15–20 minutes for the full deck, or shorten each speaker's explanation to meet the instructor's limit.
 
-### 3. The idea — One digital place for library resources
+| Presenter | Slides | Speaking role |
+|---|---:|---|
+| 1 | 1–3 | School/course title, group list, assignment prompt |
+| 2 | 4–5 | Project title and introduction |
+| 3 | 6–7 | Collection importance and Digital Archive link |
+| 4 | 8–9 | Assignment objectives and collection scope |
+| 5 | 10–11 | Selection criteria and collection value |
+| 6 | 12–13 | Rights assessment and workflow overview |
+| 7 | 14–15 | Source preparation and capture |
+| 8 | 16–17 | Image/OCR work, QC, and filenames |
+| 9 | 18–19 | Metadata approach and Dublin Core elements |
+| 10 | 20–21 | Sample record and LMS metadata workflow |
+| 11 | 22–23 | Masters, access copies, storage, and backup |
+| 12 | 24–25 | LMS capabilities, limitations, and conclusion |
 
-**Put on the slide**
-- Search the book catalogue and check book details and availability.
-- Signed-in members can submit borrow requests, make reservations, and check borrowing activity.
-- Visitors can search, preview, and download items approved for the Digital Archive.
-- Staff can manage books, categories, borrowing, and digital collections.
+Give each slide one clear message. Use tables where they help compare rights decisions, metadata, storage arrangements, or system support. Use a contact sheet for objects and arrows for workflows rather than dense paragraphs.
 
-Use three feature cards or simple icons for **Find books**, **Manage borrowing**, and **Explore the Digital Archive**. Mention staff tools aloud rather than adding more text.
+## Making the PowerPoint
 
-**Say**
+1. Follow the 25-slide sequence in the slide-content guide. It is structured for 12 presenters and follows the reference's academic presentation flow.
+2. Replace every bracketed prompt with verified group information. If something is unknown, say so instead of guessing.
+3. Use short phrases on the slides. Put explanations and examples in the speaker notes; each speaker should explain one key point and one concrete example, not read a paragraph aloud.
+4. Use large, readable text and a consistent font, colour palette, and layout. Avoid paragraphs, tiny tables, and crowded screenshots.
+5. Use only approved collection images. Blur or remove personal details from screenshots; do not show restricted records or private rights evidence.
+6. Label examples clearly. A sample filename, planned backup, or demonstration screen must not look like completed project evidence.
+7. Add image credits and useful links in small readable text or on a final references/credits slide if required by your instructor.
+8. If the live site or internet is unreliable, prepare screenshots of an approved object, metadata view, and CSV export. Do not expose account credentials or private system information.
 
-“The system includes a searchable catalogue, member borrowing and reservation features, and a Digital Archive for public materials. Staff also have tools to manage books and collections. Some features require the appropriate sign-in.”
+### Where tables help
 
-### 4. The highlight — The Digital Archive
+- **Rights slide:** a short table connects each rights decision to the action your group takes.
+- **Metadata slide:** one complete example proves what a record contains; do not fit every object on the slide.
+- **Storage slide:** compare working files, masters, backups, access copies, and review arrangements.
+- Keep the full inventory in a spreadsheet or appendix. A contact sheet is easier to read during the main presentation.
 
-**Put on the slide**
-- Materials are arranged into named collections.
-- Items can include photographs, documents, reports, newsletters, and other supported files.
-- Visitors can search, filter, preview, and download items made public.
-- Staff record details and review rights before deciding whether an item can be public.
+## Rehearsal and delivery
 
-Use a screenshot of the Digital Archive page and, if possible, one example collection.
+- Assign slide ranges as shown in the guide. Practise the handover between each presenter.
+- Rehearse the whole deck with a timer; target 15–20 minutes or the instructor's limit.
+- Presenter 1 should keep the opening slides brief. Other presenters should use their two slides to explain a topic and give one real example.
+- If the limit is shorter, reduce repeated wording and keep each presenter's turn; do not remove assignment requirements.
+- Practise the LMS demonstration on the device and network you expect to use.
+- Prepare screenshots as a backup and check that every shown object is approved for presentation.
+- Make sure every group member can explain the difference between the LMS features and the digitization work your group performed separately.
+- End with the collection's value and one realistic next step.
 
-**Say**
+## Submission checklist
 
-“This is the digital-creation focus of my project. Staff can take materials that are already digital, describe and organize them, and make approved items easier for people to find. The system does not scan physical materials by itself.”
-
-### 5. How it works — From file to discovery
-
-**Put on the slide**
-
-1. Staff create a collection.
-2. Staff add a digitized file and its details.
-3. Staff review rights and choose its access.
-4. Visitors find and open public items.
-
-Use four icons or screenshots, one for each step.
-
-**Say**
-
-“The process is designed to connect careful organization with access. A file is not automatically public just because it has been uploaded.”
-
-### 6. Who benefits — Readers, members, and staff
-
-**Put on the slide**
-- **Visitors:** discover public archive materials and browse books.
-- **Members:** manage borrowing and reservations.
-- **Staff:** organize books, members, and digital collections.
-
-Keep the benefits practical and avoid promising results that have not been measured.
-
-**Say**
-
-“The goal is to make the experience clearer for both people looking for resources and staff responsible for managing them.”
-
-### 7. Learning and next steps
-
-**Put on the slide**
-- This is an educational exercise and a working demonstration.
-- It shows how digital organization and access can support library services.
-- Possible next steps: test with users, improve accessibility, and add carefully selected materials.
-
-**Say**
-
-“Building this exercise helped me think about how libraries can preserve and share information digitally. A real rollout would need testing, staff input, and appropriate review of the materials.”
-
-## Optional live demonstration
-
-Aim for about one minute. Prepare a public archive item in advance, and do not display personal or restricted information.
-
-1. Open the Digital Archive and search for a sample title or select a collection.
-2. Open a public item and show its preview and download option.
-3. If no public archive item is available, show the public book catalogue instead: search for a title, filter by category, and open a book's details.
-4. Show a member or staff dashboard only if you have an authorized demo account and have checked the page in advance.
-
-Use the signed-in member paths `/user/my-books` and `/user/reservations` for borrowing and reservation features. The simpler `/my-books` and `/reservations` pages currently say “Coming soon.” If the live system or internet is unreliable, use screenshots instead. Avoid showing private files, account details, real passwords, or unreviewed materials.
-
-## Slide design tips
-
-- Use one main idea per slide and large, readable text.
-- Prefer screenshots and simple diagrams over technical architecture.
-- Use short phrases; explain the detail aloud.
-- Keep colors and fonts consistent.
-- Use sample or approved content in screenshots.
-- Explain “digitized” as “already converted into a digital file.”
-
-## Accuracy checklist
-
-- Describe the project as an **educational exercise**, not a fully deployed library solution.
-- Say the archive **organizes digitized files**; do not claim it scans books or paper records.
-- Explain that public access is a staff decision informed by rights review.
-- Distinguish public browsing from member and staff features that require sign-in; check the exact page before presenting it.
-- Present benefits as goals or intended uses unless you have evidence to support stronger claims.
-
-For copy-ready slide text, image and link suggestions, and specific guidance on where to use a table, see [`SLIDE_CONTENT_GUIDE.md`](SLIDE_CONTENT_GUIDE.md).
+- [ ] The presentation includes the real visit details or clearly explains if the visit is not complete.
+- [ ] The actual collection count and selection criteria are stated.
+- [ ] Copyright, permission, privacy, and access decisions are explained.
+- [ ] Capture, correction, OCR, and QC are described only to the extent completed.
+- [ ] Each object has a Dublin Core record and a consistent identifier.
+- [ ] File naming, master/access copies, storage, backup, and preservation are addressed.
+- [ ] Planned work is labelled planned; unverified backup is not described as verified.
+- [ ] The LMS feature claims match the implemented system.
+- [ ] There are exactly 25 main slides and the 12 presenter slide ranges are assigned.
+- [ ] The slides are readable, visual, credited, and within the time limit.
+- [ ] The presentation and backup screenshots contain no sensitive or unapproved material.
