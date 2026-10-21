@@ -9,6 +9,7 @@ This document is a ready-to-build companion to the [presentation guide](PRESENTA
 - Check that the live website works before putting its link in your slides: [https://kamuli-cu.vercel.app](https://kamuli-cu.vercel.app). If it is unavailable, use screenshots or run the project locally instead.
 - Use only public, approved sample archive items in screenshots or a live demonstration. Do not show real passwords, private member information, or restricted files.
 - This is an educational exercise. Avoid inventing results, user feedback, or statistics.
+- Some services require a signed-in account. Test each screen before the presentation; public pages and member-dashboard pages are not the same.
 
 ## Suggested presentation structure
 
@@ -71,28 +72,29 @@ Use a simple “searching for a resource” illustration, or a two-part visual: 
 
 **Title**
 
-> The exercise: one place for library services
+> One library system, with tools for different needs
 
 **Text to put on the slide**
 
-> **Book services** — browse books, borrow, and reserve  
-> **Digital archive** — organize, search, preview, and download approved files  
-> **Different roles** — provide reader, member, and staff tools
+> **Find books** — search the catalogue and check book details and availability
+>
+> **Manage borrowing** — send a borrow request, reserve a book, and track activity
+>
+> **Discover digital materials** — search, preview, and download public archive items
 
 **Image / diagram**
 
-Build a simple diagram with three boxes:
+Use three simple feature cards with a screenshot crop or icon for each: book search, borrowing/reservations, and the Digital Archive. Keep this slide as an overview; the archive gets its own detail slide next.
 
-> **Readers and members** → **Library website** ← **Library staff**  
-> Under the website: **Book catalogue** + **Digital Archive**
+Optional small footer:
 
-You can make this with PowerPoint shapes and arrows. This is clearer than a screenshot of code or a technical architecture diagram.
+> Staff tools also support book and category management, borrowing workflows, and digital collections.
 
 **Speaker notes**
 
-> “I wanted to explore how a library website could support both book-related tasks and access to digital materials. The system has different features for visitors, members, and staff.”
+> “The system includes a searchable book catalogue, member borrowing and reservation tools, and a public Digital Archive. Staff also have pages to manage books, categories, borrowing, and collections. Some actions require a member or staff account.”
 
-**Table?** No. Use a diagram to show how the parts connect.
+**Table?** No. Use three feature cards; this is an overview, not a comparison.
 
 ---
 
@@ -165,9 +167,9 @@ Use four simple icons or PowerPoint shapes: folder, file with label, shield/chec
 
 | Person | What they can do | Why it is useful |
 |---|---|---|
-| Visitor | Browse books and explore public archive items | Find resources in one place |
-| Member | Manage borrowing and reservations | Keep track of library activity |
-| Staff | Manage books, members, and digital collections | Organize services and archive materials |
+| Visitor | Search the catalogue; browse public archive items | Discover available resources |
+| Signed-in member | Submit borrow requests, reserve books, and view borrowing activity | Follow requests and keep track of loans |
+| Staff / administrator | Manage books, categories, borrowing, reservations, and digital collections | Coordinate library work and archive access |
 
 Keep the table to these three rows. Use large text and avoid long sentences. If the slide looks crowded, replace the table with three side-by-side cards.
 
@@ -177,7 +179,7 @@ Use small, consistent icons beside each role (for example, person, book, librari
 
 **Speaker notes**
 
-> “The project has different tools for different people. Visitors can explore public resources, members can manage their library activity, and staff can organize the catalogue and collections. These are intended uses; I have not measured improvements in speed or outcomes.”
+> “For example, a visitor can search books and public archive materials. A signed-in member can submit a borrow request, make a reservation, and check borrowing activity. Staff can manage the catalogue and collections. These are features of the exercise; I have not measured improvements in speed or outcomes.”
 
 **Table?** Yes, this is the best slide for a table because it compares roles using the same three categories.
 
@@ -208,11 +210,49 @@ Best choice: demonstrate the public archive for about one minute:
 
 If the website is unavailable, replace the live demo with two or three screenshots: archive search, item listing, and preview. Capture these from the running application; screenshots are not currently included in the repository.
 
+**Other feature options**
+
+Choose just one alternative if it better suits your presentation or if the archive has no public sample items:
+
+- **Book catalogue (public):** open [Browse Books](https://kamuli-cu.vercel.app/books), search by title or author, filter by category, and open a book to show its details and availability. Do not submit a real borrow request during the presentation.
+- **Member borrowing (sign-in required):** use a prepared demo member account to show the member dashboard's current borrowings and past history, or reservations. The member dashboard paths are `/user/my-books` and `/user/reservations`. Do not show the simpler `/my-books` or `/reservations` pages as those currently display “Coming soon.”
+- **Staff workflow (staff sign-in required):** use a prepared demo staff account to show the books/inventory or Digital Collections management page. Keep private member details and restricted files off-screen.
+
+Have screenshots ready as a backup. Do not display, write into the slides, or share real passwords. Use a demo account only if you are authorized to do so.
+
 **Speaker notes**
 
 > “Here I am showing how a visitor can search the public archive, open an available item, and view or download it. I am using a sample item that is approved for public access.”
 
 **Table?** No. Show the working experience instead.
+
+## Optional feature slide — Book services
+
+Add this slide if you want to show that the exercise includes more than the Digital Archive. Keep the archive as the main highlight and use this as a short supporting example.
+
+**Title**
+
+> Book services for readers and members
+
+**Text to put on the slide**
+
+> Search books by title, author, or ISBN.
+>
+> Browse by category and check availability.
+>
+> Signed-in members can submit borrow requests and reserve books.
+>
+> Members can check current borrowing activity and past history.
+
+**Image**
+
+Use one screenshot of the public book catalogue with the search and category controls visible. Optionally place a smaller crop of a book details page beside it. Do not include personal member data.
+
+**Speaker notes**
+
+> “Alongside the Digital Archive, the system has book discovery and circulation features. A member's borrow request may need librarian approval, and a signed-in member can review borrowing activity. I am showing the screens as features of the exercise, not claiming that every account or live service is available during this presentation.”
+
+**Table?** No. Use a catalogue screenshot and a few short callouts.
 
 ---
 
@@ -284,6 +324,8 @@ Do not use an image merely because it appears in search results. Check its permi
 - [Project website](https://kamuli-cu.vercel.app) — confirm it is online before presenting.
 - [Kamuli Church of Uganda Primary School home page](https://kamuli-cu.vercel.app) — the school/library name and system contributors are shown on this page.
 - [Public Digital Archive](https://kamuli-cu.vercel.app/digital-collections) — use for the visitor-facing demonstration.
+- [Book catalogue](https://kamuli-cu.vercel.app/books) — public book search and category browsing.
+- [Book details example](https://kamuli-cu.vercel.app/books) — open a book from the catalogue to show details and availability.
 - [Project README](README.md) — short explanation of the project and local setup.
 - [Presentation guide](PRESENTATION_GUIDE.md) — presentation purpose, speaker guidance, and demo checklist.
 - [Digital Archive page source](frontend/src/pages/DigitalArchivePage.jsx) — reference for what the public archive supports.
@@ -302,6 +344,7 @@ Do not use an image merely because it appears in search results. Check its permi
 | 7. Demonstration | No | Live demo or screenshots |
 | 8. Learning and next steps | No | Two short columns or lists |
 | 9. Project contributors (optional) | No | Name list or two columns |
+| Optional book-services feature | No | Catalogue screenshot with callouts |
 
 ## Final checks
 
@@ -309,5 +352,7 @@ Do not use an image merely because it appears in search results. Check its permi
 - Use the same colors and font styles throughout.
 - Keep paragraphs in your speaker notes, not on the slide.
 - Test website links and the live demo before presenting.
+- For member or staff features, sign in with a prepared demo account and check that the specific screen works before presenting.
+- Focus on two or three real features rather than trying to describe every page in the system.
 - Do not claim the system scans physical documents, is fully deployed, or has proven impact.
 - Do not show restricted archive items or personal account information.

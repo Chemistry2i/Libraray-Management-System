@@ -41,15 +41,16 @@ Use a simple before-and-after illustration rather than a paragraph of text.
 ### 3. The idea — One digital place for library resources
 
 **Put on the slide**
-- A searchable catalogue for books
-- Library services such as borrowing and reservations
-- A Digital Archive for public, digitized materials
+- Search the book catalogue and check book details and availability.
+- Signed-in members can submit borrow requests, make reservations, and check borrowing activity.
+- Visitors can search, preview, and download items approved for the Digital Archive.
+- Staff can manage books, categories, borrowing, and digital collections.
 
-Show a simple diagram: **Readers and staff → Library system → Books and Digital Archive**.
+Use three feature cards or simple icons for **Find books**, **Manage borrowing**, and **Explore the Digital Archive**. Mention staff tools aloud rather than adding more text.
 
 **Say**
 
-“The system brings book information and digital archive materials into one website. Different people see the tools they need for their role.”
+“The system includes a searchable catalogue, member borrowing and reservation features, and a Digital Archive for public materials. Staff also have tools to manage books and collections. Some features require the appropriate sign-in.”
 
 ### 4. The highlight — The Digital Archive
 
@@ -108,13 +109,12 @@ Keep the benefits practical and avoid promising results that have not been measu
 
 Aim for about one minute. Prepare a public archive item in advance, and do not display personal or restricted information.
 
-1. Open the Digital Archive.
-2. Search for a sample title or select a collection.
-3. Open a public item and show its preview.
-4. Point out the download option, if appropriate.
-5. Briefly show the staff collections screen only if a safe demonstration account and sample data are available.
+1. Open the Digital Archive and search for a sample title or select a collection.
+2. Open a public item and show its preview and download option.
+3. If no public archive item is available, show the public book catalogue instead: search for a title, filter by category, and open a book's details.
+4. Show a member or staff dashboard only if you have an authorized demo account and have checked the page in advance.
 
-If the live system or internet is unreliable, use screenshots instead. Avoid showing private files, account details, real passwords, or unreviewed materials.
+Use the signed-in member paths `/user/my-books` and `/user/reservations` for borrowing and reservation features. The simpler `/my-books` and `/reservations` pages currently say “Coming soon.” If the live system or internet is unreliable, use screenshots instead. Avoid showing private files, account details, real passwords, or unreviewed materials.
 
 ## Slide design tips
 
@@ -130,6 +130,7 @@ If the live system or internet is unreliable, use screenshots instead. Avoid sho
 - Describe the project as an **educational exercise**, not a fully deployed library solution.
 - Say the archive **organizes digitized files**; do not claim it scans books or paper records.
 - Explain that public access is a staff decision informed by rights review.
+- Distinguish public browsing from member and staff features that require sign-in; check the exact page before presenting it.
 - Present benefits as goals or intended uses unless you have evidence to support stronger claims.
 
 For copy-ready slide text, image and link suggestions, and specific guidance on where to use a table, see [`SLIDE_CONTENT_GUIDE.md`](SLIDE_CONTENT_GUIDE.md).
