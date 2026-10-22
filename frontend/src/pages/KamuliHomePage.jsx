@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import { ArrowRight, BookOpen, MapPin, Phone, Mail, ChevronDown, Send, UserRound, Tag, MessageSquare, Archive, Search, ShieldCheck, Upload } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { motion, useReducedMotion } from 'framer-motion'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -75,6 +75,15 @@ const readingImages = [
   { src: classImageThree, alt: 'A teacher sharing books with pupils', label: 'Learning in every lesson' },
 ]
 
+const heroImages = [
+  { src: heroImage, alt: 'The entrance to Kamuli Church of Uganda Primary School', label: 'School entrance' },
+  { src: classImageOne, alt: 'Pupils reading together in the school library', label: 'Pupils reading' },
+  { src: classImageTwo, alt: 'A pupil studying among the library shelves', label: 'Library shelves' },
+  { src: classImageThree, alt: 'A teacher sharing books with pupils', label: 'Shared stories' },
+  { src: groupImageOne, alt: 'Project team members visiting to gather information for the library system', label: 'Information visit 1' },
+  { src: groupImageTwo, alt: 'Project team members gathering information during their school library visit', label: 'Information visit 2' },
+]
+
 const faqs = [
   ['Who can use the school library?', 'Pupils and teachers of Kamuli Church of Uganda Primary School can use the library in line with school library guidance. Ask the librarian if you need help getting started.'],
   ['How do I find a book?', 'Search the online catalogue by title, author or subject, or ask the librarian to help you find a suitable book.'],
@@ -85,6 +94,7 @@ const faqs = [
 
 export default function KamuliHomePage() {
   const [emailDraftOpened, setEmailDraftOpened] = useState(false)
+  const [activeHeroImage, setActiveHeroImage] = useState(0)
   const prefersReducedMotion = useReducedMotion()
   const heroRef = useRef(null)
   const galleryRef = useRef(null)
@@ -147,7 +157,18 @@ export default function KamuliHomePage() {
   return (
     <div className="w-full bg-white text-slate-900">
       <motion.section ref={heroRef} className="relative flex min-h-[80vh] items-center overflow-hidden bg-[#102d4f]">
-        <img src={heroImage} alt="The entrance to Kamuli Church of Uganda Primary School" className="absolute inset-0 size-full object-cover object-center" />
+        <AnimatePresence initial={false}>
+          <motion.img
+            key={heroImages[activeHeroImage].src}
+            src={heroImages[activeHeroImage].src}
+            alt={heroImages[activeHeroImage].alt}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.65 }}
+            className="absolute inset-0 size-full object-cover object-center"
+          />
+        </AnimatePresence>
         <div className="absolute inset-0 bg-gradient-to-t from-[#081a30]/95 via-[#0a2442]/50 to-[#102d4f]/5" />
         <div className="relative mx-auto w-full max-w-7xl px-5 py-14 sm:px-8 md:py-16">
           <div className="max-w-3xl text-white">
@@ -167,6 +188,22 @@ export default function KamuliHomePage() {
             </div>
           </div>
         </div>
+        <div role="group" aria-label="Choose landing page background image" className="absolute bottom-4 right-4 z-10 flex max-w-[calc(100%-2rem)] gap-2 rounded-md border border-white/20 bg-[#081a30]/70 p-2 backdrop-blur-sm sm:bottom-6 sm:right-6 sm:gap-2.5 sm:p-2.5">
+          {heroImages.map((image, index) => (
+            <button
+              key={image.src}
+              type="button"
+              aria-label={`Show background: ${image.label}`}
+              aria-pressed={activeHeroImage === index}
+              onClick={() => setActiveHeroImage(index)}
+              className={`size-10 shrink-0 overflow-hidden rounded-sm border-2 transition-[border-color,opacity] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 sm:size-12 ${
+                activeHeroImage === index ? 'border-amber-300 opacity-100' : 'border-white/50 opacity-70 hover:opacity-100'
+              }`}
+            >
+              <img src={image.src} alt="" loading="lazy" className="size-full object-cover" />
+            </button>
+          ))}
+        </div>
       </motion.section>
 
       <motion.section {...scrollReveal} className="flex items-center border-b border-slate-200 bg-white">
@@ -182,12 +219,12 @@ export default function KamuliHomePage() {
           </div>
           <div className="grid min-h-[320px] grid-cols-2 gap-3 md:min-h-[460px]">
             <figure className="relative min-h-0 overflow-hidden bg-[#102d4f]">
-              <img src={groupImageOne} alt="The library project team during a visit to the school library" loading="lazy" className="absolute inset-0 size-full object-cover" />
-              <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#081a30]/90 to-transparent px-3 pb-3 pt-12 text-sm font-bold text-white sm:px-4 sm:pb-4">Our library visit</figcaption>
+              <img src={groupImageOne} alt="Project team members visiting to gather information for the library system" loading="lazy" className="absolute inset-0 size-full object-cover" />
+              <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#081a30]/90 to-transparent px-3 pb-3 pt-12 text-sm font-bold text-white sm:px-4 sm:pb-4">Gathering project information</figcaption>
             </figure>
             <figure className="relative mt-6 min-h-0 overflow-hidden bg-[#102d4f] md:mt-10">
-              <img src={groupImageTwo} alt="Team members exploring the school library collection during their visit" loading="lazy" className="absolute inset-0 size-full object-cover" />
-              <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#081a30]/90 to-transparent px-3 pb-3 pt-12 text-sm font-bold text-white sm:px-4 sm:pb-4">Exploring the collection</figcaption>
+              <img src={groupImageTwo} alt="Project team members gathering information during their school library visit" loading="lazy" className="absolute inset-0 size-full object-cover" />
+              <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#081a30]/90 to-transparent px-3 pb-3 pt-12 text-sm font-bold text-white sm:px-4 sm:pb-4">Learning about the library</figcaption>
             </figure>
           </div>
         </div>
