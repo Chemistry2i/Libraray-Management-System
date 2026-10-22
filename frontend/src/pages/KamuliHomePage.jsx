@@ -7,10 +7,15 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SCHOOL_BADGE, SCHOOL_NAME, SCHOOL_OFFICIAL_NAME } from '../constants/schoolBrand'
 import heroImage from '../img/hero.jpeg'
+import aboutImage from '../img/aboutPageImage.jpg'
+import akelloImage from '../img/akello.jpg'
 import doreenImage from '../img/doreen.jpg'
 import classImageOne from '../img/class1.jpg'
 import classImageTwo from '../img/class2.jpg'
 import classImageThree from '../img/class3.jpg'
+import groupImageOne from '../img/groupImg.jpg'
+import groupImageTwo from '../img/groupImg2.jpg'
+import lucyImage from '../img/lucy.jpg'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger)
 
@@ -31,14 +36,14 @@ const contributors = [
   {
     name: 'SSENYONGA LUCY ',
     initials: 'SL',
-    image: '/images/team/ssenyonga-lucy.jpg',
+    image: lucyImage,
     email: 'lucy@example.invalid',
     description: 'Helping make school reading resources easier for pupils and teachers to discover.',
   },
   {
     name: 'AKELLO PATRICIA ',
     initials: 'AP',
-    image: '/images/team/akello-patricia.jpg',
+    image: akelloImage,
     email: 'akello@example.invalid',
     description: 'Helping make school reading resources easier for pupils and teachers to discover.',
   },
@@ -66,9 +71,9 @@ const contributors = [
 ]
 
 const readingImages = [
-  { src: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=900&q=85', alt: 'Rows of books in a library', label: 'A world of books' },
-  { src: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=900&q=85', alt: 'Books ready to be read and studied', label: 'Ideas to explore' },
-  { src: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=900&q=85', alt: 'School children learning in a classroom', label: 'Learning in every lesson' },
+  { src: groupImageOne, alt: 'The library project team during a visit to the school library', label: 'Our library visit' },
+  { src: groupImageTwo, alt: 'Team members exploring the school library collection during their visit', label: 'Exploring the collection' },
+  { src: classImageTwo, alt: 'Pupils learning together in a classroom', label: 'Learning in every lesson' },
 ]
 
 const faqs = [
@@ -177,7 +182,7 @@ export default function KamuliHomePage() {
             </div>
           </div>
           <figure className="relative min-h-[320px] overflow-hidden bg-[#102d4f] md:min-h-[460px]">
-            <img src={readingImages[0].src} alt={readingImages[0].alt} loading="lazy" className="absolute inset-0 size-full object-cover" />
+            <img src={aboutImage} alt="A pupil browsing books in the school library" loading="lazy" className="absolute inset-0 size-full object-cover" />
             <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#081a30]/90 to-transparent px-5 pb-5 pt-16 text-lg font-bold text-white">A welcoming place to read, learn and grow.</figcaption>
           </figure>
         </div>
@@ -304,7 +309,7 @@ export default function KamuliHomePage() {
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#a77914]">Borrowing made clear</p>
             <h2 className="mt-2 text-3xl font-bold text-[#102d4f]">Three steps to your next read.</h2>
             <p className="mt-4 leading-7 text-slate-600">The library team can help you choose books and understand borrowing periods. Check the due date when you borrow and return books on time.</p>
-            <img src="https://images.unsplash.com/photo-1491841550275-ad7854e35ca6?auto=format&fit=crop&w=1000&q=85" alt="A student reading a book at a desk" loading="lazy" className="mt-6 h-64 w-full object-cover md:h-80" />
+            <img src={classImageThree} alt="A teacher sharing books with pupils" loading="lazy" className="mt-6 h-64 w-full object-cover md:h-80" />
           </div>
           <ol className="divide-y divide-slate-200 border-y border-slate-200">
             {[
