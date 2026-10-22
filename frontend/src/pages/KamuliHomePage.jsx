@@ -77,11 +77,11 @@ const readingImages = [
 
 const heroImages = [
   { src: heroImage, alt: 'The entrance to Kamuli Church of Uganda Primary School', label: 'School entrance' },
+  { src: groupImageOne, alt: 'Project team members visiting to gather information for the library system', label: 'Information visit 1' },
+  { src: groupImageTwo, alt: 'Project team members gathering information during their school library visit', label: 'Information visit 2' },
   { src: classImageOne, alt: 'Pupils reading together in the school library', label: 'Pupils reading' },
   { src: classImageTwo, alt: 'A pupil studying among the library shelves', label: 'Library shelves' },
   { src: classImageThree, alt: 'A teacher sharing books with pupils', label: 'Shared stories' },
-  { src: groupImageOne, alt: 'Project team members visiting to gather information for the library system', label: 'Information visit 1' },
-  { src: groupImageTwo, alt: 'Project team members gathering information during their school library visit', label: 'Information visit 2' },
 ]
 
 const faqs = [
