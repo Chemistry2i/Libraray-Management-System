@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { ArrowRight, BookOpen, MapPin, Phone, Mail, ChevronDown, Send, UserRound, Tag, MessageSquare, Archive, Search, ShieldCheck, Upload } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
@@ -77,11 +77,11 @@ const readingImages = [
 
 const heroImages = [
   { src: heroImage, alt: 'The entrance to Kamuli Church of Uganda Primary School', label: 'School entrance' },
+  { src: groupImageOne, alt: 'Project team members visiting to gather information for the library system', label: 'Information visit 1' },
+  { src: groupImageTwo, alt: 'Project team members gathering information during their school library visit', label: 'Information visit 2' },
   { src: classImageOne, alt: 'Pupils reading together in the school library', label: 'Pupils reading' },
   { src: classImageTwo, alt: 'A pupil studying among the library shelves', label: 'Library shelves' },
   { src: classImageThree, alt: 'A teacher sharing books with pupils', label: 'Shared stories' },
-  { src: groupImageOne, alt: 'Project team members visiting to gather information for the library system', label: 'Information visit 1' },
-  { src: groupImageTwo, alt: 'Project team members gathering information during their school library visit', label: 'Information visit 2' },
 ]
 
 const faqs = [
@@ -95,6 +95,7 @@ const faqs = [
 export default function KamuliHomePage() {
   const [emailDraftOpened, setEmailDraftOpened] = useState(false)
   const [activeHeroImage, setActiveHeroImage] = useState(0)
+  const [heroRotationPaused, setHeroRotationPaused] = useState(false)
   const prefersReducedMotion = useReducedMotion()
   const heroRef = useRef(null)
   const galleryRef = useRef(null)
@@ -105,6 +106,16 @@ export default function KamuliHomePage() {
     viewport: { once: true, amount: 0.12 },
     transition: { duration: prefersReducedMotion ? 0.24 : 0.55, ease: 'easeOut' },
   }
+  useEffect(() => {
+    if (prefersReducedMotion || heroRotationPaused) return undefined
+
+    const rotationTimer = window.setTimeout(() => {
+      setActiveHeroImage((currentImage) => (currentImage + 1) % 3)
+    }, 5000)
+
+    return () => window.clearTimeout(rotationTimer)
+  }, [activeHeroImage, heroRotationPaused, prefersReducedMotion])
+
   useGSAP(() => {
     if (prefersReducedMotion) return
 
@@ -188,14 +199,17 @@ export default function KamuliHomePage() {
             </div>
           </div>
         </div>
-        <div role="group" aria-label="Choose landing page background image" className="absolute bottom-4 right-4 z-10 flex max-w-[calc(100%-2rem)] gap-2 rounded-md border border-white/20 bg-[#081a30]/70 p-2 backdrop-blur-sm sm:bottom-6 sm:right-6 sm:gap-2.5 sm:p-2.5">
+        <div role="group" aria-label="Choose landing page background image. The first three images rotate automatically; selecting another image pauses rotation." className="absolute bottom-4 right-4 z-10 flex max-w-[calc(100%-2rem)] gap-2 rounded-md border border-white/20 bg-[#081a30]/70 p-2 backdrop-blur-sm sm:bottom-6 sm:right-6 sm:gap-2.5 sm:p-2.5">
           {heroImages.map((image, index) => (
             <button
               key={image.src}
               type="button"
               aria-label={`Show background: ${image.label}`}
               aria-pressed={activeHeroImage === index}
-              onClick={() => setActiveHeroImage(index)}
+              onClick={() => {
+                setActiveHeroImage(index)
+                setHeroRotationPaused(index >= 3)
+              }}
               className={`size-10 shrink-0 overflow-hidden rounded-sm border-2 transition-[border-color,opacity] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 sm:size-12 ${
                 activeHeroImage === index ? 'border-amber-300 opacity-100' : 'border-white/50 opacity-70 hover:opacity-100'
               }`}
