@@ -7,7 +7,6 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SCHOOL_BADGE, SCHOOL_NAME, SCHOOL_OFFICIAL_NAME } from '../constants/schoolBrand'
 import heroImage from '../img/hero.jpeg'
-import aboutImage from '../img/aboutPageImage.jpg'
 import akelloImage from '../img/akello.jpg'
 import doreenImage from '../img/doreen.jpg'
 import classImageOne from '../img/class1.jpg'
@@ -31,49 +30,49 @@ const contributors = [
     initials: 'MD',
     image: doreenImage,
     email: 'doreen@example.invalid',
-    description: 'Contributing to a welcoming digital library experience for the school community.',
+    description: 'Helping shape a friendly digital library that welcomes the whole school community.',
   },
   {
     name: 'SSENYONGA LUCY ',
     initials: 'SL',
     image: lucyImage,
     email: 'lucy@example.invalid',
-    description: 'Helping make school reading resources easier for pupils and teachers to discover.',
+    description: 'Supporting a simple way for pupils and teachers to find books and learning resources.',
   },
   {
     name: 'AKELLO PATRICIA ',
     initials: 'AP',
     image: akelloImage,
     email: 'akello@example.invalid',
-    description: 'Helping make school reading resources easier for pupils and teachers to discover.',
+    description: 'Bringing the school library collection closer to readers through the online catalogue.',
   },
   {
     name: 'MUSINGUZI DERRICK ',
     initials: 'MD',
     image: '/images/team/musinguzi-derrick.jpg',
     email: 'derrick@example.invalid',
-    description: 'Helping make school reading resources easier for pupils and teachers to discover.',
+    description: 'Contributing to tools that help the library team organize and share its resources.',
   },
   {
     name: 'KISAAKYE DEBORAH',
     initials: 'KD',
     image: '/images/team/kisaakye-deborah.jpg',
     email: 'kisakyey@example.invalid',
-    description: 'Helping make school reading resources easier for pupils and teachers to discover.',
+    description: 'Supporting access to reading materials for learning, research, and enjoyment.',
   },
   {
     name: 'KATAANO VIVIAN LYNNA',
     initials: 'KVL',
     image: '/images/team/kataano-vivian-lynna.jpg',
     email: 'vivian@example.invalid',
-    description: 'Helping make school reading resources easier for pupils and teachers to discover.',
+    description: 'Helping connect the school community with books and approved digital collections.',
   },
 ]
 
 const readingImages = [
-  { src: groupImageOne, alt: 'The library project team during a visit to the school library', label: 'Our library visit' },
-  { src: groupImageTwo, alt: 'Team members exploring the school library collection during their visit', label: 'Exploring the collection' },
-  { src: classImageTwo, alt: 'Pupils learning together in a classroom', label: 'Learning in every lesson' },
+  { src: classImageOne, alt: 'Pupils reading together in the school library', label: 'A world of books' },
+  { src: classImageTwo, alt: 'A pupil studying among the library shelves', label: 'Ideas to explore' },
+  { src: classImageThree, alt: 'A teacher sharing books with pupils', label: 'Learning in every lesson' },
 ]
 
 const faqs = [
@@ -181,10 +180,16 @@ export default function KamuliHomePage() {
               <div><p className="font-bold text-[#102d4f]">For teachers</p><p className="mt-1 text-sm leading-6 text-slate-600">Discover resources that can support classroom teaching.</p></div>
             </div>
           </div>
-          <figure className="relative min-h-[320px] overflow-hidden bg-[#102d4f] md:min-h-[460px]">
-            <img src={aboutImage} alt="A pupil browsing books in the school library" loading="lazy" className="absolute inset-0 size-full object-cover" />
-            <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#081a30]/90 to-transparent px-5 pb-5 pt-16 text-lg font-bold text-white">A welcoming place to read, learn and grow.</figcaption>
-          </figure>
+          <div className="grid min-h-[320px] grid-cols-2 gap-3 md:min-h-[460px]">
+            <figure className="relative min-h-0 overflow-hidden bg-[#102d4f]">
+              <img src={groupImageOne} alt="The library project team during a visit to the school library" loading="lazy" className="absolute inset-0 size-full object-cover" />
+              <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#081a30]/90 to-transparent px-3 pb-3 pt-12 text-sm font-bold text-white sm:px-4 sm:pb-4">Our library visit</figcaption>
+            </figure>
+            <figure className="relative mt-6 min-h-0 overflow-hidden bg-[#102d4f] md:mt-10">
+              <img src={groupImageTwo} alt="Team members exploring the school library collection during their visit" loading="lazy" className="absolute inset-0 size-full object-cover" />
+              <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#081a30]/90 to-transparent px-3 pb-3 pt-12 text-sm font-bold text-white sm:px-4 sm:pb-4">Exploring the collection</figcaption>
+            </figure>
+          </div>
         </div>
       </motion.section>
 
