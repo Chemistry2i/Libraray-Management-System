@@ -1,16 +1,21 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { ArrowRight, BookOpen, MapPin, Phone, Mail, ChevronDown, Send, UserRound, Tag, MessageSquare, Archive, Search, ShieldCheck, Upload } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { motion, useReducedMotion } from 'framer-motion'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SCHOOL_BADGE, SCHOOL_NAME, SCHOOL_OFFICIAL_NAME } from '../constants/schoolBrand'
 import heroImage from '../img/hero.jpeg'
+import akelloImage from '../img/akello.jpg'
 import doreenImage from '../img/doreen.jpg'
 import classImageOne from '../img/class1.jpg'
 import classImageTwo from '../img/class2.jpg'
 import classImageThree from '../img/class3.jpg'
+import groupImageOne from '../img/groupImg.jpg'
+import groupImageTwo from '../img/groupImg2.jpg'
+import lucyImage from '../img/lucy.jpg'
+import deborahImage from '../img/deborah.jpeg'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger)
 
@@ -26,49 +31,58 @@ const contributors = [
     initials: 'MD',
     image: doreenImage,
     email: 'doreen@example.invalid',
-    description: 'Contributing to a welcoming digital library experience for the school community.',
+    description: 'Helping shape a friendly digital library that welcomes the whole school community.',
   },
   {
     name: 'SSENYONGA LUCY ',
     initials: 'SL',
-    image: '/images/team/ssenyonga-lucy.jpg',
+    image: lucyImage,
     email: 'lucy@example.invalid',
-    description: 'Helping make school reading resources easier for pupils and teachers to discover.',
+    description: 'Supporting a simple way for pupils and teachers to find books and learning resources.',
+  },
+  {
+    name: 'KISAAKYE DEBORAH',
+    initials: 'KD',
+    image: deborahImage,
+    email: 'kisakyey@example.invalid',
+    description: 'Supporting access to reading materials for learning, research, and enjoyment.',
   },
   {
     name: 'AKELLO PATRICIA ',
     initials: 'AP',
-    image: '/images/team/akello-patricia.jpg',
+    image: akelloImage,
     email: 'akello@example.invalid',
-    description: 'Helping make school reading resources easier for pupils and teachers to discover.',
+    description: 'Bringing the school library collection closer to readers through the online catalogue.',
   },
   {
     name: 'MUSINGUZI DERRICK ',
     initials: 'MD',
     image: '/images/team/musinguzi-derrick.jpg',
     email: 'derrick@example.invalid',
-    description: 'Helping make school reading resources easier for pupils and teachers to discover.',
-  },
-  {
-    name: 'KISAAKYE DEBORAH',
-    initials: 'KD',
-    image: '/images/team/kisaakye-deborah.jpg',
-    email: 'kisakyey@example.invalid',
-    description: 'Helping make school reading resources easier for pupils and teachers to discover.',
+    description: 'Contributing to tools that help the library team organize and share its resources.',
   },
   {
     name: 'KATAANO VIVIAN LYNNA',
     initials: 'KVL',
     image: '/images/team/kataano-vivian-lynna.jpg',
     email: 'vivian@example.invalid',
-    description: 'Helping make school reading resources easier for pupils and teachers to discover.',
+    description: 'Helping connect the school community with books and approved digital collections.',
   },
 ]
 
 const readingImages = [
-  { src: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=900&q=85', alt: 'Rows of books in a library', label: 'A world of books' },
-  { src: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=900&q=85', alt: 'Books ready to be read and studied', label: 'Ideas to explore' },
-  { src: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=900&q=85', alt: 'School children learning in a classroom', label: 'Learning in every lesson' },
+  { src: classImageOne, alt: 'Pupils reading together in the school library', label: 'A world of books' },
+  { src: classImageTwo, alt: 'A pupil studying among the library shelves', label: 'Ideas to explore' },
+  { src: classImageThree, alt: 'A teacher sharing books with pupils', label: 'Learning in every lesson' },
+]
+
+const heroImages = [
+  { src: heroImage, alt: 'The entrance to Kamuli Church of Uganda Primary School', label: 'School entrance' },
+  { src: groupImageOne, alt: 'Project team members visiting to gather information for the library system', label: 'Information visit 1' },
+  { src: groupImageTwo, alt: 'Project team members gathering information during their school library visit', label: 'Information visit 2' },
+  { src: classImageOne, alt: 'Pupils reading together in the school library', label: 'Pupils reading' },
+  { src: classImageTwo, alt: 'A pupil studying among the library shelves', label: 'Library shelves' },
+  { src: classImageThree, alt: 'A teacher sharing books with pupils', label: 'Shared stories' },
 ]
 
 const faqs = [
@@ -81,6 +95,8 @@ const faqs = [
 
 export default function KamuliHomePage() {
   const [emailDraftOpened, setEmailDraftOpened] = useState(false)
+  const [activeHeroImage, setActiveHeroImage] = useState(0)
+  const [heroRotationPaused, setHeroRotationPaused] = useState(false)
   const prefersReducedMotion = useReducedMotion()
   const heroRef = useRef(null)
   const galleryRef = useRef(null)
@@ -91,6 +107,16 @@ export default function KamuliHomePage() {
     viewport: { once: true, amount: 0.12 },
     transition: { duration: prefersReducedMotion ? 0.24 : 0.55, ease: 'easeOut' },
   }
+  useEffect(() => {
+    if (prefersReducedMotion || heroRotationPaused) return undefined
+
+    const rotationTimer = window.setTimeout(() => {
+      setActiveHeroImage((currentImage) => (currentImage + 1) % 3)
+    }, 5000)
+
+    return () => window.clearTimeout(rotationTimer)
+  }, [activeHeroImage, heroRotationPaused, prefersReducedMotion])
+
   useGSAP(() => {
     if (prefersReducedMotion) return
 
@@ -143,7 +169,18 @@ export default function KamuliHomePage() {
   return (
     <div className="w-full bg-white text-slate-900">
       <motion.section ref={heroRef} className="relative flex min-h-[80vh] items-center overflow-hidden bg-[#102d4f]">
-        <img src={heroImage} alt="The entrance to Kamuli Church of Uganda Primary School" className="absolute inset-0 size-full object-cover object-center" />
+        <AnimatePresence initial={false}>
+          <motion.img
+            key={heroImages[activeHeroImage].src}
+            src={heroImages[activeHeroImage].src}
+            alt={heroImages[activeHeroImage].alt}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.65 }}
+            className="absolute inset-0 size-full object-cover object-center"
+          />
+        </AnimatePresence>
         <div className="absolute inset-0 bg-gradient-to-t from-[#081a30]/95 via-[#0a2442]/50 to-[#102d4f]/5" />
         <div className="relative mx-auto w-full max-w-7xl px-5 py-14 sm:px-8 md:py-16">
           <div className="max-w-3xl text-white">
@@ -163,6 +200,25 @@ export default function KamuliHomePage() {
             </div>
           </div>
         </div>
+        <div role="group" aria-label="Choose landing page background image. The first three images rotate automatically; selecting another image pauses rotation." className="absolute bottom-4 right-4 z-10 flex max-w-[calc(100%-2rem)] gap-2 rounded-md border border-white/20 bg-[#081a30]/70 p-2 backdrop-blur-sm sm:bottom-6 sm:right-6 sm:gap-2.5 sm:p-2.5">
+          {heroImages.map((image, index) => (
+            <button
+              key={image.src}
+              type="button"
+              aria-label={`Show background: ${image.label}`}
+              aria-pressed={activeHeroImage === index}
+              onClick={() => {
+                setActiveHeroImage(index)
+                setHeroRotationPaused(index >= 3)
+              }}
+              className={`size-10 shrink-0 overflow-hidden rounded-sm border-2 transition-[border-color,opacity] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 sm:size-12 ${
+                activeHeroImage === index ? 'border-amber-300 opacity-100' : 'border-white/50 opacity-70 hover:opacity-100'
+              }`}
+            >
+              <img src={image.src} alt="" loading="lazy" className="size-full object-cover" />
+            </button>
+          ))}
+        </div>
       </motion.section>
 
       <motion.section {...scrollReveal} className="flex items-center border-b border-slate-200 bg-white">
@@ -176,10 +232,16 @@ export default function KamuliHomePage() {
               <div><p className="font-bold text-[#102d4f]">For teachers</p><p className="mt-1 text-sm leading-6 text-slate-600">Discover resources that can support classroom teaching.</p></div>
             </div>
           </div>
-          <figure className="relative min-h-[320px] overflow-hidden bg-[#102d4f] md:min-h-[460px]">
-            <img src={readingImages[0].src} alt={readingImages[0].alt} loading="lazy" className="absolute inset-0 size-full object-cover" />
-            <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#081a30]/90 to-transparent px-5 pb-5 pt-16 text-lg font-bold text-white">A welcoming place to read, learn and grow.</figcaption>
-          </figure>
+          <div className="grid min-h-[320px] grid-cols-2 gap-3 md:min-h-[460px]">
+            <figure className="relative min-h-0 overflow-hidden bg-[#102d4f]">
+              <img src={groupImageOne} alt="Project team members visiting to gather information for the library system" loading="lazy" className="absolute inset-0 size-full object-cover" />
+              <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#081a30]/90 to-transparent px-3 pb-3 pt-12 text-sm font-bold text-white sm:px-4 sm:pb-4">Gathering project information</figcaption>
+            </figure>
+            <figure className="relative mt-6 min-h-0 overflow-hidden bg-[#102d4f] md:mt-10">
+              <img src={groupImageTwo} alt="Project team members gathering information during their school library visit" loading="lazy" className="absolute inset-0 size-full object-cover" />
+              <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#081a30]/90 to-transparent px-3 pb-3 pt-12 text-sm font-bold text-white sm:px-4 sm:pb-4">Learning about the library</figcaption>
+            </figure>
+          </div>
         </div>
       </motion.section>
 
@@ -304,7 +366,7 @@ export default function KamuliHomePage() {
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#a77914]">Borrowing made clear</p>
             <h2 className="mt-2 text-3xl font-bold text-[#102d4f]">Three steps to your next read.</h2>
             <p className="mt-4 leading-7 text-slate-600">The library team can help you choose books and understand borrowing periods. Check the due date when you borrow and return books on time.</p>
-            <img src="https://images.unsplash.com/photo-1491841550275-ad7854e35ca6?auto=format&fit=crop&w=1000&q=85" alt="A student reading a book at a desk" loading="lazy" className="mt-6 h-64 w-full object-cover md:h-80" />
+            <img src={classImageThree} alt="A teacher sharing books with pupils" loading="lazy" className="mt-6 h-64 w-full object-cover md:h-80" />
           </div>
           <ol className="divide-y divide-slate-200 border-y border-slate-200">
             {[

@@ -248,33 +248,24 @@ class BorrowingService {
       // Approve
       await BorrowingModel.approveBorrow(borrowId, approvedByUserId);
 
-      // Send approval email - ENSURE delivery with retry
+      // Schedule email delivery after returning the approval response.
       const dueDate = new Date(request.due_date).toLocaleDateString();
       const lateFeePerDay = request.fine_amount || 500;
-      
-      try {
-        const emailSent = await EmailService.sendEmail(request.email, 'borrow_approved', {
+
+      setImmediate(() => {
+        EmailService.sendEmail(request.email, 'borrow_approved', {
           userName: request.username,
           bookTitle: request.title,
           dueDate: dueDate,
           lateFee: lateFeePerDay
+        }).then((emailSent) => {
+          if (!emailSent) {
+            console.error(`Approval email delivery failed for ${request.email}`);
+          }
+        }).catch((emailError) => {
+          console.error(`Approval email error for ${request.email}:`, emailError);
         });
-        
-        if (!emailSent) {
-          console.warn(`⚠️ Email delivery failed for ${request.email} - Retry queued`);
-          // Queue for retry later
-          await NotificationService.createNotification(
-            1, // Admin
-            'email_delivery_failed',
-            'Email Delivery Failed',
-            `Approval email failed for user: ${request.username} (${request.email})`
-          );
-        } else {
-          console.log(`✅ Approval email delivered to ${request.email}`);
-        }
-      } catch (emailError) {
-        console.error(`❌ Critical email error for ${request.email}:`, emailError.message);
-      }
+      });
 
       // Notify user in-app
       await NotificationService.createNotification(
@@ -284,7 +275,7 @@ class BorrowingService {
         `Your request to borrow "${request.title}" has been approved. Due date: ${dueDate}`
       );
 
-      return { success: true, message: 'Borrow request approved', emailSent: true };
+      return { success: true, message: 'Borrow request approved' };
     } catch (error) {
       throw error;
     }
