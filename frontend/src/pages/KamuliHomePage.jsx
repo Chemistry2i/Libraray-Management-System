@@ -41,13 +41,6 @@ const contributors = [
     description: 'Supporting a simple way for pupils and teachers to find books and learning resources.',
   },
   {
-    name: 'AKELLO PATRICIA ',
-    initials: 'AP',
-    image: akelloImage,
-    email: 'akello@example.invalid',
-    description: 'Bringing the school library collection closer to readers through the online catalogue.',
-  },
-  {
     name: 'KISAAKYE DEBORAH',
     initials: 'KD',
     image: deborahImage,
@@ -67,13 +60,6 @@ const contributors = [
     image: '/images/team/musinguzi-derrick.jpg',
     email: 'derrick@example.invalid',
     description: 'Contributing to tools that help the library team organize and share its resources.',
-  },
-  {
-    name: 'KISAAKYE DEBORAH',
-    initials: 'KD',
-    image: '/images/team/kisaakye-deborah.jpg',
-    email: 'kisakyey@example.invalid',
-    description: 'Supporting access to reading materials for learning, research, and enjoyment.',
   },
   {
     name: 'KATAANO VIVIAN LYNNA',
