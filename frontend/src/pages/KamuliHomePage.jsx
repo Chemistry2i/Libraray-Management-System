@@ -15,6 +15,7 @@ import classImageThree from '../img/class3.jpg'
 import groupImageOne from '../img/groupImg.jpg'
 import groupImageTwo from '../img/groupImg2.jpg'
 import lucyImage from '../img/lucy.jpg'
+import deborahImage from '../img/deborah.jpeg'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger)
 
@@ -38,6 +39,20 @@ const contributors = [
     image: lucyImage,
     email: 'lucy@example.invalid',
     description: 'Supporting a simple way for pupils and teachers to find books and learning resources.',
+  },
+  {
+    name: 'AKELLO PATRICIA ',
+    initials: 'AP',
+    image: akelloImage,
+    email: 'akello@example.invalid',
+    description: 'Bringing the school library collection closer to readers through the online catalogue.',
+  },
+  {
+    name: 'KISAAKYE DEBORAH',
+    initials: 'KD',
+    image: deborahImage,
+    email: 'kisakyey@example.invalid',
+    description: 'Supporting access to reading materials for learning, research, and enjoyment.',
   },
   {
     name: 'AKELLO PATRICIA ',
